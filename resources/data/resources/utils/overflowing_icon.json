@@ -1,0 +1,23 @@
+{
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 1, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 1], "texture": "#layer0", "tintindex": -1},
+				"east": {"uv": [0, 0, 16, 1], "texture": "#layer0", "tintindex": -1},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#layer0", "tintindex": -1},
+				"west": {"uv": [0, 0, 16, 1], "texture": "#layer0", "tintindex": -1},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#layer0", "tintindex": -1},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#layer0", "tintindex": -1}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [90, 0, 0],
+			"scale": [1.15, 1, 1.15]
+		}
+	},
+	"gui_light": "front"
+}
