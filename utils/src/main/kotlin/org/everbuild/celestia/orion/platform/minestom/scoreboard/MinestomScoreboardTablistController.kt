@@ -11,13 +11,11 @@ import org.everbuild.celestia.orion.core.scoreboard.ScoreBoardController.scoreBo
 import org.everbuild.celestia.orion.core.util.component
 import org.everbuild.celestia.orion.core.util.plus
 import org.everbuild.celestia.orion.platform.minestom.luckperms.lp
-import org.everbuild.celestia.orion.platform.minestom.profiling.Profiler
 import org.everbuild.celestia.orion.platform.minestom.util.orion
 import java.util.regex.Pattern
-import java.util.stream.IntStream
 import net.minestom.server.component.DataComponents
 
-object MinestomScoreboardTablistController{
+object MinestomScoreboardTablistController {
     private val teamManager = MinecraftServer.getTeamManager()
     private val scoreboards = mutableMapOf<Player, Sidebar>()
 
@@ -106,11 +104,9 @@ object MinestomScoreboardTablistController{
 
     fun start() {
         MinecraftServer.getSchedulerManager().scheduleTask({
-            Profiler("scoreboard") {
-                MinecraftServer.getConnectionManager().onlinePlayers.forEach { player ->
-                    updateTabList(player)
-                    updateScoreboard(player)
-                }
+            MinecraftServer.getConnectionManager().onlinePlayers.forEach { player ->
+                updateTabList(player)
+                updateScoreboard(player)
             }
         }, TaskSchedule.tick(20), TaskSchedule.duration(500, TimeUnit.MILLISECOND))
     }

@@ -23,7 +23,6 @@ include(":app")
 include(":utils")
 include(
     "resources",
-    "resources:agent",
     "resources:data",
 )
 

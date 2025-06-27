@@ -1,22 +1,27 @@
 package org.everbuild.asorda.resources
 
-import aws.smithy.kotlin.runtime.InternalApi
-import aws.smithy.kotlin.runtime.text.encoding.encodeHex
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
 
 object ChecksumGenerator {
-
+    private val hexChars = "0123456789abcdef".toCharArray()
     const val STREAM_BUFFER_LENGTH = 1024
+
+    fun encodeHex(bytes: ByteArray): String = buildString(bytes.size * 2) {
+        for (i in bytes.indices) {
+            val byte = bytes[i].toInt() and 0xff
+            append(hexChars[byte shr 4])
+            append(hexChars[byte and 0x0f])
+        }
+    }
 
     fun getCheckSumFromFile(digest: MessageDigest, filePath: String): String {
         val file = File(filePath)
         return getCheckSumFromFile(digest, file)
     }
 
-    @OptIn(InternalApi::class)
     fun getCheckSumFromFile(digest: MessageDigest, file: File): String {
         val fis = FileInputStream(file)
         val byteArray = updateDigest(digest, fis).digest()

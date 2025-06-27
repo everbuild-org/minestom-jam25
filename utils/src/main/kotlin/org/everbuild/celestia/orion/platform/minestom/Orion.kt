@@ -11,14 +11,10 @@ import org.everbuild.celestia.orion.platform.minestom.chat.ChatCommand
 import org.everbuild.celestia.orion.platform.minestom.chat.MinestomPlatformChatHooks
 import org.everbuild.celestia.orion.platform.minestom.chat.registerChatListeners
 import org.everbuild.celestia.orion.platform.minestom.command.*
-import io.github._4drian3d.signedvelocity.minestom.SignedVelocity
 import org.everbuild.celestia.orion.platform.minestom.initializer.registerPlayerInitializer
 import org.everbuild.celestia.orion.platform.minestom.luckperms.MinestomLuckPermsProvider
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksIfInDev
 import org.everbuild.celestia.orion.platform.minestom.platform.MinestomOrionPlatform
-import org.everbuild.celestia.orion.platform.minestom.prism.PrismMinestomPlatform
-import org.everbuild.celestia.orion.platform.minestom.prism.PrismProfileLoaderCallback
-import org.everbuild.celestia.orion.platform.minestom.profiling.Profiler
 import org.everbuild.celestia.orion.platform.minestom.scoreboard.MinestomScoreboardTablistController
 import org.slf4j.LoggerFactory
 
@@ -43,15 +39,11 @@ abstract class OrionServer(private vararg val deps: OrionDependency) : OrionCore
     var maxPlayers = 128
     var online = false
     val chat = BufferedChat(MinestomPlatformChatHooks())
-    val prism = PrismMinestomPlatform()
 
     init {
-        Profiler.start()
-         MinestomLuckPermsProvider.load(this)
+        MinestomLuckPermsProvider.load(this)
         MinestomScoreboardTablistController.start()
         globalServer = this
-
-        prism.start()
     }
 
     fun bind() {
@@ -68,7 +60,6 @@ abstract class OrionServer(private vararg val deps: OrionDependency) : OrionCore
 
         if (SharedPropertyConfig.bcpEnabled) {
             BungeeCordProxy.enable()
-            SignedVelocity.initialize()
         }
 
         registerChatListeners(chat)
@@ -76,14 +67,6 @@ abstract class OrionServer(private vararg val deps: OrionDependency) : OrionCore
         online = true
         withResourcePacksIfInDev()
         server.autoBind()
-    }
-
-    protected fun onReloadProfiles(block: (List<Int>) -> Unit) {
-        prism.callback = object : PrismProfileLoaderCallback {
-            override fun syncLoadedProfiles(profiles: List<Int>) {
-                block(profiles)
-            }
-        }
     }
 }
 

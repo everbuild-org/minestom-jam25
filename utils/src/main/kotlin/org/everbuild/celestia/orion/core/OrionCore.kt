@@ -12,9 +12,6 @@ import org.everbuild.celestia.orion.core.database.Migrator
 import org.everbuild.celestia.orion.core.database.playerdata.onPlayerdataPlayerJoin
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.platform.OrionPlatform
-import org.everbuild.celestia.orion.core.platform.onPlatformPlayerJoin
-import org.everbuild.celestia.orion.core.platform.onPlatformPlayerLeave
-import org.everbuild.celestia.orion.core.remote.RemotePlatform
 import org.everbuild.celestia.orion.core.translation.Translator
 import org.everbuild.celestia.orion.core.util.globalOrion
 
@@ -46,14 +43,7 @@ open class OrionCore<Platform : OrionPlatform>(val platform: Platform) {
     fun load() {
         platform.registerJoinEvent {
             onPlayerdataPlayerJoin(it)
-            onPlatformPlayerJoin(it)
         }
-
-        platform.registerLeaveEvent {
-            onPlatformPlayerLeave(it)
-        }
-
-        RemotePlatform.listenAndSchedule(platform)
     }
 
     companion object {

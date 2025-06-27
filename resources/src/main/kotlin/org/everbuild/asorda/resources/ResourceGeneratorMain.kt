@@ -40,7 +40,7 @@ fun triggerRefresh() {
 
 fun main(args: Array<String>) {
     val parser = ArgParser("resourcegen")
-    val branch by parser.option(ArgType.String, shortName = "b", description = "The branch to use").required()
+    val branch by parser.option(ArgType.String, shortName = "b", description = "The branch to use")
     val upload by parser.option(ArgType.Boolean, shortName = "u", description = "Upload the generated file to s3")
         .default(false)
     val serve by parser.option(
@@ -112,8 +112,7 @@ fun main(args: Array<String>) {
             ResourceGenerationService.metadata.writeText(Json.encodeToString(meta))
 
             if (upload) {
-                ResourcePackUploadService(s3Server ?: "localhost", s3Bucket ?: "resources", s3key ?: "", s3secret ?: "")
-                    .upload(ResourceGenerationService.resources, "resource_pack_$branch.zip")
+                println("Uploading not supported")
             }
 
             exitProcess(0)

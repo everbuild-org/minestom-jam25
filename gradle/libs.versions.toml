@@ -3,6 +3,7 @@ kotlin = "2.1.20"
 kotlinxDatetime = "0.6.1"
 kotlinxSerializationJSON = "1.7.3"
 kotlinxCoroutines = "1.9.0"
+kotlinx-cli = "0.3.6"
 
 adventure = "4.19.0"
 ktorm = "4.1.0"
@@ -11,12 +12,22 @@ minestom = "1_21_6-c3ccee696b"
 http4k = "6.2.0.0"
 slf4j = "2.0.12"
 ktor-version = "3.1.1"
+classgraph = "4.8.179"
+bimap = "1.1.0"
+creative = "1.8.4-everbuild-R2-SNAPSHOT"
+reflections = "0.10.2"
+configurate = "3.7.1"
+
+luckperms-minestom = "5.4-SNAPSHOT"
+luckperms-api = "5.4-SNAPSHOT"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinxDatetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinxSerialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJSON" }
 kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinxCli = { module = "org.jetbrains.kotlinx:kotlinx-cli-jvm", version.ref = "kotlinx-cli" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
 adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventureNbt = { module = "net.kyori:adventure-nbt", version.ref = "adventure" }
@@ -27,6 +38,7 @@ adventureTextLegacy = { module = "net.kyori:adventure-text-serializer-json-legac
 ktormCore = { module = "org.ktorm:ktorm-core", version.ref = "ktorm" }
 ktormMysql = { module = "org.ktorm:ktorm-support-mysql", version.ref = "ktorm" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 
 minestom = { module = "net.minestom:minestom-snapshots", version.ref = "minestom" }
 
@@ -34,18 +46,30 @@ slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4jSimple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 http4k = { module = "org.http4k:http4k-core", version.ref = "http4k" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
+bimap = { module = "io.michaelrocks.bimap:bimap", version.ref = "bimap" }
+
+configurateHocon = { module = "ninja.leaping.configurate:configurate-hocon", version.ref = "configurate" }
+configurateYaml = { module = "ninja.leaping.configurate:configurate-yaml", version.ref = "configurate" }
+
+luckpermsMinestom = { module = "dev.lu15:luckperms-minestom", version.ref = "luckperms-minestom" }
+luckpermsApi = { module = "net.luckperms:api", version.ref = "luckperms-api" }
 
 ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor-version" }
 ktorServerSse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor-version" }
 ktorServerNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
 ktorServerConfigYaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
 
+creativeApi = { module = "team.unnamed:creative-api", version.ref = "creative" }
+creativeMinecraft = { module = "team.unnamed:creative-serializer-minecraft", version.ref = "creative" }
+
 [bundles]
-kotlinxEcosystem = ["kotlinxDatetime", "kotlinxSerialization", "kotlinxCoroutines"]
+kotlinxEcosystem = ["kotlinxDatetime", "kotlinxSerialization", "kotlinxCoroutines", "kotlinxCli"]
 adventure = [ "adventureApi", "adventureNbt", "adventureTextMinimessage", "adventureTextGson", "adventureTextLegacy" ]
 database = [ "ktormCore", "ktormMysql", "hikaricp" ]
-utils = [ "slf4jApi", "slf4jSimple", "http4k", "classgraph" ]
+utils = [ "slf4jApi", "slf4jSimple", "http4k", "classgraph", "bimap", "reflections" ]
 ktor = [ "ktorServerCore", "ktorServerSse", "ktorServerNetty", "ktorServerConfigYaml" ]
+creative = [ "creativeApi", "creativeMinecraft" ]
+luckperms = [ "configurateYaml", "configurateHocon", "luckpermsApi", "luckpermsMinestom" ]
 
 [plugins]
 kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -1,0 +1,26 @@
+{
+    "dataVersion": 1,
+    "basicBlockStates": {
+        "entries": {
+            "asorda:mystery_block[lit=false]": {
+                "key": "minecraft:note_block",
+                "properties": {
+                    "instrument": "banjo",
+                    "note": "0",
+                    "powered": "true"
+                }
+            },
+            "asorda:mystery_block[lit=true]": {
+                "key": "minecraft:note_block",
+                "properties": {
+                    "instrument": "banjo",
+                    "note": "0",
+                    "powered": "false"
+                }
+            }
+        }
+    },
+    "groundBlockStateRegistry": {
+        "entries": {}
+    }
+}

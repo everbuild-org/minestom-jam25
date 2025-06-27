@@ -9,7 +9,19 @@ plugins {
 
 kotlin {
     // Use a specific Java version to make it easier to work in different environments.
-    jvmToolchain(23)
+    jvmToolchain(21)
+}
+
+repositories {
+    mavenCentral()
+    maven("https://mvn.everbuild.org/public") {
+        content{
+            excludeModule("dev.lu15","luckperms-minestom")
+            excludeModule("dev.lu15","luckperms-common")
+        }
+    }
+    maven("https://repo.hypera.dev/snapshots")
+    maven("https://repo.lucko.me/")
 }
 
 tasks.withType<Test>().configureEach {
