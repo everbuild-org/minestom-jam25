@@ -14,7 +14,7 @@ data class Lockfile(
 )
 
 object LockfileService {
-    private const val FILENAME = "resources.lock.json"
+    private const val FILENAME = "../resources.lock.json"
     private val beautifiedJson = Json {
         prettyPrint = true
         encodeDefaults = true

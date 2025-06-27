@@ -19,7 +19,7 @@ fun BankCard.getAmountLeftToday(): Long {
     @Language("SQL")
     val sql =
         "SELECT SUM(amount) AS amount FROM (SELECT IF(amount > 0, 0, amount) AS amount, 1 as id FROM orion_bank_transactions WHERE diagnostics LIKE 'cardId=${cardId}:%' AND (timestamp BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL 1 DAY)) tx GROUP BY id"
-    return DataSource.connection.use {
+    return DataSource.database.useConnection {
         it.prepareStatement(sql)
             .use { statement ->
                 statement.executeQuery().use { result ->

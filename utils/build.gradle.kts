@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.bundles.utils)
     implementation(libs.bundles.luckperms)
     implementation(libs.minestom)
+    implementation("org.xerial:sqlite-jdbc:3.50.1.0")
     implementation(project(":resources:data"))
     testImplementation(kotlin("test"))
 }

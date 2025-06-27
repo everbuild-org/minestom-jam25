@@ -36,7 +36,7 @@ adventureTextGson = { module = "net.kyori:adventure-text-serializer-gson", versi
 adventureTextLegacy = { module = "net.kyori:adventure-text-serializer-json-legacy-impl", version.ref = "adventure" }
 
 ktormCore = { module = "org.ktorm:ktorm-core", version.ref = "ktorm" }
-ktormMysql = { module = "org.ktorm:ktorm-support-mysql", version.ref = "ktorm" }
+ktormSqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 
@@ -65,7 +65,7 @@ creativeMinecraft = { module = "team.unnamed:creative-serializer-minecraft", ver
 [bundles]
 kotlinxEcosystem = ["kotlinxDatetime", "kotlinxSerialization", "kotlinxCoroutines", "kotlinxCli"]
 adventure = [ "adventureApi", "adventureNbt", "adventureTextMinimessage", "adventureTextGson", "adventureTextLegacy" ]
-database = [ "ktormCore", "ktormMysql", "hikaricp" ]
+database = [ "ktormCore", "ktormSqlite", "hikaricp" ]
 utils = [ "slf4jApi", "slf4jSimple", "http4k", "classgraph", "bimap", "reflections" ]
 ktor = [ "ktorServerCore", "ktorServerSse", "ktorServerNetty", "ktorServerConfigYaml" ]
 creative = [ "creativeApi", "creativeMinecraft" ]

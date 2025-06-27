@@ -11,11 +11,11 @@ object Migrator {
     private val logger = LoggerFactory.getLogger(Migrator::class.java)
 
     fun assertMigrationTable() {
-        DataSource.connection.use { conn ->
+        DataSource.database.useConnection { conn ->
             conn.prepareStatement(
                 """
                 CREATE TABLE IF NOT EXISTS orion_migrations (
-                    id      INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    id      INTEGER PRIMARY KEY AUTOINCREMENT,
                     plugin  VARCHAR(512) NOT NULL,
                     name    VARCHAR(512) NOT NULL
                 )
@@ -57,17 +57,17 @@ object Migrator {
 
         migrationsToPerform.forEach { migration ->
             val migrationScript = loadMigration(plugin, path, migration)
-                ?: throw MigrationFailedException(migration, MigrationPhase.GATHER)
+                ?: throw MigrationFailedException(migration, MigrationPhase.GATHER, null)
             migrationScriptCache.add(migrationScript)
         }
 
-        DataSource.connection.use { conn ->
+        DataSource.database.useConnection { conn ->
             for (migration in migrationScriptCache) {
                 try {
                     executeMigration(migration, conn, pluginId)
                     logger.info(" - ${migration.name} executed")
                 } catch (e: Exception) {
-                    throw MigrationFailedException(migration.name, MigrationPhase.EXECUTE)
+                    throw MigrationFailedException(migration.name, MigrationPhase.EXECUTE, e)
                 }
             }
         }
@@ -97,6 +97,6 @@ object Migrator {
         GATHER, EXECUTE
     }
 
-    class MigrationFailedException(name: String, phase: MigrationPhase) :
-        Exception("Migration failed: $name could not be processed in the $phase phase")
+    class MigrationFailedException(name: String, phase: MigrationPhase, exception: Exception?) :
+        Exception("Migration failed: $name could not be processed in the $phase phase", exception)
 }
