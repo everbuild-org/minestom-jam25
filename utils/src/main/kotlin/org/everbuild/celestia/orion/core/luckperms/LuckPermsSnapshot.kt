@@ -1,8 +1,8 @@
 package org.everbuild.celestia.orion.core.luckperms
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.everbuild.celestia.orion.core.database.playerdata.OrionPlayer
+import org.everbuild.celestia.orion.core.packs.withEmojis
 import org.everbuild.celestia.orion.core.util.globalOrion
 
 data class LuckPermsSnapshot(
@@ -15,9 +15,9 @@ data class LuckPermsSnapshot(
     val isChatImportant: Boolean
 ) {
     constructor(playerData: LuckPermsData) : this(
-        playerData.permissionsPrefix,
-        playerData.permissionsColor,
-        playerData.permissionsDisplayName,
+        playerData.permissionsPrefix.withEmojis(),
+        playerData.permissionsColor.withEmojis(),
+        playerData.permissionsDisplayName.withEmojis(),
         playerData.permissionsWeight,
         playerData.permissionsGroupNameRaw,
         playerData.playerName,

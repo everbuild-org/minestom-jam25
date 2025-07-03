@@ -58,6 +58,12 @@ object BrandingAndChatCharacters : ContentList() {
         ascent(7)
     }
 
+    val iconTeam = createBitmapCharacter("icon_team") {
+        texture(Texture("playermenu/travel"))
+        height(8)
+        ascent(7)
+    }
+
     val cubit = createBitmapCharacter("cubit") {
         texture(Texture("font/icons/cubit"))
         height(7)

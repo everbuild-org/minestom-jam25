@@ -13,6 +13,7 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerSpawnEvent
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import java.io.File
 import java.nio.file.Path
 import java.util.*
 
@@ -25,8 +26,46 @@ object MinestomLuckPermsProvider {
         return Optional.empty()
     }
 
+    private fun extract(from: String, to: String) {
+        val file = File(directory.toFile(), to)
+        file.parentFile.mkdirs()
+        MinestomLuckPermsProvider.javaClass.getResourceAsStream(from)!!.copyTo(file.outputStream())
+    }
+
+    private fun addAdminUser(name: String, uuid: String) {
+        val prototype = """
+            name=$name
+            parents=[
+                {
+                    group=dev
+                }
+            ]
+            permissions=[
+                {
+                    permission="*"
+                    value=true
+                }
+            ]
+            primary-group=dev
+            uuid="$uuid"
+        """.trimIndent()
+
+        val file = File(directory.toFile(), "hocon-storage/users/$uuid.conf")
+        file.parentFile.mkdirs()
+        file.createNewFile()
+        file.writeText(prototype)
+    }
+
     fun load(orionServer: OrionServer) {
         this.orionServer = orionServer
+        extract("/luckperms/default.conf", "hocon-storage/groups/default.conf")
+        extract("/luckperms/dev.conf", "hocon-storage/groups/dev.conf")
+
+        addAdminUser("Bloeckchengrafik", "35afa48c-de21-4869-ae97-0918ca3dd82d")
+        addAdminUser("TheNico24", "2aadcbff-f4a6-4ccf-b4e6-4823ca513bf6")
+        addAdminUser("_CreepyX_", "18f76a31-eac0-4cad-9a3e-ef0b498a38a5")
+        addAdminUser("wi1helm", "dbb8ea69-212f-490b-a263-c718b49949b8")
+
         luckperms = LuckPermsMinestom.builder(directory)
             .commandRegistry(CommandRegistry.minestom())
             .contextProvider(object : ContextProvider {

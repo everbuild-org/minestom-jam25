@@ -57,3 +57,11 @@ object OrionPacks {
 
     fun getComponentWidth(label: Component): Int = 0
 }
+
+fun String.withEmojis(): String {
+    var mutSelf = this
+    for ((key, value) in OrionPacks.data.font.entries) {
+        mutSelf = mutSelf.replace(":$key:", value.codepoint)
+    }
+    return mutSelf
+}

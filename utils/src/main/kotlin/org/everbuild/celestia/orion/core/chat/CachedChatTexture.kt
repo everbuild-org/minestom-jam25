@@ -2,6 +2,8 @@ package org.everbuild.celestia.orion.core.chat
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.util.ARGBLike
+import net.minestom.server.color.AlphaColor
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.component
 import org.slf4j.LoggerFactory
@@ -65,6 +67,7 @@ class CachedChatTexture(path: URI, overlayedCoordinates: List<ChatTexViewBox>) {
                     resourceDots[y]
                         .component()
                         .color(color)
+                        .shadowColor(AlphaColor(0, 255, 255, 255))
                 ).append(
                     resourceSpacingMin2.component()
                 )
