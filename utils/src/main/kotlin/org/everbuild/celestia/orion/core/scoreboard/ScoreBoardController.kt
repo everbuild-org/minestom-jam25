@@ -3,8 +3,8 @@ package org.everbuild.celestia.orion.core.scoreboard
 import net.kyori.adventure.text.Component
 import org.everbuild.celestia.orion.core.database.playerdata.OrionPlayer
 
-object ScoreBoardController : IScoreBoardCallback {
-    var scoreBoardCallback: IScoreBoardCallback = ScoreBoardController
+object ScoreBoardController : ScoreBoardCallback {
+    var scoreBoardCallback: ScoreBoardCallback = ScoreBoardController
     val teamUniques = listOf(
         "§1",
         "§2",

@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component
 import org.everbuild.celestia.orion.core.database.playerdata.OrionPlayer
 import org.everbuild.celestia.orion.core.database.playerdata.c
 
-interface IScoreBoardCallback {
+interface ScoreBoardCallback {
     /**
      * Get The Key-Value Pair for a Scoreboard entry
      *

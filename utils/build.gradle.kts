@@ -15,7 +15,7 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-tasks.classes {
+tasks.processResources {
     dependsOn(":resources:buildResources")
 
     doFirst {
@@ -23,4 +23,8 @@ tasks.classes {
         rootProject.file("run/resources.json").copyTo(layout.projectDirectory.file("src/main/resources/resources.json").asFile, overwrite = true)
         rootProject.file("run/resources.zip").copyTo(layout.projectDirectory.file("src/main/resources/resources.zip").asFile, overwrite = true)
     }
+}
+
+tasks.classes {
+    dependsOn("processResources")
 }
