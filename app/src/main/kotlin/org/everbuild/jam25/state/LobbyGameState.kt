@@ -3,6 +3,7 @@ package org.everbuild.jam25.state
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.minestom.server.adventure.audience.Audiences
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
@@ -15,7 +16,7 @@ import net.minestom.server.utils.chunk.ChunkSupplier
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 
-class LobbyGameState : GameState, DynamicGameState {
+class LobbyGameState : GameState, EntryGameState {
     private val eventNode = EventNode.type(this.key().asString(), EventFilter.PLAYER) { _, player -> players.contains(player) }
         .listen<PlayerDisconnectEvent, _> { event -> players.remove(event.player) }
 
@@ -33,12 +34,12 @@ class LobbyGameState : GameState, DynamicGameState {
 
     override fun players(): List<Player> = players
 
+    override fun getInstance(): Instance = instance
+
+    override fun getSpawn(): Pos = Pos(0.0, 32.0, 0.0)
+
     override fun addPlayer(player: Player) {
         players.add(player)
-    }
-
-    override fun getInstance(): Instance {
-        TODO("Not yet implemented")
     }
 
     override fun key(): Key = Key.key("jam", "lobby")
