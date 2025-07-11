@@ -11,6 +11,12 @@ class Jam : OrionServer() {
         Mc.globalEvent
             .addChild(gameStates.eventNode())
             .addChild(PingResponder.eventNode())
+
+        TabListController.schedule()
+    }
+
+    companion object {
+        const val NAME = "Game Name"
     }
 }
 
