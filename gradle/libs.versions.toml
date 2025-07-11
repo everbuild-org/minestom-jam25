@@ -8,7 +8,7 @@ kotlinx-cli = "0.3.6"
 adventure = "4.19.0"
 ktorm = "4.1.0"
 hikaricp = "5.1.0"
-minestom = "1_21_6-c3ccee696b"
+minestom = "2025.07.11-1.21.7"
 http4k = "6.2.0.0"
 slf4j = "2.0.12"
 ktor-version = "3.1.1"
@@ -40,7 +40,7 @@ ktormSqlite = { module = "org.ktorm:ktorm-support-sqlite", version.ref = "ktorm"
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 
-minestom = { module = "net.minestom:minestom-snapshots", version.ref = "minestom" }
+minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
 
 slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4jSimple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }

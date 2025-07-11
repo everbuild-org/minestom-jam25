@@ -296,8 +296,8 @@ class WorldLoader(private val path: Path) : IChunkLoader {
                         properties[key] = value.value()
                     } else {
                         MinecraftServer.LOGGER.warn(
-                            "Fail to parse block state properties {}, expected a string for {}, but contents were {}",
-                            propertiesNBT, key, TagStringIOExt.writeTag(value!!)
+                            "Fail to parse block state properties {}, expected a string for {}",
+                            propertiesNBT, key
                         )
                     }
                 }

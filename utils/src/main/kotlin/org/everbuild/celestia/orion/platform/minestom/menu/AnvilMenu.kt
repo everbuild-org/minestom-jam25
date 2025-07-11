@@ -142,7 +142,7 @@ class AnvilMenu(private val player: Player) {
         val name = "anvil_gui_${player.username}"
         val node = EventNode.all(name)
         Mc.globalEvent.addChild(node)
-        node.listen<PlayerPacketEvent> {
+        node.listen<PlayerPacketEvent, _> {
             if (it.entity != player) return@listen
 
             if (!player.isOnline) {
@@ -159,12 +159,12 @@ class AnvilMenu(private val player: Player) {
             }
         }
 
-        node.listen<InventoryCloseEvent> {
+        node.listen<InventoryCloseEvent, _> {
             if (it.player != player) return@listen
             Mc.globalEvent.removeChild(node)
         }
 
-        node.listen<InventoryPreClickEvent> {
+        node.listen<InventoryPreClickEvent, _> {
             if (it.player != player) return@listen
             if (it.inventory != inventory) return@listen
             it.isCancelled = true

@@ -23,7 +23,7 @@ fun registerChatListeners(chat: BufferedChat) {
     Mc.globalEvent.addChild(EventNode.all("orion-chat-listeners").also { node ->
         node.setPriority(1000)
 
-        node.listen<PlayerChatEvent> { event ->
+        node.listen<PlayerChatEvent, _> { event ->
             if (event.isCancelled) return@listen
 
             event.isCancelled = true
