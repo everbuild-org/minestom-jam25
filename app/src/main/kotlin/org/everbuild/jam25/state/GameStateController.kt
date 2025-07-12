@@ -36,4 +36,9 @@ class GameStateController {
         controlledStates.add(inGameState)
         node.addChild(inGameState.events())
     }
+
+    fun tryQuickStart(player: Player) {
+        if (!lobbyState.players().contains(player)) return
+        lobbyState.tryQuickStart(player)
+    }
 }

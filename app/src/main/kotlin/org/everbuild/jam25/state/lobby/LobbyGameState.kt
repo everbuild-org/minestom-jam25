@@ -77,6 +77,11 @@ class LobbyGameState : GameState {
         groups.remove(group)
     }
 
+    fun tryQuickStart(player: Player) {
+        val grp = groups.find { it.containsPlayer(player) } ?: return
+        grp.startGame()
+    }
+
     companion object {
         const val MIN_PLAYERS_PER_INSTANCE = 2
         const val PLAYERS_PER_INSTANCE_SLOW_START = 4

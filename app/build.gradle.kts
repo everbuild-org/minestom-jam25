@@ -1,6 +1,4 @@
 plugins {
-    // Apply the shared build logic from a convention plugin.
-    // The shared code is located in `buildSrc/src/main/kotlin/kotlin-jvm.gradle.kts`.
     id("buildsrc.convention.kotlin-jvm")
     id("com.gradleup.shadow") version "9.0.0-rc1"
 
@@ -17,6 +15,7 @@ dependencies {
     implementation(libs.bundles.utils)
     implementation(libs.bundles.luckperms)
     implementation(libs.minestom)
+    implementation("dev.hollowcube:schem:2.0")
 }
 
 application {
@@ -25,7 +24,16 @@ application {
     mainClass = "org.everbuild.jam25.JamKt"
 }
 
-
 tasks.named<JavaExec>("run") {
     workingDir = file("../run")
+}
+
+val zipMap = tasks.register<Zip>("zipMap") {
+    from("../map")
+    destinationDirectory.set(layout.buildDirectory.dir("resources/main"))
+    archiveFileName.set("map.zip")
+}
+
+tasks.processResources {
+    dependsOn(zipMap)
 }

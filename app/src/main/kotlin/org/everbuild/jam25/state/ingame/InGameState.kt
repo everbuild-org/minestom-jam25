@@ -15,21 +15,19 @@ import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.Jam
 import org.everbuild.jam25.state.GameState
 import org.everbuild.jam25.state.lobby.LobbyGroup
+import org.everbuild.jam25.world.GameWorld
 
 class InGameState(lobby: LobbyGroup) : GameState {
     private val id = UUID.randomUUID()
     private val key = Key.key("jam", "in-game/$id")
     private val players = mutableListOf<Player>()
     private val audience = DynamicGroup { players.contains(it) }
-    private val instance = Mc.instance.createInstanceContainer().also {
-        it.chunkSupplier = ChunkSupplier { i, x, y -> LightingChunk(i, x, y) }
-        it.setGenerator { unit -> unit.modifier().fillHeight(0, 32, Block.STONE) }
-    }
+    private val world = GameWorld()
     private val teamRed: GameTeam
     private val teamBlue: GameTeam
 
     private val instanceEvents = EventNode.event("in-game/$id/instance", EventFilter.INSTANCE) {
-        it.instance == instance
+        it.instance == world.instance
     }
 
     private val playerEvents = EventNode.event("in-game/$id/player", EventFilter.PLAYER) {
@@ -48,8 +46,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
         teamRed = GameTeam(redPlayers, GameTeamType.RED)
         teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE)
 
-        audience.sendMiniMessage("${Jam.PREFIX} <gray>Game started! Welcome to ${Jam.NAME}<gray>!")
-        audience.setInstance(instance, Pos(0.0, 32.0, 0.0))
+        teamRed.setInstance(world.instance, teamRed.poi.spawn)
+        teamBlue.setInstance(world.instance, teamBlue.poi.spawn)
     }
 
     override fun events(): EventNode<out Event> = eventNode
