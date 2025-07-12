@@ -10,4 +10,6 @@ private fun ResourcePack.coreShader(id: String) {
 suspend fun addShaders(pack: ResourcePack) {
     pack.coreShader("rendertype_text.vsh")
     pack.coreShader("rendertype_text.fsh")
+    pack.coreShader("rendertype_text_background.vsh")
+    pack.coreShader("rendertype_text_background.fsh")
 }

@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":utils"))
+    implementation(project(":resources:data"))
     implementation(libs.bundles.kotlinxEcosystem)
     implementation(libs.bundles.adventure)
     implementation(libs.bundles.database)
@@ -14,6 +15,7 @@ dependencies {
     implementation(libs.bundles.luckperms)
     implementation(libs.minestom)
     implementation("dev.hollowcube:schem:2.0")
+    implementation("org.joml:joml:1.10.8")
 }
 
 application {

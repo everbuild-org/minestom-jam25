@@ -32,21 +32,6 @@ flat in int arcSegment;
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
 
-    if (functionId == 2) {
-        vec3 gradientDirection = vec3(1, 1, 0);
-        float gradientScale = 0.5;
-        float scrollSpeed = 2.0;
-        float secondTimer = 1 - fract(GameTime * 1200);
-        float slowerTimer = 1 - fract(GameTime * 1200 * 0.5);
-        float timeOffset = secondTimer * scrollSpeed;
-        float projectedPos = dot(vPos, gradientDirection) * gradientScale + timeOffset;
-        float gradientFactor = fract(projectedPos);
-        vec4 colorA = vec4(0.0, 1.0, 1.0, 1.0); // Cyan
-        vec4 colorB = vec4(0.0, 1.0, 1.0, 0.0); // Transparent
-        fragColor = mix(mix(colorA, colorB, gradientFactor * 1.75), colorB, mix(0.0, 0.8, abs(slowerTimer * 2 - 1)));
-        return;
-    }
-
     if (color.a < 0.1) {
         discard;
     }
@@ -55,10 +40,10 @@ void main() {
         int angle = arcSegment;
         float pxAngle = atan(uv.y - 0.5, uv.x - 0.5) + PI;
         if ((arcSegment == 3 && !(pxAngle < QUARTER_CIRCLE && pxAngle > QUARTER_CIRCLE - FIFTH))
-        || (arcSegment == 4 && !(pxAngle < QUARTER_CIRCLE + FIFTH && pxAngle > QUARTER_CIRCLE))
-        || (arcSegment == 0 && !(pxAngle < QUARTER_CIRCLE + (FIFTH * 2) && pxAngle > QUARTER_CIRCLE + FIFTH))
-        || (arcSegment == 1 && !(pxAngle < QUARTER_CIRCLE + (FIFTH * 3) && pxAngle > QUARTER_CIRCLE + (FIFTH * 2)))
-        || (arcSegment == 2 && !(pxAngle > QUARTER_CIRCLE + (FIFTH * 3) || pxAngle < QUARTER_CIRCLE - FIFTH))) {
+                || (arcSegment == 4 && !(pxAngle < QUARTER_CIRCLE + FIFTH && pxAngle > QUARTER_CIRCLE))
+                || (arcSegment == 0 && !(pxAngle < QUARTER_CIRCLE + (FIFTH * 2) && pxAngle > QUARTER_CIRCLE + FIFTH))
+                || (arcSegment == 1 && !(pxAngle < QUARTER_CIRCLE + (FIFTH * 3) && pxAngle > QUARTER_CIRCLE + (FIFTH * 2)))
+                || (arcSegment == 2 && !(pxAngle > QUARTER_CIRCLE + (FIFTH * 3) || pxAngle < QUARTER_CIRCLE - FIFTH))) {
             discard;
         }
     }
