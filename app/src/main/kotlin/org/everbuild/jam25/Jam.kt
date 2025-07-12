@@ -5,8 +5,8 @@ import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
-import org.everbuild.jam25.commands.QuickStartCommand
-import org.everbuild.jam25.commands.SetAllowPlayingCommand
+import org.everbuild.jam25.command.QuickStartCommand
+import org.everbuild.jam25.command.SetAllowPlayingCommand
 import org.everbuild.jam25.state.GameStateController
 
 object Jam : OrionServer() {
@@ -31,6 +31,8 @@ object Jam : OrionServer() {
 
         SetAllowPlayingCommand.register()
         QuickStartCommand.register()
+
+        withGlobalTickEvent()
     }
 }
 

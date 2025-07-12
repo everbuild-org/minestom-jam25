@@ -8,8 +8,7 @@ import kotlin.time.Instant
 import net.minestom.server.entity.Player
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.Jam
-import org.everbuild.jam25.commands.SetAllowPlayingCommand
-import org.everbuild.jam25.state.GameStateController
+import org.everbuild.jam25.command.SetAllowPlayingCommand
 
 @OptIn(ExperimentalTime::class)
 class LobbyGroup {

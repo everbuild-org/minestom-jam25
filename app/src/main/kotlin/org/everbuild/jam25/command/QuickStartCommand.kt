@@ -1,4 +1,4 @@
-package org.everbuild.jam25.commands
+package org.everbuild.jam25.command
 
 import org.everbuild.celestia.orion.core.util.sendMiniMessage
 import org.everbuild.celestia.orion.platform.minestom.api.command.Kommand

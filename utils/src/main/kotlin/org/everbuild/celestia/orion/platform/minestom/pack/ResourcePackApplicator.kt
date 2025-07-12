@@ -103,6 +103,8 @@ fun withResourcePacksInDev() {
         var addr = player.playerConnection.serverAddress ?: "127.0.0.1"
         addr = addr.split(":")[0]
 
+        recomputeHash()
+
         val info = ResourcePackInfo.resourcePackInfo()
             .id(UUID.randomUUID())
             .uri(URI.create("http://$addr$portAndPath"))

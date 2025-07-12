@@ -1,4 +1,4 @@
-package org.everbuild.jam25.commands
+package org.everbuild.jam25.command
 
 import net.minestom.server.adventure.audience.Audiences
 import org.everbuild.celestia.orion.core.util.sendMiniMessage

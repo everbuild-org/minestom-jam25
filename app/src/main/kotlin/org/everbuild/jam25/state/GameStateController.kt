@@ -41,4 +41,8 @@ class GameStateController {
         if (!lobbyState.players().contains(player)) return
         lobbyState.tryQuickStart(player)
     }
+
+    fun getInGamePhase(player: Player): InGameState? {
+        return controlledStates.find { it is InGameState && it.players().contains(player) } as? InGameState?
+    }
 }
