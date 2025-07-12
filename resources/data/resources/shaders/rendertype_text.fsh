@@ -11,6 +11,7 @@ in float cylindricalVertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
 in vec2 uv;
+in vec3 vPos;
 
 out vec4 fragColor;
 flat in int functionId;
@@ -30,6 +31,22 @@ flat in int arcSegment;
 
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
+
+    if (functionId == 2) {
+        vec3 gradientDirection = vec3(1, 1, 0);
+        float gradientScale = 0.5;
+        float scrollSpeed = 2.0;
+        float secondTimer = 1 - fract(GameTime * 1200);
+        float slowerTimer = 1 - fract(GameTime * 1200 * 0.5);
+        float timeOffset = secondTimer * scrollSpeed;
+        float projectedPos = dot(vPos, gradientDirection) * gradientScale + timeOffset;
+        float gradientFactor = fract(projectedPos);
+        vec4 colorA = vec4(0.0, 1.0, 1.0, 1.0); // Cyan
+        vec4 colorB = vec4(0.0, 1.0, 1.0, 0.0); // Transparent
+        fragColor = mix(mix(colorA, colorB, gradientFactor * 1.75), colorB, mix(0.0, 0.8, abs(slowerTimer * 2 - 1)));
+        return;
+    }
+
     if (color.a < 0.1) {
         discard;
     }

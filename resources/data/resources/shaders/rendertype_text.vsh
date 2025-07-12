@@ -19,11 +19,12 @@ out vec4 vertexColor;
 out vec2 texCoord0;
 
 out vec2 uv;
+out vec3 vPos;
 flat out int functionId;
 flat out int arcSegment;
 
 void main() {
-    vec3 vPos = Position;
+    vPos = Position;
     vec4 vColor = Color;
     ivec4 iColor = ivec4(round(Color * 255));
 

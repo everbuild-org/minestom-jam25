@@ -7,6 +7,7 @@ object TextShader {
 
     val COLOR_TRADE_TITLE: String = getColor(0)
     val RADIAL_MENU_LABEL: TextColor = TextColor.color(254, 254, 1)
+    val COLOR_FORCEFIELD: String = getColor(2)
 
     fun radialMenu(segment: Int, anim: Int): TextColor {
         assert(segment < 5)
