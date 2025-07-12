@@ -1,6 +1,7 @@
 plugins {
     id("buildsrc.convention.kotlin-jvm")
     alias(libs.plugins.kotlinPluginSerialization)
+    alias(libs.plugins.ktor)
 }
 
 dependencies {
@@ -12,6 +13,9 @@ dependencies {
     implementation(libs.minestom)
     implementation("org.xerial:sqlite-jdbc:3.50.1.0")
     implementation(project(":resources:data"))
+    implementation("io.ktor:ktor-client-core-jvm:3.2.1")
+    implementation(libs.bundles.ktor)
+    implementation("io.ktor:ktor-client-apache:3.2.1")
     testImplementation(kotlin("test"))
 }
 

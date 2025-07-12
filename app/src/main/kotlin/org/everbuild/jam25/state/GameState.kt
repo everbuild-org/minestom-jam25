@@ -6,8 +6,7 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventNode
 
-sealed interface GameState : Keyed {
+interface GameState : Keyed {
     fun events(): EventNode<out Event>
-    fun audience(): Audience
     fun players(): List<Player>
 }

@@ -1,61 +1,47 @@
 package org.everbuild.celestia.orion.platform.minestom.pack
 
-import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.HttpHandler
-import com.sun.net.httpserver.HttpServer
-import net.kyori.adventure.resource.ResourcePackInfo
-import net.kyori.adventure.resource.ResourcePackRequest
-import net.minestom.server.entity.Player
-import net.minestom.server.event.player.PlayerSpawnEvent
-import org.everbuild.celestia.orion.core.autoconfigure.SharedPropertyConfig
-import org.everbuild.celestia.orion.core.util.component
-import org.everbuild.celestia.orion.platform.minestom.api.Mc
-import org.everbuild.celestia.orion.platform.minestom.util.listen
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.origin
+import io.ktor.server.response.respondBytes
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
 import java.net.BindException
-import java.net.InetSocketAddress
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.Flow
 import java.util.concurrent.SubmissionPublisher
+import net.kyori.adventure.resource.ResourcePackInfo
+import net.kyori.adventure.resource.ResourcePackRequest
+import net.minestom.server.entity.Player
+import net.minestom.server.event.player.PlayerSpawnEvent
+import org.everbuild.celestia.orion.core.util.component
+import org.everbuild.celestia.orion.core.util.minimessage
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.celestia.orion.platform.minestom.api.utils.logger
+import org.everbuild.celestia.orion.platform.minestom.util.listen
 
 private fun withInternalServer(): String {
-    val server = HttpServer.create(InetSocketAddress(3013), 0)
-    server.createContext("/pack.zip", object : HttpHandler {
-        @Throws(IOException::class)
-        override fun handle(exchange: HttpExchange) {
-            javaClass.getResourceAsStream("/resources.zip").use { inputStream ->
-                if (inputStream == null) {
-                    val response = "File not found"
-                    exchange.sendResponseHeaders(404, response.toByteArray().size.toLong())
-                    exchange.responseBody.use { os ->
-                        os.write(response.toByteArray())
-                    }
-                    return
-                }
-                val fileBytes = inputStream.readAllBytes()
 
-                println("Load resource pack")
-
-                exchange.responseHeaders.add("Content-Type", "application/zip")
-                exchange.responseHeaders.add("Content-Disposition", "attachment; filename=\"pack.zip\"")
-                exchange.sendResponseHeaders(200, fileBytes.size.toLong())
-                exchange.responseBody.use { os ->
-                    os.write(fileBytes)
-                }
+    embeddedServer(Netty, port=3013, host="localhost") {
+        routing {
+            get("/pack.zip") {
+                logger.info("Received resource pack request from ${call.request.origin.remoteHost}")
+                call.respondBytes(
+                    bytes = javaClass.getResourceAsStream("/resources.zip")!!.readAllBytes(),
+                    contentType = io.ktor.http.ContentType.Application.Zip,
+                    status = io.ktor.http.HttpStatusCode.OK
+                )
             }
         }
-    })
+    }.start(wait = false)
 
-    server.executor = null
-    server.start()
-
-    return ":${server.address.port}/pack.zip"
+    return ":3013/pack.zip"
 }
 
 private fun withExternalServer(publisher: SubmissionPublisher<String>): String {
@@ -94,8 +80,7 @@ private fun withExternalServer(publisher: SubmissionPublisher<String>): String {
     return ":3013/pack.zip"
 }
 
-fun withResourcePacksIfInDev() {
-    if (SharedPropertyConfig.bcpEnabled) return
+fun withResourcePacksInDev() {
     val publisher = SubmissionPublisher<String>()
     val portAndPath = try {
         withInternalServer()
@@ -123,6 +108,8 @@ fun withResourcePacksIfInDev() {
             .uri(URI.create("http://$addr$portAndPath"))
             .hash(hash)
             .build()
+
+        println("Sending resource pack to ${player.username} (${player.uuid}) (${"http://$addr$portAndPath"})")
 
         player.sendResourcePacks(
             ResourcePackRequest.resourcePackRequest()
@@ -159,4 +146,27 @@ fun withResourcePacksIfInDev() {
         if (event.isFirstSpawn)
             sendPack(event.player)
     }
+}
+
+object ResourcePackApplicator
+
+fun withResourcePack(url: String) {
+    ResourcePackInfo.resourcePackInfo()
+        .id(UUID.randomUUID())
+        .uri(URI.create(url))
+        .computeHashAndBuild().thenAccept { info ->
+            ResourcePackApplicator.logger.info("Loaded resource pack hash: ${info.hash()}")
+
+            listen<PlayerSpawnEvent> { event ->
+                if (!event.isFirstSpawn) return@listen
+
+                event.player.sendResourcePacks(
+                    ResourcePackRequest.resourcePackRequest()
+                        .packs(info)
+                        .required(true)
+                        .replace(true)
+                        .prompt("<yellow>This game requires a resource pack. Click 'Accept' to continue".minimessage())
+                )
+            }
+        }
 }

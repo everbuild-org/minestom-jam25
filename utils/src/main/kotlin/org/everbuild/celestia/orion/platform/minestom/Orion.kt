@@ -13,7 +13,6 @@ import org.everbuild.celestia.orion.platform.minestom.chat.registerChatListeners
 import org.everbuild.celestia.orion.platform.minestom.command.*
 import org.everbuild.celestia.orion.platform.minestom.initializer.registerPlayerInitializer
 import org.everbuild.celestia.orion.platform.minestom.luckperms.MinestomLuckPermsProvider
-import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksIfInDev
 import org.everbuild.celestia.orion.platform.minestom.platform.MinestomOrionPlatform
 import org.everbuild.celestia.orion.platform.minestom.scoreboard.MinestomScoreboardTablistController
 import org.slf4j.LoggerFactory
@@ -65,7 +64,6 @@ abstract class OrionServer(private vararg val deps: OrionDependency) : OrionCore
         registerChatListeners(chat)
 
         online = true
-        withResourcePacksIfInDev()
         server.autoBind()
     }
 }

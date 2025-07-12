@@ -48,8 +48,4 @@ fun registerChatListeners(chat: BufferedChat) {
             cachedTex[event.player.uuid] = event.player.orion.takeLuckPermsSnapshot()
         }
     }
-
-    listen<PlayerDisconnectEvent> { event ->
-        chat.send(ChatMessage.quit(event.player.orion, cachedTex.remove(event.player.uuid)))
-    }
 }

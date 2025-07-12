@@ -1,10 +1,17 @@
 package org.everbuild.jam25
 
+import net.minestom.server.extras.velocity.VelocityProxy
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
+import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
+import org.everbuild.jam25.commands.SetAllowPlayingCommand
 import org.everbuild.jam25.state.GameStateController
 
-class Jam : OrionServer() {
+object Jam : OrionServer() {
+    const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
+    const val PREFIX = "<gradient:#FFAA00:#FF5555>BD ✧</gradient>"
+
     val gameStates = GameStateController()
 
     init {
@@ -13,14 +20,19 @@ class Jam : OrionServer() {
             .addChild(PingResponder.eventNode())
 
         TabListController.schedule()
-    }
 
-    companion object {
-        const val NAME = "Game Name"
+        if (JamConfig.velocityEnable) {
+            VelocityProxy.enable(JamConfig.velocitySecret)
+            withResourcePack(JamConfig.resourcePackUri)
+        } else {
+            withResourcePacksInDev()
+        }
+
+        SetAllowPlayingCommand.register()
     }
 }
 
 
 fun main() {
-    Jam().bind()
+    Jam.bind()
 }

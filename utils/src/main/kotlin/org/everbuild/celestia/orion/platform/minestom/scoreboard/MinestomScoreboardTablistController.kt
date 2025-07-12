@@ -14,6 +14,7 @@ import org.everbuild.celestia.orion.platform.minestom.luckperms.lp
 import org.everbuild.celestia.orion.platform.minestom.util.orion
 import java.util.regex.Pattern
 import net.minestom.server.component.DataComponents
+import org.everbuild.celestia.orion.core.util.minimessage
 
 object MinestomScoreboardTablistController {
     private val teamManager = MinecraftServer.getTeamManager()
@@ -21,16 +22,17 @@ object MinestomScoreboardTablistController {
 
     private fun updateTabList(player: Player) {
         val lpWrapper = player.lp()
-        val expectedTeamName = String.format("%04d", 9999 - lpWrapper.permissionsWeight) + player.username
+        val extraPrefix = tabListExtras.get(player) ?: ""
+        val expectedTeamName = String.format("%04d", 9999 - lpWrapper.permissionsWeight) + extraPrefix + player.username
         var team = teamManager.getTeam(expectedTeamName)
         if (team == null) team = teamManager.createTeam(expectedTeamName)
-        team.prefix = lpWrapper.permissionsPrefix.component()
+        team.prefix = extraPrefix.minimessage().append(lpWrapper.permissionsPrefix.component())
         team.suffix = scoreBoardCallback.getExtra(player.orion)
         team.teamColor = getLastEffectiveColor(lpWrapper.permissionsPrefix)
         team.sendUpdatePacket()
 
         player.displayName =
-            (lpWrapper.permissionsPrefix + player.username).component()
+            extraPrefix.minimessage().append((lpWrapper.permissionsPrefix + player.username).component())
                 .append(scoreBoardCallback.getExtra(player.orion))
         player[DataComponents.CUSTOM_NAME] = player.displayName as Component
         player.isCustomNameVisible = true

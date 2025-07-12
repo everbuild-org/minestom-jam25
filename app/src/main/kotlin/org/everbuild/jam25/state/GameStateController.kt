@@ -4,11 +4,15 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.state.ingame.InGameState
+import org.everbuild.jam25.state.lobby.LobbyGameState
+import org.everbuild.jam25.state.lobby.LobbyGroup
 
 class GameStateController {
     private var controlledStates = mutableListOf<GameState>()
     private val lobbyState = LobbyGameState()
     private val node = EventNode.all("game-state-controller")
+        .addChild(lobbyState.events())
         .listen<AsyncPlayerConfigurationEvent, _> {
             addPlayer(it)
         }
@@ -25,4 +29,11 @@ class GameStateController {
     }
 
     fun eventNode() = node
+
+    fun transitionIntoPlay(group: LobbyGroup) {
+        lobbyState.remove(group)
+        val inGameState = InGameState(group)
+        controlledStates.add(inGameState)
+        node.addChild(inGameState.events())
+    }
 }
