@@ -5,6 +5,7 @@ import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
+import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.command.GiveCommand
 import org.everbuild.jam25.command.QuickStartCommand
 import org.everbuild.jam25.command.SetAllowPlayingCommand
@@ -22,9 +23,11 @@ object Jam : OrionServer() {
         Mc.globalEvent
             .addChild(gameStates.eventNode())
             .addChild(PingResponder.eventNode())
+            .addChild(BlockController.eventNode())
 
         withCustomItemListeners()
         ItemLoader.withCustomItemSupport()
+
         TabListController.schedule()
 
         if (JamConfig.velocityEnable) {

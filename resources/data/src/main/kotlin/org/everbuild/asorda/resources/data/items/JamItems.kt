@@ -15,11 +15,21 @@ object JamItems : ContentList("jam") {
         val hammer = item(4, 0)
     }
 
+    private val pipeTexture = Texture("jam/pipe")
+
     val bioScraps = defaultModelItem("bio_scraps", ItemSprites.bioScraps)
     val cableComponent = defaultModelItem("cable_component", ItemSprites.cableComponent)
     val digitalComponent = defaultModelItem("digital_component", ItemSprites.digitalComponent)
     val metalScraps = defaultModelItem("metal_scraps", ItemSprites.metalScraps)
     val hammer = defaultModelItem("hammer", ItemSprites.hammer)
+    val pipeItem = createItem("pipeItem") {
+        model(createModel {
+            parent(includeModel("jam/pipe_hand"))
+            textures(
+                "0" to pipeTexture
+            )
+        })
+    }
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {
