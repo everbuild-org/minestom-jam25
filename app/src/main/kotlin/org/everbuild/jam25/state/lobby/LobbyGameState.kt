@@ -82,6 +82,10 @@ class LobbyGameState : GameState {
         grp.startGame()
     }
 
+    fun getLobby(player: Player): LobbyGroup? {
+        return groups.firstOrNull { it.containsPlayer(player) }
+    }
+
     companion object {
         const val MIN_PLAYERS_PER_INSTANCE = 2
         const val PLAYERS_PER_INSTANCE_SLOW_START = 4

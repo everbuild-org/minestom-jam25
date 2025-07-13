@@ -4,7 +4,7 @@
         "model_format": "bedrock",
         "box_uv": true
     },
-    "name": "pipe_plate_down.geo",
+    "name": "pipe_plate_up.geo",
     "model_identifier": "",
     "visible_box": [
         3,
@@ -22,7 +22,7 @@
     },
     "elements": [
         {
-            "name": "conn_east",
+            "name": "plate_up",
             "box_uv": true,
             "rescale": false,
             "locked": false,
@@ -30,14 +30,14 @@
             "render_order": "default",
             "allow_mirror_modeling": true,
             "from": [
-                0,
-                4,
-                -4
+                -8.01,
+                3,
+                -5
             ],
             "to": [
-                8,
-                12,
-                4
+                -6.01,
+                13,
+                5
             ],
             "autouv": 0,
             "color": 9,
@@ -51,64 +51,68 @@
                 8,
                 0
             ],
+            "uv_offset": [
+                2,
+                18
+            ],
             "faces": {
                 "north": {
                     "uv": [
-                        8,
-                        8,
-                        16,
-                        16
+                        12,
+                        28,
+                        14,
+                        38
                     ],
                     "texture": 0
                 },
                 "east": {
                     "uv": [
-                        0,
-                        8,
-                        8,
-                        16
+                        2,
+                        28,
+                        12,
+                        38
                     ],
                     "texture": 0
                 },
                 "south": {
                     "uv": [
                         24,
-                        8,
-                        32,
-                        16
+                        28,
+                        26,
+                        38
                     ],
                     "texture": 0
                 },
                 "west": {
                     "uv": [
-                        16,
-                        8,
+                        14,
+                        28,
                         24,
-                        16
+                        38
                     ],
                     "texture": 0
                 },
                 "up": {
                     "uv": [
-                        16,
-                        8,
-                        8,
-                        0
+                        14,
+                        28,
+                        12,
+                        18
                     ],
                     "texture": 0
                 },
                 "down": {
                     "uv": [
-                        24,
-                        0,
                         16,
-                        8
+                        18,
+                        14,
+                        28
                     ],
                     "texture": 0
                 }
             },
             "type": "cube",
-            "uuid": "173a6c8a-1842-9095-01ff-3e76995880e4"
+            "uuid": "baf20952-8e0d-0917-afea-e7d196e94f01"
         }
     ],
     "outliner": [
@@ -120,14 +124,14 @@
                 0
             ],
             "color": 0,
-            "uuid": "afab87f8-6999-4824-ad33-db24550146a5",
+            "uuid": "68cca2e7-8c0c-467f-b90b-6a699d7b947e",
             "export": true,
             "isOpen": true,
             "locked": false,
             "visibility": true,
             "autouv": 0,
             "children": [
-                "173a6c8a-1842-9095-01ff-3e76995880e4"
+                "baf20952-8e0d-0917-afea-e7d196e94f01"
             ]
         }
     ],

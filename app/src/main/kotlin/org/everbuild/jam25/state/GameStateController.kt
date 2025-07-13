@@ -45,4 +45,8 @@ class GameStateController {
     fun getInGamePhase(player: Player): InGameState? {
         return controlledStates.find { it is InGameState && it.players().contains(player) } as? InGameState?
     }
+
+    fun getLobby(player: Player): LobbyGroup? {
+        return lobbyState.getLobby(player)
+    }
 }

@@ -1,5 +1,6 @@
 package org.everbuild.jam25.block.impl.pipe
 
+import java.util.Objects
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.nbt.BinaryTagTypes
 import net.kyori.adventure.nbt.CompoundBinaryTag
@@ -17,7 +18,7 @@ import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.block.api.CustomBlock
 
 object PipeBlock : CustomBlock {
-    val entities = hashMapOf<Instance, HashMap<BlockVec, MutableSet<Entity>>>()
+    val entities = hashMapOf<Instance, HashMap<Long, MutableSet<Entity>>>()
     val state = Tag.NBT("state")
 
     init {
@@ -47,14 +48,13 @@ object PipeBlock : CustomBlock {
         player: Player?
     ) {
         instance.setBlock(position, Block.AIR)
-        entities[instance]?.remove(position)?.forEach { it.remove() }
+        entities[instance]?.remove(position.asId())?.also { println(it) }?.forEach { it.remove() }
     }
 
     override fun update(
         instance: Instance,
         position: BlockVec
     ) {
-        println("Updating $position")
         val connectingTo = BlockFace.entries
             .filter { dir -> shouldConnect(
                 instance.getBlock(position.relative(dir)),
@@ -81,25 +81,22 @@ object PipeBlock : CustomBlock {
             return
         }
 
-        val entities = entities.getOrPut(instance) { hashMapOf() }.getOrPut(position) { hashSetOf() }
-        entities.forEach { it.remove() }
+        val entitiesPerPos = entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) { hashSetOf() }
+        entitiesPerPos.forEach { it.remove() }
+        entitiesPerPos.clear()
 
         state.connectedTo.forEach { (face, type) ->
             if (type == BlockStateType.END) {
-                entities.add(PipePartEntity("plate", face))
+                entitiesPerPos.add(PipePartEntity("plate", face))
             }
-            entities.add(PipePartEntity("conn", face))
+            entitiesPerPos.add(PipePartEntity("conn", face))
         }
 
-        if (state.connectedTo.size != 2 || state.connectedTo.all { v -> state.connectedTo.any { it.first == v.first.oppositeFace }}) {
-            entities.add(PipePartEntity("middle", null))
+        if (state.connectedTo.size != 2 || state.connectedTo.any { v -> !state.connectedTo.any { it.first == v.first.oppositeFace }}) {
+            entitiesPerPos.add(PipePartEntity("middle", null))
         }
 
-        entities.forEach { it.setInstance(instance, position) }
-        entities.forEach {
-            println("Placed entity ${it.entityType} at ${it.position}")
-        }
-
+        entitiesPerPos.forEach { it.setInstance(instance, position) }
 //        BlockController.updateAround(instance, position)
     }
 
@@ -139,4 +136,6 @@ object PipeBlock : CustomBlock {
             }
         }
     }
+
+    fun BlockVec.asId(): Long = Objects.hash(x, y, z).toLong()
 }
