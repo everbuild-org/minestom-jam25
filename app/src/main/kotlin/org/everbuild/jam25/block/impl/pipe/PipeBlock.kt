@@ -141,5 +141,5 @@ object PipeBlock : CustomBlock {
         }
     }
 
-    fun BlockVec.asId(): Long = Objects.hash(x, y, z).toLong()
+    fun BlockVec.asId(): Long = x.toLong() and 0x7FFFFFF or (z.toLong() and 0x7FFFFFF shl 27) or (y.toLong() shl 54)
 }
