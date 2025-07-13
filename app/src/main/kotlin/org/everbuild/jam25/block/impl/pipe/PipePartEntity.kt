@@ -3,12 +3,15 @@ package org.everbuild.jam25.block.impl.pipe
 import net.minestom.server.entity.EntityCreature
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.Player
-import net.worldseed.multipart.animations.AnimationHandlerImpl
+import net.minestom.server.instance.block.BlockFace
 
 
-class PipePartEntity : EntityCreature(EntityType.ITEM_DISPLAY) {
-    val part = PipePart()
-    val animationHandler = AnimationHandlerImpl(part)
+class PipePartEntity(type: String, face: BlockFace?) : EntityCreature(EntityType.FROG) {
+    val part = PipePart(type, face)
+
+    init {
+        println("$type $face ${part.parts}")
+    }
 
     override fun updateNewViewer(player: Player) {
         super.updateNewViewer(player)
@@ -23,6 +26,5 @@ class PipePartEntity : EntityCreature(EntityType.ITEM_DISPLAY) {
     override fun remove() {
         super.remove()
         this.part.destroy()
-        this.animationHandler.destroy()
     }
 }

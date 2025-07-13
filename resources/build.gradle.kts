@@ -22,7 +22,9 @@ dependencies {
     implementation(libs.bundles.kotlinxEcosystem)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.creative)
+    implementation(libs.minestom)
     implementation(libs.bundles.utils)
+    implementation("org.zeroturnaround:zt-zip:1.15")
 }
 
 tasks.register("buildResources", JavaExec::class) {

@@ -1,14 +1,11 @@
 package org.everbuild.jam25.block.impl.pipe
 
-import net.minestom.server.coordinate.Pos
-import net.minestom.server.instance.Instance
+import net.minestom.server.instance.block.BlockFace
 import net.worldseed.multipart.GenericModelImpl
 
-class PipePart : GenericModelImpl() {
-    override fun getId(): String = "pipe.bbmodel"
-
-    override fun init(instance: Instance?, position: Pos) {
-        super.init(instance, position)
-        println(super.parts)
+class PipePart(val type: String, val face: BlockFace?) : GenericModelImpl() {
+    override fun getId(): String {
+        if (face == null) return "pipe_$type.geo.bbmodel"
+        return "pipe_${type}_${face.name.lowercase()}$.geo.bbmodel"
     }
 }

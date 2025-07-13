@@ -8,8 +8,8 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 
 interface CustomBlock : Keyed {
-    fun placeBlock(instance: Instance, position: BlockVec, player: Player)
-    fun breakBlock(instance: Instance, position: BlockVec, player: Player)
+    fun placeBlock(instance: Instance, position: BlockVec, player: Player?)
+    fun breakBlock(instance: Instance, position: BlockVec, player: Player?)
     fun update(instance: Instance, position: BlockVec)
 
     fun Block.withTypeTag(): Block {

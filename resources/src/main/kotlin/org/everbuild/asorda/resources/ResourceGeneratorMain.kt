@@ -31,6 +31,10 @@ import kotlinx.serialization.serializer
 import org.everbuild.asorda.resources.data.ResourceGenerator
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter
 import kotlin.time.Duration.Companion.milliseconds
+import org.everbuild.asorda.resources.ResourceGenerationService.Companion.resources
+import org.everbuild.asorda.resources.ResourceGenerationService.Companion.resourcesDir
+import org.everbuild.asorda.resources.ResourceGenerationService.Companion.zipDirectory
+import org.everbuild.asorda.resources.data.addWseeModels
 
 val service = ResourceGenerationService()
 
@@ -108,7 +112,10 @@ fun main(args: Array<String>) {
                 .prettyPrinting(true)
                 .targetPackFormat(46)
                 .build()
-                .writeToZipFile(ResourceGenerationService.resources, pack)
+                .writeToDirectory(resourcesDir, pack)
+            MinecraftResourcePackWriter.minecraft().writeToDirectory(resourcesDir, pack)
+            addWseeModels(resourcesDir)
+            zipDirectory(resourcesDir, resources)
             ResourceGenerationService.metadata.writeText(Json.encodeToString(meta))
 
             if (upload) {

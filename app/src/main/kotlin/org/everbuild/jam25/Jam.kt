@@ -1,6 +1,10 @@
 package org.everbuild.jam25
 
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.io.Reader
 import net.minestom.server.extras.velocity.VelocityProxy
+import net.worldseed.multipart.ModelEngine
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
@@ -13,6 +17,7 @@ import org.everbuild.jam25.item.api.ItemLoader
 import org.everbuild.jam25.item.api.withCustomItemListeners
 import org.everbuild.jam25.listener.setupPlayerDropEvent
 import org.everbuild.jam25.state.GameStateController
+
 
 object Jam : OrionServer() {
     const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
@@ -39,6 +44,10 @@ object Jam : OrionServer() {
         } else {
             withResourcePacksInDev()
         }
+
+        val models = extractToDir("models")
+        val mappingsData: Reader = InputStreamReader(Jam::class.java.getResourceAsStream("/model_mappings.json")!!)
+        ModelEngine.loadMappings(mappingsData, models)
 
         SetAllowPlayingCommand.register()
         QuickStartCommand.register()
