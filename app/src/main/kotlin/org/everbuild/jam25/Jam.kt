@@ -11,6 +11,7 @@ import org.everbuild.jam25.command.QuickStartCommand
 import org.everbuild.jam25.command.SetAllowPlayingCommand
 import org.everbuild.jam25.item.api.ItemLoader
 import org.everbuild.jam25.item.api.withCustomItemListeners
+import org.everbuild.jam25.listener.setupPlayerDropEvent
 import org.everbuild.jam25.state.GameStateController
 
 object Jam : OrionServer() {
@@ -27,6 +28,8 @@ object Jam : OrionServer() {
 
         withCustomItemListeners()
         ItemLoader.withCustomItemSupport()
+
+        setupPlayerDropEvent()
 
         TabListController.schedule()
 
