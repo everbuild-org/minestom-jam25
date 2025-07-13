@@ -2,11 +2,12 @@ import json
 import os
 import uuid
 
-def force_wrap_outliner_elements_bbmodel():
+def safe_wrap_outliner_elements_bbmodel():
     """
     Processes all .bbmodel files in the current working directory.
-    It wraps the elements from the 'outliner' list in a new dictionary
-    structure and updates the 'outliner' key, regardless of its current state.
+    It detects if the 'outliner' key has already been wrapped into the
+    '_all_model' structure and skips the file if it has. Otherwise,
+    it performs the wrapping conversion.
     """
     current_working_directory = os.getcwd()
     print(f"Searching for .bbmodel files in: {current_working_directory}")
@@ -22,6 +23,24 @@ def force_wrap_outliner_elements_bbmodel():
                 with open(file_path, 'r+', encoding='utf-8') as f:
                     data = json.load(f)
 
+                    # --- Detection Logic: Check if it's already converted ---
+                    is_already_converted = False
+                    if (
+                        "outliner" in data and
+                        isinstance(data["outliner"], list) and
+                        len(data["outliner"]) == 1 and
+                        isinstance(data["outliner"][0], dict) and
+                        data["outliner"][0].get("name") == "_all_model" and
+                        "children" in data["outliner"][0]
+                    ):
+                        is_already_converted = True
+
+                    if is_already_converted:
+                        print(f"Skipping '{filename}': Already appears to be converted.")
+                        continue # Move to the next file
+                    # --- End Detection Logic ---
+
+                    # If not already converted, proceed with the conversion
                     if "outliner" in data and isinstance(data["outliner"], list):
                         original_outliner_elements = data["outliner"]
 
@@ -48,7 +67,7 @@ def force_wrap_outliner_elements_bbmodel():
                         f.truncate() # Truncate any remaining old content if the new content is smaller
                         print(f"Successfully updated '{filename}'.")
                     else:
-                        print(f"Skipping '{filename}': 'outliner' key not found or is not a list.")
+                        print(f"Skipping '{filename}': 'outliner' key not found or is not a list (and not yet converted).")
 
             except json.JSONDecodeError:
                 print(f"Error: Could not decode JSON from '{filename}'. Skipping.")
@@ -61,6 +80,6 @@ def force_wrap_outliner_elements_bbmodel():
 
 # --- How to use the script ---
 if __name__ == "__main__":
-    print("\n--- Starting .bbmodel file conversion ---")
-    force_wrap_outliner_elements_bbmodel()
+    print("\n--- Starting .bbmodel file conversion (with detection) ---")
+    safe_wrap_outliner_elements_bbmodel()
     print("\n--- Conversion process finished. ---")

@@ -3,6 +3,8 @@ package org.everbuild.jam25
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.Reader
+import kotlin.io.path.exists
+import kotlin.io.path.listDirectoryEntries
 import net.minestom.server.extras.velocity.VelocityProxy
 import net.worldseed.multipart.ModelEngine
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
