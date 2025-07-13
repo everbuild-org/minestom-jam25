@@ -9,4 +9,5 @@ object CableComponentItem : AbstractItem(
     key = "cable_component",
     item = itemStackOf(JamItems.cableComponent)
         .name("<gold>Cable Component")
+        .withMaxStackSize(64)
 )

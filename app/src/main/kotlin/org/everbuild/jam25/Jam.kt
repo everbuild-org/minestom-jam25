@@ -5,12 +5,15 @@ import java.io.InputStreamReader
 import java.io.Reader
 import kotlin.io.path.exists
 import kotlin.io.path.listDirectoryEntries
+import net.minestom.server.entity.GameMode
+import net.minestom.server.event.player.PlayerSpawnEvent
 import net.minestom.server.extras.velocity.VelocityProxy
 import net.worldseed.multipart.ModelEngine
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
+import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.command.GiveCommand
 import org.everbuild.jam25.command.QuickStartCommand
@@ -45,6 +48,10 @@ object Jam : OrionServer() {
             withResourcePack(JamConfig.resourcePackUri)
         } else {
             withResourcePacksInDev()
+        }
+
+        listen<PlayerSpawnEvent> { event ->
+            event.player.gameMode = GameMode.ADVENTURE
         }
 
         val models = extractToDir("models")

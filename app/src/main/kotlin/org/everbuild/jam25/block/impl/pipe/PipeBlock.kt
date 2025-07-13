@@ -6,6 +6,7 @@ import net.kyori.adventure.nbt.BinaryTagTypes
 import net.kyori.adventure.nbt.CompoundBinaryTag
 import net.kyori.adventure.nbt.ListBinaryTag
 import net.minestom.server.coordinate.BlockVec
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.event.instance.InstanceUnregisterEvent
@@ -16,6 +17,8 @@ import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.block.api.CustomBlock
+import org.everbuild.jam25.item.impl.PipeBlockItem
+import org.everbuild.jam25.listener.dropItemOnFloor
 
 object PipeBlock : CustomBlock {
     val entities = hashMapOf<Instance, HashMap<Long, MutableSet<Entity>>>()
@@ -48,7 +51,8 @@ object PipeBlock : CustomBlock {
         player: Player?
     ) {
         instance.setBlock(position, Block.AIR)
-        entities[instance]?.remove(position.asId())?.also { println(it) }?.forEach { it.remove() }
+        entities[instance]?.remove(position.asId())?.forEach { it.remove() }
+        dropItemOnFloor(Pos.fromPoint(position), PipeBlockItem.createItem(), instance)
     }
 
     override fun update(

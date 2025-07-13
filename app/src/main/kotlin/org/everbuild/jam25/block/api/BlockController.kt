@@ -6,6 +6,7 @@ import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventNode
+import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
@@ -61,6 +62,12 @@ object BlockController {
                 targetBlock.breakBlock(event.player.instance!!, event.blockPosition, event.player)
                 updateAround(event.player.instance!!, event.blockPosition)
                 event.player.swingMainHand()
+            }
+            .listen<PlayerBlockBreakEvent, _> { event ->
+                val targetType = event.block.getTag(typeTag) ?: return@listen
+                val targetBlock = getBlockImpl(Key.key(targetType)) ?: return@listen
+                targetBlock.breakBlock(event.player.instance!!, event.blockPosition, event.player)
+                updateAround(event.player.instance!!, event.blockPosition)
             }
     }
 

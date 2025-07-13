@@ -12,4 +12,5 @@ object PipeBlockItem : AbstractItem(
     item = itemStackOf(JamItems.pipeItem)
         .name("<color:#ff983d>Item & Fluid Pipe")
         .attachCustomBlock(PipeBlock)
+        .withMaxStackSize(64)
 )

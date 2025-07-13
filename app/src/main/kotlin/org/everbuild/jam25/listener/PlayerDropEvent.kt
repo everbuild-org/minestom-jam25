@@ -14,6 +14,8 @@ import org.everbuild.celestia.orion.platform.minestom.api.utils.eyePosition
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
+import net.minestom.server.coordinate.Vec
 
 fun setupPlayerDropEvent() {
     listen<ItemDropEvent> {
@@ -55,4 +57,17 @@ fun dropItem(playerPosition: Pos, itemStack: ItemStack, instance: Instance) {
     itemEntity.setPickupDelay(2, TimeUnit.SECOND)
 
     itemEntity.scheduleRemove(5, TimeUnit.MINUTE)
+}
+
+
+fun dropItemOnFloor(position: Pos, itemStack: ItemStack, instance: Instance) {
+    val entity = ItemEntity(itemStack)
+    entity.setPickupDelay(1, TimeUnit.SECOND) // 1s for natural drop
+    entity.scheduleRemove(5, TimeUnit.MINUTE)
+    entity.velocity = Vec(
+        Random.nextDouble() * 2 - 1,
+        2.0,
+        Random.nextDouble() * 2 - 1
+    )
+    entity.setInstance(instance, position.add(0.5, 0.5, 0.5))
 }
