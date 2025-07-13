@@ -12,14 +12,14 @@ object WorldDebugger : Debugger {
     fun shoot(player: Player) {
         val phase = Jam.gameStates.getInGamePhase(player) ?: return
         val instance = phase.world.instance
-        phase.teamOf(player)?.poi?.turret?.consumeEvent(instance, TurretEvent.Fire)
+//        phase.teamOf(player)?.poi?.turret?.consumeEvent(instance, TurretEvent.Fire)
     }
 
     @Debuggable
     fun progress(player: Player) {
         val phase = Jam.gameStates.getInGamePhase(player) ?: return
         val instance = phase.world.instance
-        phase.teamOf(player)?.poi?.turret?.consumeEvent(instance, TurretEvent.Progress)
+//        phase.teamOf(player)?.poi?.turret?.consumeEvent(instance, TurretEvent.Progress)
     }
 }
 

@@ -50,7 +50,7 @@ class LobbyGroup {
 
     fun getStartOffsetTime(): Duration {
         return if (players.size >= LobbyGameState.PLAYERS_PER_INSTANCE) {
-            0.seconds
+            5.seconds
         } else if (players.size >= LobbyGameState.PLAYERS_PER_INSTANCE_SLOW_START) {
             10.seconds
         } else {

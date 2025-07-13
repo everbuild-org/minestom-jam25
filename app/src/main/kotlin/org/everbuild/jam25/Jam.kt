@@ -34,7 +34,7 @@ object Jam : OrionServer() {
         TabListController.schedule()
 
         if (JamConfig.velocityEnable) {
-            VelocityProxy.enable(JamConfig.velocitySecret)
+            VelocityProxy.enable(System.getenv("VELOCITY_SECRET"))
             withResourcePack(JamConfig.resourcePackUri)
         } else {
             withResourcePacksInDev()

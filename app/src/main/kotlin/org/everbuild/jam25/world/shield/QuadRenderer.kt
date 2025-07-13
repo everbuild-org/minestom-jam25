@@ -16,6 +16,7 @@ class QuadRenderer(
     val vertices: List<Vector3f>,
 ) : AutoCloseable {
     val entity = Entity(EntityType.TEXT_DISPLAY)
+    val spawn = Pos(6.0, 11.25, 67.0)
 
     init {
         entity.editEntityMeta(TextDisplayMeta::class.java) { meta ->
@@ -24,6 +25,9 @@ class QuadRenderer(
             meta.backgroundColor = 0xFE0000
 
             val stack = MatrixStack()
+
+            stack.translate(-spawn.x.toFloat(), -spawn.y.toFloat(), -spawn.z.toFloat())
+
             applyToVertices(stack)
 
             // correct for origin
@@ -37,7 +41,7 @@ class QuadRenderer(
 
         entity.setNoGravity(true)
 
-        entity.setInstance(instance, Pos(0.0, 0.0, 0.0))
+        entity.setInstance(instance, spawn)
     }
 
     fun applyToVertices(stack: MatrixStack) {

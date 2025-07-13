@@ -65,6 +65,7 @@ object MinestomLuckPermsProvider {
         addAdminUser("TheNico24", "2aadcbff-f4a6-4ccf-b4e6-4823ca513bf6")
         addAdminUser("_CreepyX_", "18f76a31-eac0-4cad-9a3e-ef0b498a38a5")
         addAdminUser("wi1helm", "dbb8ea69-212f-490b-a263-c718b49949b8")
+        addAdminUser("p3sto", "3f7db8d7-7537-4ff8-87c1-b3c9e110b03f")
 
         luckperms = LuckPermsMinestom.builder(directory)
             .commandRegistry(CommandRegistry.minestom())

@@ -28,7 +28,7 @@ import org.everbuild.celestia.orion.platform.minestom.util.listen
 
 private fun withInternalServer(): String {
 
-    embeddedServer(Netty, port=3013, host="localhost") {
+    embeddedServer(Netty, port=3013, host="0.0.0.0") {
         routing {
             get("/pack.zip") {
                 logger.info("Received resource pack request from ${call.request.origin.remoteHost}")

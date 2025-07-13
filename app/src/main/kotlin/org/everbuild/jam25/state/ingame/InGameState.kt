@@ -60,8 +60,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
         teamRed.setInstance(world.instance, teamRed.poi.spawn)
         teamBlue.setInstance(world.instance, teamBlue.poi.spawn)
 
-        advanceable.add(teamRed.poi.turret)
-        advanceable.add(teamBlue.poi.turret)
+//        advanceable.add(teamRed.poi.turret)
+//        advanceable.add(teamBlue.poi.turret)
 
         val jobs = mutableListOf<CompletableFuture<*>>()
         for (x in -10..10) {
@@ -71,11 +71,14 @@ class InGameState(lobby: LobbyGroup) : GameState {
         }
         CompletableFuture.allOf(*jobs.toTypedArray()).join()
 
-        background {
-            teams.map { it.poi }.forEach {
-                it.turret.spawn(world.instance)
-            }
-        }
+//        background {
+//            teams.map { it.poi }.forEach {
+//                it.turret.spawn(world.instance)
+//            }
+//        }
+
+        teams.forEach { it.spawnShield(world.instance) }
+
     }
 
     fun teamOf(player: Player): GameTeam? = teams.find { it.players.contains(player) }

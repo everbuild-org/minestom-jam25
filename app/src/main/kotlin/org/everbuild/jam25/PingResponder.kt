@@ -26,7 +26,7 @@ object PingResponder {
     fun eventNode(): EventNode<Event> = EventNode.all("ping")
         .listen<ServerListPingEvent, _> { event ->
             event.status = Status.builder()
-                .description("<gradient:#FFAA00:#FF5555><bold>✧ Asorda Jam Entry ✧</bold></gradient> \n<white>Wi1helm</white> <b>|</b> <white>_CreepyX_</white> <b>|</b> <white>TheNico24</white> <b>|</b> <white>Bloeckchengrafik</white>".minimessage())
+                .description("<gradient:#FFAA00:#FF5555><bold>✧ Asorda Jam Entry ✧</bold></gradient> \n<white>Wi1helm</white> <b>|</b> <white>p3sto</white> <b>|</b> <white>Team Asorda</white>".minimessage())
                 .favicon(favicon)
                 .build()
         }
