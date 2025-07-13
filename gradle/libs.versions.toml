@@ -17,6 +17,7 @@ bimap = "1.1.0"
 creative = "1.8.4-everbuild-R2-SNAPSHOT"
 reflections = "0.10.2"
 configurate = "3.7.1"
+commons-compress = "1.27.1"
 
 luckperms-minestom = "5.4-SNAPSHOT"
 luckperms-api = "5.4-SNAPSHOT"
@@ -58,6 +59,8 @@ ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor-vers
 ktorServerSse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor-version" }
 ktorServerNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
 ktorServerConfigYaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
+
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
 
 creativeApi = { module = "team.unnamed:creative-api", version.ref = "creative" }
 creativeMinecraft = { module = "team.unnamed:creative-serializer-minecraft", version.ref = "creative" }

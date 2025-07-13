@@ -3,10 +3,12 @@ plugins {
     id("com.gradleup.shadow") version "9.0.0-rc1"
 
     application
+    alias(libs.plugins.kotlinPluginSerialization)
 }
 
 dependencies {
     implementation(project(":utils"))
+    implementation(project(":kotlinx-serialization-nbt"))
     implementation(project(":resources:data"))
     implementation(libs.bundles.kotlinxEcosystem)
     implementation(libs.bundles.adventure)
