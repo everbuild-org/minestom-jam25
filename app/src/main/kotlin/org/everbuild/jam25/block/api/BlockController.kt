@@ -7,12 +7,12 @@ import net.minestom.server.entity.GameMode
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerBlockInteractEvent
-import net.minestom.server.event.player.PlayerStartDiggingEvent
 import net.minestom.server.instance.Instance
+import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
-import org.everbuild.jam25.block.impl.PipeBlock
+import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.item.api.get
 import org.everbuild.jam25.item.api.has
 import org.everbuild.jam25.item.api.with
@@ -30,6 +30,11 @@ object BlockController {
     fun hasBlock(key: Key): Boolean = blocks.find { it.key() == key } != null
     fun hasBlock(itemStack: ItemStack, key: Key): Boolean = itemStack.has<BlockItemComponent>() && itemStack.get<BlockItemComponent>()?.customBlock == key.asString()
     fun hasBlock(itemStack: ItemStack, block: CustomBlock): Boolean = itemStack.has<BlockItemComponent>() && itemStack.get<BlockItemComponent>()?.customBlock == block.key().asString()
+
+    fun getBlock(block: Block): CustomBlock? {
+        val blockType = block.getTag(typeTag) ?: return null
+        return getBlockImpl(Key.key(blockType))
+    }
 
     fun eventNode(): EventNode<Event> {
         return EventNode.all("block-controller")
