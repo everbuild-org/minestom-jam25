@@ -2,6 +2,7 @@ package org.everbuild.jam25.state.ingame
 
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
+import kotlin.time.Duration.Companion.seconds
 import net.kyori.adventure.key.Key
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
@@ -11,6 +12,7 @@ import net.minestom.server.event.EventNode
 import net.minestom.server.instance.LightingChunk
 import net.minestom.server.instance.block.Block
 import net.minestom.server.utils.chunk.ChunkSupplier
+import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
@@ -41,11 +43,15 @@ class InGameState(lobby: LobbyGroup) : GameState {
         players.contains(it.player)
     }
 
+    private val sendNukesCooldown = Cooldown(3.seconds)
+
     private val eventNode = EventNode.all("in-game/$id")
         .addChild(instanceEvents)
         .addChild(playerEvents)
         .listen<GlobalTickEvent, _> {
             advanceable.forEach { it.advance(world.instance) }
+            if (!sendNukesCooldown.get()) return@listen
+            teams.map(GameTeam::tryLaunch)
         }
 
     init {
