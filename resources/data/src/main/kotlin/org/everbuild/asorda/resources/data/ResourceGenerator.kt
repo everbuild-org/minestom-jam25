@@ -6,6 +6,7 @@ import kotlin.reflect.full.callSuspend
 import org.everbuild.asorda.resources.data.api.PackBuilder
 import org.everbuild.asorda.resources.data.api.lockfile.LockfileService
 import org.everbuild.asorda.resources.data.api.meta.ResourcePackMetadata
+import org.everbuild.asorda.resources.data.api.resource
 import team.unnamed.creative.ResourcePack
 
 object ResourceGenerator {
@@ -33,6 +34,8 @@ object ResourceGenerator {
         apply(::addModels)
         apply(::addBlocks)
         apply(::addShaders)
+
+        resourcePack.unknownFile("assets/minecraft/atlases/blocks.json", resource("blocksAtlas.json"))
 
         LockfileService.save()
         return Pair(resourcePack, metadata)

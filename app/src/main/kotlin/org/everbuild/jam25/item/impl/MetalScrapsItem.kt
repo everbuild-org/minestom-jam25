@@ -9,4 +9,5 @@ object MetalScrapsItem : AbstractItem(
     key = "metal_scraps",
     item = itemStackOf(JamItems.metalScraps)
         .name("<white>Metal Scraps")
+        .withMaxStackSize(64)
 )

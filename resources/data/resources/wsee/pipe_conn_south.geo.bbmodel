@@ -1,0 +1,194 @@
+{
+    "meta": {
+        "format_version": "4.10",
+        "model_format": "free",
+        "box_uv": true
+    },
+    "name": "pipe_conn_south.geo",
+    "model_identifier": "",
+    "visible_box": [
+        3,
+        2.5,
+        0.75
+    ],
+    "variable_placeholders": "",
+    "variable_placeholder_buttons": [],
+    "bedrock_animation_mode": "entity",
+    "timeline_setups": [],
+    "unhandled_root_fields": {},
+    "resolution": {
+        "width": 64,
+        "height": 64
+    },
+    "elements": [
+        {
+            "name": "conn_east",
+            "box_uv": true,
+            "rescale": false,
+            "locked": false,
+            "light_emission": 0,
+            "render_order": "default",
+            "allow_mirror_modeling": true,
+            "from": [
+                0,
+                4,
+                -4
+            ],
+            "to": [
+                8,
+                12,
+                4
+            ],
+            "autouv": 0,
+            "color": 9,
+            "rotation": [
+                0,
+                -90,
+                0
+            ],
+            "origin": [
+                0,
+                8,
+                0
+            ],
+            "faces": {
+                "north": {
+                    "uv": [
+                        8,
+                        8,
+                        16,
+                        16
+                    ],
+                    "texture": 0
+                },
+                "east": {
+                    "uv": [
+                        0,
+                        8,
+                        8,
+                        16
+                    ],
+                    "texture": 0
+                },
+                "south": {
+                    "uv": [
+                        24,
+                        8,
+                        32,
+                        16
+                    ],
+                    "texture": 0
+                },
+                "west": {
+                    "uv": [
+                        16,
+                        8,
+                        24,
+                        16
+                    ],
+                    "texture": 0
+                },
+                "up": {
+                    "uv": [
+                        16,
+                        8,
+                        8,
+                        0
+                    ],
+                    "texture": 0
+                },
+                "down": {
+                    "uv": [
+                        24,
+                        0,
+                        16,
+                        8
+                    ],
+                    "texture": 0
+                }
+            },
+            "type": "cube",
+            "uuid": "173a6c8a-1842-9095-01ff-3e76995880e4"
+        }
+    ],
+    "outliner": [
+        {
+            "name": "_all_model",
+            "origin": [
+                0,
+                0,
+                0
+            ],
+            "color": 0,
+            "uuid": "4c50540c-ac97-4abb-8e91-df09df404014",
+            "export": true,
+            "isOpen": true,
+            "locked": false,
+            "visibility": true,
+            "autouv": 0,
+            "children": [
+                "173a6c8a-1842-9095-01ff-3e76995880e4"
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "path": "/p/46_Art/Blockbench/pipe/texture.png",
+            "name": "texture.png",
+            "folder": "block",
+            "namespace": "",
+            "id": "0",
+            "group": "",
+            "width": 64,
+            "height": 64,
+            "uv_width": 64,
+            "uv_height": 64,
+            "particle": false,
+            "use_as_default": false,
+            "layers_enabled": false,
+            "sync_to_project": "",
+            "render_mode": "default",
+            "render_sides": "auto",
+            "pbr_channel": "color",
+            "frame_time": 1,
+            "frame_order_type": "loop",
+            "frame_order": "",
+            "frame_interpolate": false,
+            "visible": true,
+            "internal": true,
+            "saved": true,
+            "uuid": "f6462029-147f-4ea9-7407-79616e2e0936",
+            "relative_path": "../texture.png",
+            "source": "data:image/png;base64,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"
+        },
+        {
+            "path": "/home/chris/.minecraft/versions/1.21.4/1.21.4/assets/minecraft/textures/block/copper_block.png",
+            "name": "copper_block.png",
+            "folder": "",
+            "namespace": "",
+            "id": "1",
+            "group": "",
+            "width": 16,
+            "height": 16,
+            "uv_width": 64,
+            "uv_height": 64,
+            "particle": false,
+            "use_as_default": false,
+            "layers_enabled": false,
+            "sync_to_project": "",
+            "render_mode": "default",
+            "render_sides": "auto",
+            "pbr_channel": "color",
+            "frame_time": 1,
+            "frame_order_type": "loop",
+            "frame_order": "",
+            "frame_interpolate": false,
+            "visible": true,
+            "internal": true,
+            "saved": true,
+            "uuid": "93909761-391e-86f1-58bf-354ce04e19a7",
+            "relative_path": "../../../../../home/chris/.minecraft/versions/1.21.4/1.21.4/assets/minecraft/textures/block/copper_block.png",
+            "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAWdJREFUOE+FU01PwkAQnR5woQpYYsCkidHEgyf/kH/Bf+DNP8Uf4OCB4EUMCYokpkFJI19aqBwgb+tsp2sDc9nN7r43b2beOu/3txv6i0U8obLyCCsCeztwN4/X9LuMKJh8kwOCYD7W73CIOCi5eq2oQoYQZ+F0pu+myzV9fM1SAr9Sp8dhn+q16k7wReNcv0MYgrfPoWG8vjzLZIZcKLEzn9aqNBiNEwUgkLK5boBlaagZcVhUdFwqUGcQZHuATLvAi2hFZbdIvnekFRsFaKJsWF5mG4xEhkCObx+YJ4BmP3T7SQk45PlyzZD4s4pJZpZg7A1BHhgPQIBAzRyy2a3u638jITODudt5YLi02WmnBHAhgxmAUdmyZbONAviAHQbZMjNIbXeyY00PpDXhMGRmNRIMNS+jUFv4yj9JjdTqPelu7wODgH8i9r0gJOf57maDWuAwkCCiOCZXKb02vORz6VFb9zjbAjzTWY8vG83jAAAAAElFTkSuQmCC"
+        }
+    ]
+}

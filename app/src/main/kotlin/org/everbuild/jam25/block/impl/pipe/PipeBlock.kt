@@ -1,9 +1,12 @@
 package org.everbuild.jam25.block.impl.pipe
 
-import kotlinx.serialization.Serializable
+import java.util.Objects
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.nbt.BinaryTagTypes
 import net.kyori.adventure.nbt.CompoundBinaryTag
+import net.kyori.adventure.nbt.ListBinaryTag
 import net.minestom.server.coordinate.BlockVec
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.event.instance.InstanceUnregisterEvent
@@ -14,10 +17,11 @@ import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.block.api.CustomBlock
-import org.everbuild.jam25.util.MinestomNBT
+import org.everbuild.jam25.item.impl.PipeBlockItem
+import org.everbuild.jam25.listener.dropItemOnFloor
 
 object PipeBlock : CustomBlock {
-    val entities = hashMapOf<Instance, HashMap<BlockVec, Set<Entity>>>()
+    val entities = hashMapOf<Instance, HashMap<Long, MutableSet<Entity>>>()
     val state = Tag.NBT("state")
 
     init {
@@ -31,11 +35,11 @@ object PipeBlock : CustomBlock {
     override fun placeBlock(
         instance: Instance,
         position: BlockVec,
-        player: Player
+        player: Player?
     ) {
         instance.setBlock(position, Block.BARRIER
             .withTypeTag()
-            .withTag(state, MinestomNBT.encodeToCompoundTag(BlockState.EMPTY))
+            .withTag(state, BlockState.EMPTY.toNBT())
         )
 
         update(instance, position)
@@ -44,10 +48,11 @@ object PipeBlock : CustomBlock {
     override fun breakBlock(
         instance: Instance,
         position: BlockVec,
-        player: Player
+        player: Player?
     ) {
         instance.setBlock(position, Block.AIR)
-        entities[instance]?.remove(position)?.forEach { it.remove() }
+        entities[instance]?.remove(position.asId())?.forEach { it.remove() }
+        dropItemOnFloor(Pos.fromPoint(position), PipeBlockItem.createItem(), instance)
     }
 
     override fun update(
@@ -71,21 +76,32 @@ object PipeBlock : CustomBlock {
             connectingTo.add(connectingTo.first().first.oppositeFace to BlockStateType.END)
         }
 
-        val oldState = MinestomNBT.decodeFromCompoundTag<BlockState>(
-            instance.getBlock(position).getTag(state) as? CompoundBinaryTag ?: return
-        )
-        val state = BlockState(connectingTo)
+        val oldState = BlockState.fromNBT(instance.getBlock(position).getTag(state) as? CompoundBinaryTag ?: return)
+        val state = BlockState(connectingTo.toList())
+
+        instance.setBlock(position, Block.BARRIER.withTypeTag().withTag(this.state, state.toNBT()))
 
         if (oldState == state) {
             return
         }
 
-        val entities = entities.getOrPut(instance) { hashMapOf() }.getOrPut(position) { hashSetOf() }
-        entities.forEach { it.remove() }
+        val entitiesPerPos = entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) { hashSetOf() }
+        entitiesPerPos.forEach { it.remove() }
+        entitiesPerPos.clear()
 
         state.connectedTo.forEach { (face, type) ->
-
+            if (type == BlockStateType.END) {
+                entitiesPerPos.add(PipePartEntity("plate", face))
+            }
+            entitiesPerPos.add(PipePartEntity("conn", face))
         }
+
+        if (state.connectedTo.size != 2 || state.connectedTo.any { v -> !state.connectedTo.any { it.first == v.first.oppositeFace }}) {
+            entitiesPerPos.add(PipePartEntity("middle", null))
+        }
+
+        entitiesPerPos.forEach { it.setInstance(instance, position) }
+//        BlockController.updateAround(instance, position)
     }
 
     fun shouldConnect(block: Block, face: BlockFace): Boolean {
@@ -97,11 +113,33 @@ object PipeBlock : CustomBlock {
         END
     }
 
-    @Serializable
-    data class BlockState(val connectedTo: Set<Pair<BlockFace, BlockStateType>>) {
+    data class BlockState(val connectedTo: List<Pair<BlockFace, BlockStateType>>) {
+
+        fun toNBT(): CompoundBinaryTag {
+            return CompoundBinaryTag.builder()
+                .put("connectedTo", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, connectedTo.map {
+                    CompoundBinaryTag.builder()
+                        .putString("face", it.first.name)
+                        .putString("type", it.second.name)
+                        .build()
+                }))
+                .build()
+        }
 
         companion object {
-            val EMPTY = BlockState(emptySet())
+            val EMPTY = BlockState(emptyList())
+
+            fun fromNBT(nbt: CompoundBinaryTag): BlockState {
+                return BlockState(nbt.getList("connectedTo").map {
+                    val nbtPair = it as CompoundBinaryTag
+                    Pair(
+                        BlockFace.valueOf(nbtPair.getString("face")),
+                        BlockStateType.valueOf(nbtPair.getString("type"))
+                    )
+                })
+            }
         }
     }
+
+    fun BlockVec.asId(): Long = x.toLong() and 0x7FFFFFF or (z.toLong() and 0x7FFFFFF shl 27) or (y.toLong() shl 54)
 }

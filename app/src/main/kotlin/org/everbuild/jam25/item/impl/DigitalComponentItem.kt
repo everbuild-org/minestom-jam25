@@ -9,4 +9,5 @@ object DigitalComponentItem : AbstractItem(
     key = "digital_component",
     item = itemStackOf(JamItems.digitalComponent)
         .name("<gray>Digital Component")
+        .withMaxStackSize(64)
 )

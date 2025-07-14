@@ -9,4 +9,5 @@ object BioScrapsItem : AbstractItem(
     key = "bio_scraps",
     item = itemStackOf(JamItems.bioScraps)
         .name("<green>Bio Scraps")
+        .withMaxStackSize(64)
 )
