@@ -70,6 +70,7 @@ object BlockController {
                 event.player.swingMainHand()
             }
             .listen<PlayerBlockBreakEvent, _> { event ->
+                if (event.player.gameMode != GameMode.CREATIVE) return@listen
                 val targetType = event.block.getTag(typeTag) ?: return@listen
                 val targetBlock = getBlockImpl(Key.key(targetType)) ?: return@listen
                 targetBlock.breakBlock(event.player.instance!!, event.blockPosition, event.player)

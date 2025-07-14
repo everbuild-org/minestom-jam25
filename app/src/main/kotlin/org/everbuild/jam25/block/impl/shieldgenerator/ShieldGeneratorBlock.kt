@@ -27,10 +27,13 @@ object ShieldGeneratorBlock : CustomBlock {
             instance.setBlock(
                 it,
                 Block.BARRIER
-                    .withTypeTag()
-                    .withTag(state, BlockState.DEFAULT.toNBT())
             )
         }
+        instance.setBlock(
+            position, Block.BARRIER
+                .withTypeTag()
+                .withTag(state, BlockState.DEFAULT.toNBT())
+        )
         entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) {
             ShieldGeneratorEntity(BlockState.DEFAULT.running).also {
                 it.setInstance(instance, position)

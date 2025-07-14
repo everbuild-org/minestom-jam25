@@ -15,7 +15,7 @@ class ShieldGeneratorEntity(val running: Boolean) : EntityCreature(EntityType.IT
     var animationHandler: AnimationHandler? = null
 
     override fun setInstance(instance: Instance, spawnPosition: Pos): CompletableFuture<Void?>? {
-        modelEntity.init(instance, Pos.fromPoint(spawnPosition.plus(Pos(-0.5, 0.0, 0.5))))
+        modelEntity.init(instance, Pos.fromPoint(spawnPosition.plus(Pos(0.5, 0.0, 0.5))))
         animationHandler = AnimationHandlerImpl(modelEntity)
         animationHandler?.playRepeat(if (running) "running" else "idle")
 

@@ -50,7 +50,7 @@ object ImpulseBlock : CustomBlock {
     }
 
     override fun breakBlock(instance: Instance, position: BlockVec, player: Player?) {
-        instance.setBlock(position, Block.AIR)
+        instance.setBlock(position, Block.SLIME_BLOCK) // can't be broken
     }
 
     override fun update(instance: Instance, position: BlockVec) {
