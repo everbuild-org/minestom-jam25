@@ -49,5 +49,6 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
         spawnShield(instance)
         initOilBiome(instance)
         poi.map.setInstance(instance)
+        poi.shieldGenerator.setInstance(instance)
     }
 }
