@@ -17,7 +17,7 @@ object TabListController {
         for (player in Mc.connection.onlinePlayers) {
             player.sendPlayerListHeaderAndFooter(
                 "\n\n<gradient:#FFAA00:#FF5555><bold>${Jam.NAME}</bold></gradient>\n\n".minimessage(),
-                "\n<gradient:#FFAA00:#FF5555>✧ Asorda Jam Entry ✧</gradient> \n\n<gray>Wi1helm, _CreepyX_,\n<gray>     p3sto, TheNico24     \n<gray>Bloeckchengrafik\n".minimessage()
+                "\n<gradient:#FFAA00:#FF5555>✧ Asorda Jam Entry ✧</gradient> \n\n<gray>Wi1helm, _CreepyX_,\n<gray>     p3sto, TheNico24, justalittlewolf     \n<gray>Bloeckchengrafik\n".minimessage()
             )
         }
     }

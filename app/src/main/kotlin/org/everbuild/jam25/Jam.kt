@@ -38,7 +38,7 @@ object Jam : OrionServer() {
                     .fogColor(Color(0xC0D8FF))
                     .skyColor(Color(0x78A7FF))
                     .waterColor(Color(0x0f0f0f))
-                    .waterFogColor(Color(0x50533))
+                    .waterFogColor(Color(0x0f0f0f))
                     .build()
             )
             .build()

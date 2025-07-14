@@ -15,6 +15,14 @@ class MissileEntity(missileType: MissileType) : EntityCreature(EntityType.ITEM_D
         setNoGravity(true)
     }
 
+    override fun tick(time: Long) {
+        super.tick(time)
+        if (!this.isDead) {
+            model.position = this.position
+            model.setGlobalRotation(this.position.yaw.toDouble(), this.position.pitch.toDouble())
+        }
+    }
+
     override fun setInstance(instance: Instance, spawnPosition: Pos): CompletableFuture<Void?>? {
         model.init(instance, Pos.fromPoint(spawnPosition.plus(Pos(0.5, 0.0, 0.5))))
 

@@ -23,6 +23,7 @@ class QuadRenderer(
             meta.text = " ".minimessage()
             meta.viewRange = 100f
             meta.backgroundColor = 0xFE0000
+            meta.isSeeThrough = true
 
             val stack = MatrixStack()
 
