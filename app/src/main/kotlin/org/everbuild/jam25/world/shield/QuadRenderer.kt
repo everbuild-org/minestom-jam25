@@ -21,7 +21,7 @@ class QuadRenderer(
     init {
         entity.editEntityMeta(TextDisplayMeta::class.java) { meta ->
             meta.text = " ".minimessage()
-            meta.viewRange = 2f
+            meta.viewRange = 100f
             meta.backgroundColor = 0xFE0000
 
             val stack = MatrixStack()

@@ -2,26 +2,51 @@ package org.everbuild.jam25.world
 
 import net.minestom.server.coordinate.Pos
 import org.everbuild.jam25.world.shield.Shield
+import org.joml.Vector2i
 
 
 class GameWorld : ZippedWorld("map") {
+
     sealed class Poi(
         val spawn: Pos,
         val area: FlatArea,
-        val minY: Int = -75,
-        val maxY: Int = -40,
+        val minY: Int = -28,
+        val maxY: Int = 40,
         val mainShield: Shield,
+        val oilChunks: Polygon
     ) {
         class Red : Poi(
             spawn = Pos(12.5, -7.0, 1.5, 0f, 0f),
             area = FlatArea(-56, -64, 84, 41),
-            mainShield = redShield
+            mainShield = redShield,
+            oilChunks = Polygon(
+                Vector2i(35, 25),
+                Vector2i(65, 27),
+                Vector2i(77, -13),
+                Vector2i(57, -36),
+                Vector2i(52, -58),
+                Vector2i(13, -58),
+                Vector2i(5, -41),
+                Vector2i(8, -24),
+                Vector2i(28, -25),
+                Vector2i(33, -5)
+            )
         )
 
         class Blue : Poi(
             spawn = Pos(16.5, -7.00, 124.5, 180f, 0f),
             area = FlatArea(-30, -67, 55, 4),
-            mainShield = blueShield
+            mainShield = blueShield,
+            oilChunks = Polygon(
+                Vector2i(-9, 98),
+                Vector2i(-45, 105),
+                Vector2i(-49, 146),
+                Vector2i(-29, 160),
+                Vector2i(-27, 182),
+                Vector2i(22, 178),
+                Vector2i(22, 150),
+                Vector2i(-2, 148)
+            )
         )
     }
 

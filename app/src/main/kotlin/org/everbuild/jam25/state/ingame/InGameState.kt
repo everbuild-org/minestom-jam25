@@ -57,9 +57,6 @@ class InGameState(lobby: LobbyGroup) : GameState {
         teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE)
         teams = listOf(teamRed, teamBlue)
 
-        teamRed.setInstance(world.instance, teamRed.poi.spawn)
-        teamBlue.setInstance(world.instance, teamBlue.poi.spawn)
-
 //        advanceable.add(teamRed.poi.turret)
 //        advanceable.add(teamBlue.poi.turret)
 
@@ -77,8 +74,13 @@ class InGameState(lobby: LobbyGroup) : GameState {
 //            }
 //        }
 
-        teams.forEach { it.spawnShield(world.instance) }
+        teams.forEach {
+            it.spawnShield(world.instance)
+            it.initOilBiome(world.instance)
+        }
 
+        teamRed.setInstance(world.instance, teamRed.poi.spawn)
+        teamBlue.setInstance(world.instance, teamBlue.poi.spawn)
     }
 
     fun teamOf(player: Player): GameTeam? = teams.find { it.players.contains(player) }
