@@ -1,12 +1,10 @@
 package org.everbuild.jam25
 
-import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.Reader
-import kotlin.io.path.exists
-import kotlin.io.path.listDirectoryEntries
 import net.minestom.server.color.Color
 import net.minestom.server.entity.GameMode
+import net.minestom.server.entity.attribute.Attribute
 import net.minestom.server.event.player.PlayerSpawnEvent
 import net.minestom.server.extras.velocity.VelocityProxy
 import net.minestom.server.world.biome.Biome
@@ -39,7 +37,7 @@ object Jam : OrionServer() {
                 BiomeEffects.builder()
                     .fogColor(Color(0xC0D8FF))
                     .skyColor(Color(0x78A7FF))
-                    .waterColor(Color(0x000000))
+                    .waterColor(Color(0x0f0f0f))
                     .waterFogColor(Color(0x50533))
                     .build()
             )
@@ -68,7 +66,8 @@ object Jam : OrionServer() {
         }
 
         listen<PlayerSpawnEvent> { event ->
-            event.player.gameMode = GameMode.ADVENTURE
+            event.player.gameMode = GameMode.SURVIVAL
+            event.player.getAttribute(Attribute.BLOCK_BREAK_SPEED).baseValue = 0.0
         }
 
         val models = extractToDir("models")

@@ -16,9 +16,17 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 import net.minestom.server.coordinate.Vec
+import org.everbuild.celestia.orion.core.util.sendMiniMessageActionBar
+import org.everbuild.jam25.block.api.WrenchComponent
+import org.everbuild.jam25.item.api.has
 
 fun setupPlayerDropEvent() {
     listen<ItemDropEvent> {
+        if (it.itemStack.has<WrenchComponent>()) {
+            it.player.sendMiniMessageActionBar("<red>The Construction tool cannot be dropped!")
+            it.isCancelled = true
+            return@listen
+        }
         dropItem(it.player.eyePosition(), it.itemStack, it.instance)
     }
 
@@ -55,15 +63,12 @@ fun dropItem(playerPosition: Pos, itemStack: ItemStack, instance: Instance) {
         .withZ(z)
         .mul(20.0)
     itemEntity.setPickupDelay(2, TimeUnit.SECOND)
-
-    itemEntity.scheduleRemove(5, TimeUnit.MINUTE)
 }
 
 
 fun dropItemOnFloor(position: Pos, itemStack: ItemStack, instance: Instance) {
     val entity = ItemEntity(itemStack)
-    entity.setPickupDelay(1, TimeUnit.SECOND) // 1s for natural drop
-    entity.scheduleRemove(5, TimeUnit.MINUTE)
+    entity.setPickupDelay(500, TimeUnit.MILLISECOND)
     entity.velocity = Vec(
         Random.nextDouble() * 2 - 1,
         2.0,

@@ -47,6 +47,8 @@ object BlockController {
                 val block = getBlock(item) ?: return@listen
                 val bounds = BoundingBox(1.0, 1.0, 1.0)
                 if (bounds.intersectEntity(targetPos, event.player)) return@listen
+                val blockAtTargetPos = event.player.instance!!.getBlock(targetPos)
+                if (!blockAtTargetPos.isAir && !blockAtTargetPos.registry().isReplaceable) return@listen
 
                 block.placeBlock(event.player.instance!!, targetPos, event.player)
                 updateAround(event.player.instance!!, targetPos)

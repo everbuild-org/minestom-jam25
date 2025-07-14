@@ -8,6 +8,8 @@ import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.Jam
+import org.everbuild.jam25.item.impl.HammerItem
+import org.everbuild.jam25.item.impl.PipeBlockItem
 import org.everbuild.jam25.world.shield.ShieldRenderer
 
 class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup({ players.contains(it) }) {
@@ -15,8 +17,15 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
     var shield: ShieldRenderer? = null
 
     init {
+        val pipesAtStart = 32
+        val pipesPerPlayer = pipesAtStart / players.size.coerceAtLeast(1)
         players.forEach {
             tabListExtras[it] = type.short + " "
+            it.inventory.let { inventory ->
+                inventory.clear()
+                inventory.addItemStack(HammerItem.createItem())
+                inventory.addItemStack(PipeBlockItem.createNewStack(pipesPerPlayer))
+            }
         }
     }
 
