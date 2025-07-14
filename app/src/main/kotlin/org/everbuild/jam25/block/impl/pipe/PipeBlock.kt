@@ -1,6 +1,5 @@
 package org.everbuild.jam25.block.impl.pipe
 
-import java.util.Objects
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.nbt.BinaryTagTypes
 import net.kyori.adventure.nbt.CompoundBinaryTag
@@ -23,6 +22,7 @@ import org.everbuild.jam25.listener.dropItemOnFloor
 object PipeBlock : CustomBlock {
     val entities = hashMapOf<Instance, HashMap<Long, MutableSet<Entity>>>()
     val state = Tag.NBT("state")
+    val canConnectTag = Tag.Boolean("canConnectToPipe").defaultValue(false)
 
     init {
         listen<InstanceUnregisterEvent> {
@@ -105,7 +105,7 @@ object PipeBlock : CustomBlock {
     }
 
     fun shouldConnect(block: Block, face: BlockFace): Boolean {
-        return BlockController.getBlock(block) == PipeBlock
+        return BlockController.getBlock(block) == PipeBlock || block.getTag(canConnectTag)
     }
 
     enum class BlockStateType {

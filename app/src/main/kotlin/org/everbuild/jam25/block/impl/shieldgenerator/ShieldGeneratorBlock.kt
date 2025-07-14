@@ -10,6 +10,7 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.CustomBlock
+import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
 
 object ShieldGeneratorBlock : CustomBlock {
@@ -33,6 +34,10 @@ object ShieldGeneratorBlock : CustomBlock {
             position, Block.BARRIER
                 .withTypeTag()
                 .withTag(state, BlockState.DEFAULT.toNBT())
+        )
+        instance.setBlock(
+            position.add(0, 0, -1), Block.BARRIER
+                .withTag(PipeBlock.canConnectTag, true)
         )
         entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) {
             ShieldGeneratorEntity(BlockState.DEFAULT.running).also {
