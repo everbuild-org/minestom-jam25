@@ -16,6 +16,7 @@ import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.block.api.CustomBlock
+import org.everbuild.jam25.block.api.PlacementActor
 import org.everbuild.jam25.item.impl.PipeBlockItem
 import org.everbuild.jam25.listener.dropItemOnFloor
 
@@ -32,11 +33,7 @@ object PipeBlock : CustomBlock {
 
     override fun key(): Key = Key.key("jam", "pipe")
 
-    override fun placeBlock(
-        instance: Instance,
-        position: BlockVec,
-        player: Player?
-    ) {
+    override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         instance.setBlock(position, Block.BARRIER
             .withTypeTag()
             .withTag(state, BlockState.EMPTY.toNBT())
@@ -45,11 +42,7 @@ object PipeBlock : CustomBlock {
         update(instance, position)
     }
 
-    override fun breakBlock(
-        instance: Instance,
-        position: BlockVec,
-        player: Player?
-    ) {
+    override fun breakBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         instance.setBlock(position, Block.AIR)
         entities[instance]?.remove(position.asId())?.forEach { it.remove() }
         dropItemOnFloor(Pos.fromPoint(position), PipeBlockItem.createItem(), instance)

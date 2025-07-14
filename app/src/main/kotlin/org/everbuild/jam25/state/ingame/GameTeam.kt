@@ -5,8 +5,6 @@ import net.minestom.server.event.EventFilter
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerMoveEvent
 import net.minestom.server.instance.Instance
-import net.minestom.server.instance.InstanceContainer
-import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
@@ -15,9 +13,11 @@ import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.Jam
 import org.everbuild.jam25.item.impl.HammerItem
 import org.everbuild.jam25.item.impl.PipeBlockItem
+import org.everbuild.jam25.missile.MissileController
+import org.everbuild.jam25.missile.MissileControllerImpl
 import org.everbuild.jam25.world.shield.ShieldRenderer
 
-class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup({ players.contains(it) }) {
+class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup({ players.contains(it) }), MissileController by MissileControllerImpl() {
     val poi = type.poi()
     var shield: ShieldRenderer? = null
     val node = EventNode.type("game-team-$type", EventFilter.PLAYER) { _, player -> players.contains(player) }

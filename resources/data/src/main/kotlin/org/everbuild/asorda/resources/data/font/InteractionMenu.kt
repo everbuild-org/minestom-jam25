@@ -14,4 +14,6 @@ object InteractionMenu : ContentList("interaction_menu") {
 
     val defaultRadial = interactionOverlay("interaction_radial", "radial_menu")
     val toolTip = interactionOverlay("interaction_radial_tt", "radial_menu_tooltip")
+    val leftClick = interactionOverlay("leftclick_tt", "leftclick")
+    val rightClick = interactionOverlay("rightclick_tt", "rightclick")
 }

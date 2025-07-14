@@ -1,6 +1,7 @@
 package org.everbuild.jam25.item.api
 
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.text.Component
 import net.minestom.server.component.DataComponents
 import net.minestom.server.entity.Player
 import net.minestom.server.event.inventory.InventoryPreClickEvent
@@ -9,6 +10,7 @@ import net.minestom.server.event.player.PlayerUseItemEvent
 import net.minestom.server.event.player.PlayerUseItemOnBlockEvent
 import net.minestom.server.event.trait.BlockEvent
 import net.minestom.server.event.trait.CancellableEvent
+import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 import org.everbuild.jam25.util.toJamKey
@@ -47,4 +49,5 @@ abstract class AbstractItem(
     open fun onUseOnBlock(event: PlayerUseItemOnBlockEvent) {}
     open fun onHit(player: Player, event: BlockEvent, cancel: CancellableEvent) {}
     open fun getTags(): List<String> = emptyList()
+    open fun getPlacementHint(lookingAt: Block?): Component = Component.empty()
 }

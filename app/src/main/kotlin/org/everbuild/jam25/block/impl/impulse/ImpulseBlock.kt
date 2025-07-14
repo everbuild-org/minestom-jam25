@@ -10,6 +10,7 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.CustomBlock
+import org.everbuild.jam25.block.api.PlacementActor
 
 
 object ImpulseBlock : CustomBlock {
@@ -45,11 +46,11 @@ object ImpulseBlock : CustomBlock {
 
     override fun key(): Key = Block.SLIME_BLOCK.key()
 
-    override fun placeBlock(instance: Instance, position: BlockVec, player: Player?) {
+    override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         instance.setBlock(position, Block.SLIME_BLOCK)
     }
 
-    override fun breakBlock(instance: Instance, position: BlockVec, player: Player?) {
+    override fun breakBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         instance.setBlock(position, Block.SLIME_BLOCK) // can't be broken
     }
 

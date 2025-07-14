@@ -10,6 +10,7 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.CustomBlock
+import org.everbuild.jam25.block.api.PlacementActor
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
 
@@ -23,7 +24,7 @@ object ShieldGeneratorBlock : CustomBlock {
         }
     }
 
-    override fun placeBlock(instance: Instance, position: BlockVec, player: Player?) {
+    override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         forEachGeneratorPosition(position) {
             instance.setBlock(
                 it,
@@ -46,7 +47,7 @@ object ShieldGeneratorBlock : CustomBlock {
         }
     }
 
-    override fun breakBlock(instance: Instance, position: BlockVec, player: Player?) {
+    override fun breakBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
         entities[instance]?.remove(position.asId())?.remove()
         forEachGeneratorPosition(position) {
             instance.setBlock(it, Block.AIR)

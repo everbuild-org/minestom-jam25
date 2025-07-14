@@ -22,6 +22,7 @@ repositories {
     }
     maven("https://repo.hypera.dev/snapshots")
     maven("https://repo.lucko.me/")
+    maven("https://reposilite.atlasengine.ca/public")
 }
 
 tasks.withType<Test>().configureEach {

@@ -18,7 +18,7 @@ dependencies {
     implementation(libs.minestom)
     implementation("dev.hollowcube:schem:2.0")
     implementation("org.joml:joml:1.10.8")
-    implementation("net.worldseed.multipart:WorldSeedEntityEngine:11.3.1-dev2")
+    implementation("net.worldseed.multipart:WorldSeedEntityEngine:11.4.2")
 }
 
 application {

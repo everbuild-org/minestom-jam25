@@ -14,6 +14,7 @@ import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.impl.impulse.ImpulseBlock
+import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
 import org.everbuild.jam25.item.api.get
@@ -24,9 +25,11 @@ object BlockController {
     val blocks = listOf<CustomBlock>(
         PipeBlock,
         ImpulseBlock,
-        ShieldGeneratorBlock
+        ShieldGeneratorBlock,
+        Missile1Block
     )
     val typeTag = Tag.String("blocktype")
+    val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)
 
     fun getBlockImpl(key: Key): CustomBlock? = blocks.find { it.key() == key }
     fun getBlock(key: Key): CustomBlock = getBlockImpl(key) ?: throw IllegalArgumentException("Block with key $key not found")
@@ -35,6 +38,13 @@ object BlockController {
     fun hasBlock(key: Key): Boolean = blocks.find { it.key() == key } != null
     fun hasBlock(itemStack: ItemStack, key: Key): Boolean = itemStack.has<BlockItemComponent>() && itemStack.get<BlockItemComponent>()?.customBlock == key.asString()
     fun hasBlock(itemStack: ItemStack, block: CustomBlock): Boolean = itemStack.has<BlockItemComponent>() && itemStack.get<BlockItemComponent>()?.customBlock == block.key().asString()
+
+    fun canBreak(block: Block): Boolean {
+        if (block.getTag(unbreakable)) return false
+        if (block.compare(Block.SLIME_BLOCK)) return false
+        block.getTag(typeTag) ?: return false
+        return true
+    }
 
     fun getBlock(block: Block): CustomBlock? {
         val blockType = block.getTag(typeTag) ?: return null
@@ -52,7 +62,7 @@ object BlockController {
                 val blockAtTargetPos = event.player.instance!!.getBlock(targetPos)
                 if (!blockAtTargetPos.isAir && !blockAtTargetPos.registry().isReplaceable) return@listen
 
-                block.placeBlock(event.player.instance!!, targetPos, event.player)
+                block.placeBlock(event.player.instance!!, targetPos, PlacementActor.ByPlayer(event.player))
                 updateAround(event.player.instance!!, targetPos)
 
                 if (event.player.gameMode != GameMode.CREATIVE) {
@@ -65,7 +75,7 @@ object BlockController {
                 if (!item.has<WrenchComponent>()) return@listen
                 val targetType = event.block.getTag(typeTag) ?: return@listen
                 val targetBlock = getBlockImpl(Key.key(targetType)) ?: return@listen
-                targetBlock.breakBlock(event.player.instance!!, event.blockPosition, event.player)
+                targetBlock.breakBlock(event.player.instance!!, event.blockPosition, PlacementActor.ByPlayer(event.player))
                 updateAround(event.player.instance!!, event.blockPosition)
                 event.player.swingMainHand()
             }
@@ -76,7 +86,7 @@ object BlockController {
                 }
                 val targetType = event.block.getTag(typeTag) ?: return@listen
                 val targetBlock = getBlockImpl(Key.key(targetType)) ?: return@listen
-                targetBlock.breakBlock(event.player.instance!!, event.blockPosition, event.player)
+                targetBlock.breakBlock(event.player.instance!!, event.blockPosition, PlacementActor.ByPlayer(event.player))
                 updateAround(event.player.instance!!, event.blockPosition)
             }
     }

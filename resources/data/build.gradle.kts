@@ -19,6 +19,6 @@ dependencies {
     implementation(libs.bundles.kotlinxEcosystem)
     implementation(libs.kotlinReflect)
     implementation(libs.bimap)
-    implementation("net.worldseed.multipart:WorldSeedEntityEngine:11.3.1-dev2")
+    implementation("net.worldseed.multipart:WorldSeedEntityEngine:11.4.2")
 }
 

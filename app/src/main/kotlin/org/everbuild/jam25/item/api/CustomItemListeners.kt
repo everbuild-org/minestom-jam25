@@ -1,16 +1,19 @@
 package org.everbuild.jam25.item.api
 
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.text.Component
 import net.minestom.server.entity.Player
 import net.minestom.server.event.inventory.CreativeInventoryActionEvent
 import net.minestom.server.event.inventory.InventoryItemChangeEvent
 import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.minestom.server.event.item.*
 import net.minestom.server.event.player.PlayerBlockBreakEvent
+import net.minestom.server.event.player.PlayerMoveEvent
 import net.minestom.server.event.player.PlayerUseItemEvent
 import net.minestom.server.event.player.PlayerUseItemOnBlockEvent
 import net.minestom.server.inventory.PlayerInventory
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.Jam
 
 fun withCustomItemListeners() {
 
@@ -110,5 +113,20 @@ fun withCustomItemListeners() {
 
         val customItem = ItemLoader.getOverriddenItem(event.newItem.material()) ?: return@listen
         event.inventory.setItemStack(event.slot, customItem.createNewStack(event.newItem.amount()))
+    }
+
+    listen<PlayerMoveEvent> { event ->
+        if (Jam.gameStates.getInGamePhase(event.player) == null) return@listen
+        val stack = event.player.itemInMainHand
+        val item = ItemLoader.byItem(stack) ?: run {
+            event.player.sendActionBar(Component.empty())
+            return@listen
+        }
+        val lookingAt = event.player.getTargetBlockPosition(4)?.let { event.player.instance?.getBlock(it) }
+        if (item.getPlacementHint(lookingAt) != Component.empty()) {
+            event.player.sendActionBar(item.getPlacementHint(lookingAt))
+        } else {
+            event.player.sendActionBar(Component.empty())
+        }
     }
 }

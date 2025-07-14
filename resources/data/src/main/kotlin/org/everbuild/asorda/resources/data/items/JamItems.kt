@@ -22,6 +22,7 @@ object JamItems : ContentList("jam") {
     val digitalComponent = defaultModelItem("digital_component", ItemSprites.digitalComponent)
     val metalScraps = defaultModelItem("metal_scraps", ItemSprites.metalScraps)
     val hammer = defaultModelItem("hammer", ItemSprites.hammer)
+    val missile1 = defaultModelItem("missile1", Texture("jam/missile1") )
     val pipeItem = createItem("pipeItem") {
         model(createModel {
             parent(includeModel("jam/pipe_hand"))

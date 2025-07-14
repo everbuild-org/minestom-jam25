@@ -1,4 +1,4 @@
-package org.everbuild.jam25.block.impl.pipe
+package org.everbuild.jam25.missile
 
 import java.util.concurrent.CompletableFuture
 import net.minestom.server.coordinate.Pos
@@ -6,30 +6,33 @@ import net.minestom.server.entity.EntityCreature
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.Player
 import net.minestom.server.instance.Instance
-import net.minestom.server.instance.block.BlockFace
 import org.everbuild.celestia.orion.platform.minestom.api.utils.plus
 
-class PipePartEntity(type: String, face: BlockFace?) : EntityCreature(EntityType.ITEM_DISPLAY) {
-    val part = PipePart(type, face)
+class MissileEntity(missileType: MissileType) : EntityCreature(EntityType.ITEM_DISPLAY) {
+    val model = MissileModel(missileType.num)
+
+    init {
+        setNoGravity(true)
+    }
 
     override fun setInstance(instance: Instance, spawnPosition: Pos): CompletableFuture<Void?>? {
-        part.init(instance, Pos.fromPoint(spawnPosition.plus(Pos(0.5, 0.0, 0.5))))
+        model.init(instance, Pos.fromPoint(spawnPosition.plus(Pos(0.5, 0.0, 0.5))))
 
         return super.setInstance(instance, spawnPosition)
     }
 
     override fun updateNewViewer(player: Player) {
         super.updateNewViewer(player)
-        this.part.addViewer(player)
+        this.model.addViewer(player)
     }
 
     override fun updateOldViewer(player: Player) {
         super.updateOldViewer(player)
-        this.part.removeViewer(player)
+        this.model.removeViewer(player)
     }
 
     override fun remove() {
         super.remove()
-        this.part.destroy()
+        this.model.destroy()
     }
 }
