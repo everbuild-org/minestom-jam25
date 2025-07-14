@@ -69,10 +69,10 @@ open class Missile(val entity: Entity) {
         }
     }
 
-    fun shoot(position: Vector2i, continuation: (Pos) -> Unit) {
+    fun shoot(position: Vector2i, continuation: (Pos) -> Unit): Boolean {
         val maxY = (-100 until 100).reversed().firstOrNull { instance.getBlock(position.x, it, position.y).isSolid } ?: run {
             println("No solid block found above $position")
-            return
+            return false
         }
         val current = this.entity.position
         val target = Pos(position.x.toDouble(), maxY.toDouble(), position.y.toDouble())
@@ -143,6 +143,8 @@ open class Missile(val entity: Entity) {
                 ))
             }
         }.repeat(TaskSchedule.nextTick()).schedule()
+
+        return true
     }
 
     fun fixYaw(yaw: Float): Float {

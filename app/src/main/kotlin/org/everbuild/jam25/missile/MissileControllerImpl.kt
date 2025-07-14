@@ -16,8 +16,12 @@ class MissileControllerImpl : MissileController {
     override fun tryLaunch() {
         if (missileTracker.isEmpty()) return
         targetPositions.removeFirstOrNull()?.let {
-            missileTracker.removeFirst().shoot(it) {
+            val missile = missileTracker.first()
+            val result = missile.shoot(it) {
                 // TODO
+            }
+            if (result) {
+                missileTracker.remove(missile)
             }
         }
     }
