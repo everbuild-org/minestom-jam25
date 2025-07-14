@@ -75,8 +75,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
 //        }
 
         teams.forEach {
-            it.spawnShield(world.instance)
-            it.initOilBiome(world.instance)
+            it.init(world.instance)
         }
 
         teamRed.setInstance(world.instance, teamRed.poi.spawn)

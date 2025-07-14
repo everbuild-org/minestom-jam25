@@ -54,4 +54,10 @@ object MenuAndUtilsCharacters : ContentList() {
         height(256)
         ascent(13)
     }
+
+    val map = createBitmapCharacter("war_map") {
+        texture(Texture("jam/general_map"))
+        height(53)
+        ascent(48)
+    }
 }

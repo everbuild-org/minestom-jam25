@@ -2,6 +2,7 @@ package org.everbuild.jam25.state.ingame
 
 import net.minestom.server.entity.Player
 import net.minestom.server.instance.Instance
+import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
@@ -19,11 +20,11 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
         }
     }
 
-    fun spawnShield(instance: Instance) {
+    private fun spawnShield(instance: Instance) {
         shield = ShieldRenderer(instance, poi.mainShield.toVertices())
     }
 
-    fun initOilBiome(instance: Instance) {
+    private fun initOilBiome(instance: Instance) {
         val id = Mc.biome.getId(Jam.oilBiome)
         poi.oilChunks.forEachVSliceInChunk { cx, cz, containingVSlices ->
             val chunk = instance.loadChunk(cx, cz).join()
@@ -33,5 +34,11 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
                 }
             }
         }
+    }
+
+    fun init(instance: Instance) {
+        spawnShield(instance)
+        initOilBiome(instance)
+        poi.map.setInstance(instance)
     }
 }

@@ -1,6 +1,7 @@
 package org.everbuild.jam25.world
 
 import net.minestom.server.coordinate.Pos
+import org.everbuild.jam25.map.WarroomMap
 import org.everbuild.jam25.world.shield.Shield
 import org.joml.Vector2i
 
@@ -13,7 +14,8 @@ class GameWorld : ZippedWorld("map") {
         val minY: Int = -28,
         val maxY: Int = 40,
         val mainShield: Shield,
-        val oilChunks: Polygon
+        val oilChunks: Polygon,
+        val map: WarroomMap
     ) {
         class Red : Poi(
             spawn = Pos(12.5, -7.0, 1.5, 0f, 0f),
@@ -30,7 +32,8 @@ class GameWorld : ZippedWorld("map") {
                 Vector2i(8, -24),
                 Vector2i(28, -25),
                 Vector2i(33, -5)
-            )
+            ),
+            map = WarroomMap(Pos(12.5, -12.8, 14.5, 180f, 0f))
         )
 
         class Blue : Poi(
@@ -46,7 +49,8 @@ class GameWorld : ZippedWorld("map") {
                 Vector2i(22, 178),
                 Vector2i(22, 150),
                 Vector2i(-2, 148)
-            )
+            ),
+            map = WarroomMap(Pos(16.5, -12.8, 111.5, 0f, 0f))
         )
     }
 
