@@ -7,7 +7,6 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 import net.minestom.server.coordinate.BlockVec
-import net.minestom.server.coordinate.Point
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
 import net.minestom.server.instance.Instance
@@ -23,7 +22,7 @@ open class Missile(val entity: Entity) {
     private lateinit var instance: Instance
     fun setInstance(instance: Instance, pos: BlockVec) {
         this.instance = instance
-        entity.setInstance(instance, pos)
+        entity.setInstance(instance, pos.add(0.5, 0.0, 0.5))
     }
 
     fun generateParabolicFlightPathSequence(
@@ -37,58 +36,36 @@ open class Missile(val entity: Entity) {
         val dz = targetPos.z - currentPos.z
         val totalHorizontalDistance = sqrt(dx.pow(2) + dz.pow(2))
 
-        // 2. Determine Parabola Parameters for Vertical (Y-axis) Movement
         val yStart = currentPos.y
         val yEnd = targetPos.y
         val yApex = max(yStart, yEnd) + maxHeightOffset
 
-        // Solve for A, B, C in y(t) = A * t^2 + B * t + C
-        val C = yStart
-        // A = -4 * (y_apex - 0.5 * (y_end + y_start))
-        val A = -4.0 * (yApex - 0.5 * (yEnd + yStart))
-        // B = y_end - y_start - A
-        val B = yEnd - yStart - A
+        val c = yStart
+        val a = -4.0 * (yApex - 0.5 * (yEnd + yStart))
+        val b = yEnd - yStart - a
 
-        // 3. Generate Path Points in a Loop
         for (i in 0 until numSteps) {
-            // Calculate Normalized Progress (t)
             val t = if (numSteps == 1) 0.0 else i.toDouble() / (numSteps - 1).toDouble()
 
-            // Calculate Current Position (x, y, z)
             val currentX = currentPos.x + dx * t
             val currentZ = currentPos.z + dz * t
-            val currentY = A * t.pow(2) + B * t + C
-
-            // Calculate Current Orientation (Yaw and Pitch)
-            val currentYaw: Float
-            if (totalHorizontalDistance < 1e-6) { // Check for very small distance to avoid division by zero/NaN
-                currentYaw = currentPos.yaw // If no horizontal movement, maintain initial yaw
+            val currentY = a * t.pow(2) + b * t + c
+            val currentYaw = if (totalHorizontalDistance < 1e-6) {
+                currentPos.yaw
             } else {
-                // atan2(y, x) calculates angle from positive X-axis to point (x, y)
-                // Here, dz is like 'y' and dx is like 'x' for the horizontal plane.
-                currentYaw = atan2(dz, dx).toFloat().toDegrees() // Convert radians to degrees
-                // Apply Pos.fixYaw to ensure it's in the correct range
-                // Note: atan2 returns radians, so convert to degrees if your Pos.yaw expects degrees
-                // and then fix it. If Pos.yaw expects radians, skip toDegrees().
+                atan2(dz, dx).toFloat().toDegrees() // Convert radians to degrees
             }
-            // Ensure yaw is fixed to the desired range (e.g., 0-360)
             val fixedYaw = fixYaw(currentYaw)
 
-            // Pitch: determined by the instantaneous slope of the parabola
-            val dy_dt = 2.0 * A * t + B // Derivative of y(t) with respect to t
-
-            val currentPitch: Float
-            if (totalHorizontalDistance < 1e-6 && abs(dy_dt) < 1e-6) {
-                // If no horizontal or vertical movement, maintain initial pitch
-                currentPitch = currentPos.pitch
+            val dyDt = 2.0 * a * t + b
+            val currentPitch = if (totalHorizontalDistance < 1e-6 && abs(dyDt) < 1e-6) {
+                currentPos.pitch
             } else {
-                // atan2(y, x) where y is vertical change and x is horizontal change
-                currentPitch = atan2(dy_dt, totalHorizontalDistance).toFloat().toDegrees() // Convert radians to degrees
+                atan2(dyDt, totalHorizontalDistance).toFloat().toDegrees() // Convert radians to degrees
             }
 
-            // Create and Add Pos Object
             val newPos = Pos(currentX, currentY, currentZ, fixedYaw, currentPitch)
-            yield(newPos) // Yield the current Pos object
+            yield(newPos)
         }
     }
 

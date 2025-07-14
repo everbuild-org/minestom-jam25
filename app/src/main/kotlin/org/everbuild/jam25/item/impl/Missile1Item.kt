@@ -15,7 +15,7 @@ import org.everbuild.jam25.item.api.name
 object Missile1Item : AbstractItem(
     key = "missile1",
     item = itemStackOf(JamItems.missile1)
-        .name("<red>basic Missile")
+        .name("<red>Basic Missile")
         .attachCustomBlock(Missile1Block)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {
