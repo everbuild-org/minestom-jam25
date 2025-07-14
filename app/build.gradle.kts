@@ -35,12 +35,18 @@ val zipMap = tasks.register<Zip>("zipMap") {
     archiveFileName.set("map.zip")
 }
 
+val zipLobby = tasks.register<Zip>("zipLobby") {
+    from("../lobby")
+    destinationDirectory.set(layout.buildDirectory.dir("resources/main"))
+    archiveFileName.set("lobby.zip")
+}
+
 val includeSchematics = tasks.register<Copy>("includeSchematics") {
     from("../schematics")
     into(layout.buildDirectory.dir("resources/main"))
 }
 
 tasks.processResources {
-    dependsOn(zipMap)
+    dependsOn(zipMap, zipLobby)
     dependsOn(includeSchematics)
 }

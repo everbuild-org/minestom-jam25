@@ -57,6 +57,9 @@ class InGameState(lobby: LobbyGroup) : GameState {
         teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE)
         teams = listOf(teamRed, teamBlue)
 
+        playerEvents.addChild(teamRed.node)
+        playerEvents.addChild(teamBlue.node)
+
 //        advanceable.add(teamRed.poi.turret)
 //        advanceable.add(teamBlue.poi.turret)
 

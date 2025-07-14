@@ -10,14 +10,17 @@ import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerDisconnectEvent
+import net.minestom.server.event.player.PlayerMoveEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.LightingChunk
 import net.minestom.server.instance.block.Block
 import net.minestom.server.utils.chunk.ChunkSupplier
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.celestia.orion.platform.minestom.util.scheduler
 import org.everbuild.jam25.state.GameState
+import org.everbuild.jam25.world.LobbyWorld
 
 class LobbyGameState : GameState {
     private val groups = mutableListOf<LobbyGroup>()
@@ -28,11 +31,15 @@ class LobbyGameState : GameState {
                 players.remove(event.player)
                 groups.forEach { it.removePlayer(event.player) }
             }
+            .listen<PlayerMoveEvent, _> { event ->
+                if (event.newPosition.y < -75.0) {
+                    event.player.teleport(getSpawn())
+                    event.player.pling()
+                }
+            }
 
-    private val instance = Mc.instance.createInstanceContainer().also {
-        it.chunkSupplier = ChunkSupplier { i, x, y -> LightingChunk(i, x, y) }
-        it.setGenerator { unit -> unit.modifier().fillHeight(0, 32, Block.STONE) }
-    }
+    private val world = LobbyWorld()
+    private val instance = world.instance
 
     private val players = mutableListOf<Player>()
 
@@ -46,7 +53,7 @@ class LobbyGameState : GameState {
 
     fun getInstance(): Instance = instance
 
-    fun getSpawn(): Pos = Pos(0.0, 32.0, 0.0)
+    fun getSpawn(): Pos = Pos(2.5, -53.0, 10.5, -90f, 0f)
 
     fun addPlayer(player: Player) {
         players.add(player)
