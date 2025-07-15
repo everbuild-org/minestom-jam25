@@ -46,8 +46,8 @@ class GameWorld : ZippedWorld("map") {
             shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30)),
             nodes = listOf(),
             shops = listOf(
-                MechanicNPC(Pos(11.0, -14.00, 43.5, 90f, 0f)),
-                UpgradeNPC(Pos(22.0, -14.00, 43.5, -90f, 0f))
+                MechanicNPC(Pos(11.0, -14.00, 43.5, -90f, 0f)),
+                UpgradeNPC(Pos(22.0, -14.00, 43.5, 90f, 0f))
             )
         )
 

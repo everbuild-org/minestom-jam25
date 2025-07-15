@@ -66,10 +66,13 @@ class SpectatorGameState(
                 player.gameMode = GameMode.SPECTATOR
                 TabListController.setSpectator(player, true)
                 player.sendMiniMessage("<gray>You are now in Spectator Mode in the game!</gray>")
+                player.isInvisible = true
+                println("Spectator ${player.username} is invisible")
+                player.isAutoViewable = false
                 player.instance.players.forEach {
                     it.addViewer(player)
+                    player.removeViewer(it)
                 }
-                player.isInvisible = true
             }
         }
     }
@@ -79,7 +82,11 @@ class SpectatorGameState(
         spectators.remove(player)
         TabListController.setSpectator(player, false)
         player.gameMode = GameMode.SURVIVAL
+        player.isAutoViewable = true
         player.isInvisible = false
+        player.instance.players.forEach {
+            player.addViewer(it)
+        }
     }
 
     private fun process() {

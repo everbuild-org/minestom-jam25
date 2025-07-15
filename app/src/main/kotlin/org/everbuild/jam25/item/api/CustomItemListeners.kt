@@ -2,6 +2,7 @@ package org.everbuild.jam25.item.api
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
+import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 import net.minestom.server.event.inventory.CreativeInventoryActionEvent
 import net.minestom.server.event.inventory.InventoryItemChangeEvent
@@ -116,7 +117,7 @@ fun withCustomItemListeners() {
     }
 
     listen<PlayerMoveEvent> { event ->
-        if (Jam.gameStates.getInGamePhase(event.player) == null) return@listen
+        if (Jam.gameStates.getInGamePhase(event.player) == null || event.player.gameMode == GameMode.SPECTATOR) return@listen
         val stack = event.player.itemInMainHand
         val item = ItemLoader.byItem(stack) ?: run {
             event.player.sendActionBar(Component.empty())

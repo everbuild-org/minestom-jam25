@@ -11,7 +11,9 @@ import net.minestom.server.item.ItemStack
 import net.minestom.server.network.packet.server.play.TradeListPacket
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.core.util.minimessage
+import org.everbuild.celestia.orion.platform.minestom.util.later
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.celestia.orion.platform.minestom.util.tickLater
 import org.everbuild.jam25.listener.dropItem
 
 class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryType.MERCHANT, name.minimessage()) {
@@ -83,19 +85,38 @@ class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryT
         if (entries.size <= id) return
         val entry = entries[id]
         selected = entry
-        val left = player.inventory.itemStacks.indexOfFirst { it.isSimilar(entry.left) }
-        if (left != -1) {
-            val leftItem = player.inventory.getItemStack(left)
-            player.inventory.setItemStack(left, getItemStack(0))
-            setItemStack(0, leftItem)
+
+        val itemsToDrop = listOf(getItemStack(0), getItemStack(1))
+        itemsToDrop.map {
+            player.inventory.addItemStack(it, TransactionOption.ALL)
+        }.map { it ->
+            if (it.isAir) return@map
+            dropItem(player.position, it, player.instance!!)
         }
+
+        val leftItem = player.inventory.itemStacks.indexOfFirst { it.isSimilar(entry.left) }
+        if (leftItem == -1) {
+            setItemStack(0, ItemStack.AIR)
+        } else {
+            setItemStack(0, player.inventory.itemStacks[leftItem])
+            player.inventory.setItemStack(leftItem, ItemStack.AIR)
+        }
+
         if (entry.right != null) {
-            val right = player.inventory.itemStacks.indexOfFirst { it.isSimilar(entry.right!!) }
-            if (right != -1) {
-                val leftItem = player.inventory.getItemStack(right)
-                player.inventory.setItemStack(right, getItemStack(1))
-                setItemStack(1, leftItem)
+            val rightItem = player.inventory.itemStacks.indexOfFirst { it.isSimilar(entry.right!!) }
+            if (rightItem == -1) {
+                setItemStack(1, ItemStack.AIR)
+            } else {
+                setItemStack(1, player.inventory.itemStacks[rightItem])
+                player.inventory.setItemStack(rightItem, ItemStack.AIR)
             }
+        } else {
+            setItemStack(1, ItemStack.AIR)
+        }
+
+        50.milliseconds later {
+            update()
+            player.inventory.update()
         }
 
         check()
@@ -113,6 +134,7 @@ class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryT
         } else {
             setItemStack(2, ItemStack.AIR)
         }
+        update()
     }
 
     sealed interface ShopEntry {

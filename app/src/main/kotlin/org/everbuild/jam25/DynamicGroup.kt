@@ -22,6 +22,10 @@ open class DynamicGroup(val block: (Player) -> Boolean) {
     }
 
     fun setInstance(instance: InstanceContainer, pos: Pos) {
-        forEach { it.setInstance(instance, pos) }
+        forEach {
+            if (it.instance != instance) {
+                it.setInstance(instance, pos)
+            }
+        }
     }
 }
