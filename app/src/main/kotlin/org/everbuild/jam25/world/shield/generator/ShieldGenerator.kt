@@ -79,12 +79,12 @@ data class ShieldGenerator(
             power = (power - POWERLOSS_PER_TICK).coerceAtLeast(0.0)
             for (notificationLevel in POWER_LEVEL_NOTIFICATIONS) {
                 if (powerBeforeLoss > notificationLevel && power <= notificationLevel) {
-                    group?.sendMiniMessage("<red>Your shieldgenerator is now at $notificationLevel% power level")
+                    group?.sendMiniMessage("<red>Your shield generator is now at $notificationLevel% power level")
                 }
             }
             if (!hasPower() && running) {
                 running = false
-                group?.sendMiniMessage("<red>Your shieldgenerator has run out of power")
+                group?.sendMiniMessage("<red>Your shield generator has run out of power")
             }
         }
         powerRenderer?.update(power, pendingRefill)
