@@ -30,6 +30,7 @@ object BlockController {
     )
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)
+    val refillable = Tag.String("refillable")
 
     fun getBlockImpl(key: Key): CustomBlock? = blocks.find { it.key() == key }
     fun getBlock(key: Key): CustomBlock = getBlockImpl(key) ?: throw IllegalArgumentException("Block with key $key not found")
@@ -44,6 +45,10 @@ object BlockController {
         if (block.compare(Block.SLIME_BLOCK)) return false
         block.getTag(typeTag) ?: return false
         return true
+    }
+
+    fun canRefill(block: Block, type: String): Boolean {
+        return block.getTag(refillable) == type
     }
 
     fun getBlock(block: Block): CustomBlock? {

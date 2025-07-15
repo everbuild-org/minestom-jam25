@@ -3,16 +3,17 @@ package org.everbuild.jam25.block.impl.shieldgenerator
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.nbt.CompoundBinaryTag
 import net.minestom.server.coordinate.BlockVec
-import net.minestom.server.entity.Player
 import net.minestom.server.event.instance.InstanceUnregisterEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.block.api.CustomBlock
 import org.everbuild.jam25.block.api.PlacementActor
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
+import org.everbuild.jam25.item.impl.BioScrapsItem
 
 object ShieldGeneratorBlock : CustomBlock {
     val entities = hashMapOf<Instance, HashMap<Long, ShieldGeneratorEntity>>()
@@ -59,6 +60,8 @@ object ShieldGeneratorBlock : CustomBlock {
             instance.setBlock(
                 it,
                 Block.BARRIER
+                    .withTag(BlockController.unbreakable, true)
+                    .withTag(BlockController.refillable, BioScrapsItem.id.asString())
             )
         }
         instance.setBlock(
@@ -67,16 +70,25 @@ object ShieldGeneratorBlock : CustomBlock {
                 .withTag(state, blockState.toNBT())
         )
         instance.setBlock(
-            position.add(0, 0, -1), Block.BARRIER
+            position.add(0, 0, -1),
+            Block.BARRIER
                 .withTag(PipeBlock.canConnectTag, true)
+                .withTag(BlockController.unbreakable, true)
+                .withTag(BlockController.refillable, BioScrapsItem.id.asString())
         )
     }
 
     private fun forEachGeneratorPosition(center: BlockVec, consumer: (subBlockPosition: BlockVec) -> Unit) {
+        for (generatorPosition in generatorPositions(center)) {
+            consumer(generatorPosition)
+        }
+    }
+
+    fun generatorPositions(center: BlockVec) = buildList {
         for (x in ((center.blockX() - 1)..(center.blockX() + 1))) {
             for (y in (center.blockY())..(center.blockY() + 2)) {
                 for (z in (center.blockZ() - 1)..(center.blockZ() + 1)) {
-                    consumer(BlockVec(x, y, z))
+                    add(BlockVec(x, y, z))
                 }
             }
         }

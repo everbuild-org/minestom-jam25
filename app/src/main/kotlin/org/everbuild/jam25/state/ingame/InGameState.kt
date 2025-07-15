@@ -68,6 +68,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
         playerEvents.addChild(teamRed.node)
         playerEvents.addChild(teamBlue.node)
 
+        advanceable.add(teamRed.poi.shieldGenerator)
+        advanceable.add(teamBlue.poi.shieldGenerator)
 //        advanceable.add(teamRed.poi.turret)
 //        advanceable.add(teamBlue.poi.turret)
 

@@ -43,6 +43,11 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
 
     private fun spawnShield(instance: Instance) {
         shield = ShieldRenderer(instance, poi.mainShield.toVertices())
+        poi.shieldGenerator.apply {
+            setInstance(instance)
+            setGroup(this@GameTeam)
+            registerRefillEvent(node)
+        }
     }
 
     private fun initOilBiome(instance: Instance) {
@@ -61,6 +66,5 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
         spawnShield(instance)
         initOilBiome(instance)
         poi.map.setInstance(instance)
-        poi.shieldGenerator.setInstance(instance)
     }
 }
