@@ -21,23 +21,23 @@ class GameWorld : ZippedWorld("map") {
         val shieldGenerator: ShieldGenerator
     ) {
         class Red : Poi(
-            spawn = Pos(16.5, -7.0, 1.5, 0f, 0f),
-            area = FlatArea(-52, -64, 88, 41),
+            spawn = Pos(16.5, -7.0, 40.5, 0f, 0f),
+            area = FlatArea(-52, -64, 88, 81),
             mainShield = redShield,
             oilChunks = Polygon(
-                Vector2i(39, 25),
-                Vector2i(69, 27),
-                Vector2i(81, -13),
-                Vector2i(61, -36),
-                Vector2i(56, -58),
-                Vector2i(17, -58),
-                Vector2i(9, -41),
-                Vector2i(12, -24),
-                Vector2i(32, -25),
-                Vector2i(37, -5)
+                Vector2i(39, 64),
+                Vector2i(69, 66),
+                Vector2i(81, 26),
+                Vector2i(61, 5),
+                Vector2i(56, -17),
+                Vector2i(17, -17),
+                Vector2i(9, 0),
+                Vector2i(12, 15),
+                Vector2i(32, 14),
+                Vector2i(37, 34)
             ),
-            map = WarroomMap(Pos(16.5, -12.8, 14.5, 180f, 0f)),
-            shieldGenerator = ShieldGenerator(BlockVec(28, -4, -9))
+            map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f)),
+            shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30))
         )
 
         class Blue : Poi(
