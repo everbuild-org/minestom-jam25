@@ -25,21 +25,7 @@ object ShieldGeneratorBlock : CustomBlock {
     }
 
     override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
-        forEachGeneratorPosition(position) {
-            instance.setBlock(
-                it,
-                Block.BARRIER
-            )
-        }
-        instance.setBlock(
-            position, Block.BARRIER
-                .withTypeTag()
-                .withTag(state, BlockState.DEFAULT.toNBT())
-        )
-        instance.setBlock(
-            position.add(0, 0, -1), Block.BARRIER
-                .withTag(PipeBlock.canConnectTag, true)
-        )
+        placeShieldGeneratorBlocks(instance, position, BlockState.DEFAULT)
         entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) {
             ShieldGeneratorEntity(BlockState.DEFAULT.running).also {
                 it.setInstance(instance, position)
@@ -61,18 +47,29 @@ object ShieldGeneratorBlock : CustomBlock {
     fun updateState(instance: Instance, position: BlockVec, running: Boolean) {
         val oldState = BlockState.fromNBT(instance.getBlock(position).getTag(state) as? CompoundBinaryTag ?: return)
         val updatedState = oldState.copy(running = running)
-        forEachGeneratorPosition(position) {
-            instance.setBlock(
-                it,
-                Block.BARRIER
-                    .withTypeTag()
-                    .withTag(state, updatedState.toNBT())
-            )
-        }
+        placeShieldGeneratorBlocks(instance, position, updatedState)
         entities[instance]?.remove(position.asId())?.remove()
         entities[instance]?.put(position.asId(), ShieldGeneratorEntity(updatedState.running).also {
             it.setInstance(instance, position)
         })
+    }
+
+    private fun placeShieldGeneratorBlocks(instance: Instance, position: BlockVec, blockState: BlockState) {
+        forEachGeneratorPosition(position) {
+            instance.setBlock(
+                it,
+                Block.BARRIER
+            )
+        }
+        instance.setBlock(
+            position, Block.BARRIER
+                .withTypeTag()
+                .withTag(state, blockState.toNBT())
+        )
+        instance.setBlock(
+            position.add(0, 0, -1), Block.BARRIER
+                .withTag(PipeBlock.canConnectTag, true)
+        )
     }
 
     private fun forEachGeneratorPosition(center: BlockVec, consumer: (subBlockPosition: BlockVec) -> Unit) {
