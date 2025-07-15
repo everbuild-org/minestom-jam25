@@ -12,6 +12,7 @@ import net.minestom.server.event.EventNode
 import net.minestom.server.instance.LightingChunk
 import net.minestom.server.instance.block.Block
 import net.minestom.server.utils.chunk.ChunkSupplier
+import org.everbuild.asorda.resources.data.addWseeModels
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.util.listen
@@ -70,8 +71,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
 
         advanceable.add(teamRed.poi.shieldGenerator)
         advanceable.add(teamBlue.poi.shieldGenerator)
-//        advanceable.add(teamRed.poi.turret)
-//        advanceable.add(teamBlue.poi.turret)
+
+        advanceable.addAll(teams.flatMap { it.poi.nodes }.toList())
 
         val jobs = mutableListOf<CompletableFuture<*>>()
         for (x in -10..10) {
@@ -80,12 +81,6 @@ class InGameState(lobby: LobbyGroup) : GameState {
             }
         }
         CompletableFuture.allOf(*jobs.toTypedArray()).join()
-
-//        background {
-//            teams.map { it.poi }.forEach {
-//                it.turret.spawn(world.instance)
-//            }
-//        }
 
         teams.forEach {
             it.init(world.instance)

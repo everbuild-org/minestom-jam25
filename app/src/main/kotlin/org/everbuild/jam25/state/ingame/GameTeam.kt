@@ -29,6 +29,8 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
         }
 
     init {
+        poi.shieldGenerator.team = this
+
         val pipesAtStart = 32
         val pipesPerPlayer = pipesAtStart / players.size.coerceAtLeast(1)
         players.forEach {
@@ -66,5 +68,7 @@ class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup
         spawnShield(instance)
         initOilBiome(instance)
         poi.map.setInstance(instance)
+        poi.nodes.forEach { it.setInstance(instance) }
+        poi.shops.forEach { it.setInstance(instance) }
     }
 }

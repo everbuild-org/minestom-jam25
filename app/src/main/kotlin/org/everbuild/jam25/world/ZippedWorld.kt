@@ -1,5 +1,6 @@
 package org.everbuild.jam25.world
 
+import java.awt.Dimension
 import java.io.File
 import java.nio.file.Files
 import java.util.zip.ZipInputStream

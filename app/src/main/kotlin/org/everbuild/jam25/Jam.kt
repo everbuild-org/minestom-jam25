@@ -2,11 +2,13 @@ package org.everbuild.jam25
 
 import java.io.InputStreamReader
 import java.io.Reader
+import kotlin.jvm.java
 import net.minestom.server.color.Color
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.attribute.Attribute
 import net.minestom.server.event.player.PlayerSpawnEvent
 import net.minestom.server.extras.velocity.VelocityProxy
+import net.minestom.server.network.packet.client.play.ClientSelectTradePacket
 import net.minestom.server.world.biome.Biome
 import net.minestom.server.world.biome.BiomeEffects
 import net.worldseed.multipart.ModelEngine
@@ -21,6 +23,7 @@ import org.everbuild.jam25.command.QuickStartCommand
 import org.everbuild.jam25.command.SetAllowPlayingCommand
 import org.everbuild.jam25.item.api.ItemLoader
 import org.everbuild.jam25.item.api.withCustomItemListeners
+import org.everbuild.jam25.listener.ClientSelectTradePacketListener
 import org.everbuild.jam25.listener.setupPlayerDropEvent
 import org.everbuild.jam25.state.GameStateController
 
@@ -28,8 +31,6 @@ import org.everbuild.jam25.state.GameStateController
 object Jam : OrionServer() {
     const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
     const val PREFIX = "<gradient:#FFAA00:#FF5555>BD ✧</gradient>"
-
-    val gameStates = GameStateController()
 
     val oilBiome = Mc.biome.register(
         "jam:oil", Biome.builder()
@@ -44,12 +45,16 @@ object Jam : OrionServer() {
             .build()
     )
 
+    val gameStates = GameStateController()
+
     init {
         Mc.globalEvent
             .addChild(gameStates.eventNode())
             .addChild(PingResponder.eventNode())
             .addChild(BlockController.eventNode())
             .addChild(PerInstanceTabList.eventNode())
+
+        Mc.packetListener.setPlayListener(ClientSelectTradePacket::class.java, ClientSelectTradePacketListener::listener)
 
         withCustomItemListeners()
         ItemLoader.withCustomItemSupport()

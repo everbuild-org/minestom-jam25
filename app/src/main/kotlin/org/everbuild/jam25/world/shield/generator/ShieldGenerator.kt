@@ -13,6 +13,7 @@ import org.everbuild.jam25.block.api.PlacementActor
 import org.everbuild.jam25.block.api.ShieldGeneratorRefillComponent
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
 import org.everbuild.jam25.item.api.get
+import org.everbuild.jam25.state.ingame.GameTeam
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 
 data class ShieldGenerator(
@@ -28,10 +29,14 @@ data class ShieldGenerator(
         private const val REFILL_POWERGAIN_PER_TICK = REFILL_POWERGAIN_PER_SECOND / 20
     }
 
+    var team: GameTeam? = null
+
     var running: Boolean = ShieldGeneratorBlock.BlockState.DEFAULT.running
         set(value) {
             field = value
             ShieldGeneratorBlock.updateState(instance ?: return, position, value)
+
+            team?.shield?.set(value)
         }
     var power: Double = 100.0
         private set
