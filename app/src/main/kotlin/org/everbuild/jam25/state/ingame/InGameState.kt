@@ -18,6 +18,8 @@ import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.GlobalTickEvent
 import org.everbuild.jam25.Jam
+import org.everbuild.jam25.resource.Resource
+import org.everbuild.jam25.resource.ResourceNode
 import org.everbuild.jam25.state.GameState
 import org.everbuild.jam25.state.lobby.LobbyGroup
 import org.everbuild.jam25.util.background
@@ -92,6 +94,10 @@ class InGameState(lobby: LobbyGroup) : GameState {
     }
 
     fun teamOf(player: Player): GameTeam? = teams.find { it.players.contains(player) }
+
+    fun createResourceNode(type: Resource, pos: Pos) {
+        advanceable.add(ResourceNode(pos, type).also { it.setInstance(world.instance) })
+    }
 
     override fun events(): EventNode<out Event> = eventNode
 

@@ -1,6 +1,7 @@
 package org.everbuild.celestia.orion.core.util
 
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class Cooldown(private val duration: Duration) {
     private var lastCall = 0L
@@ -12,6 +13,16 @@ class Cooldown(private val duration: Duration) {
             return true
         }
         return false
+    }
 
+    fun getTimeToNextExecution(): Duration {
+        val now = System.currentTimeMillis()
+        val elapsed = now - lastCall
+        val remaining = duration.inWholeMilliseconds - elapsed
+        return if (remaining > 0) {
+            remaining.milliseconds
+        } else {
+            Duration.ZERO
+        }
     }
 }

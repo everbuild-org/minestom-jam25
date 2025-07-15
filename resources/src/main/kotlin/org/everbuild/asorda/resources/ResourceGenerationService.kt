@@ -56,9 +56,10 @@ class ResourceGenerationService : Thread() {
     }
 
     companion object {
-        val resourcesDir = File("run/resources")
-        val resources = File("run/resources.zip")
-        val metadata = File("run/resources.json")
+        fun base() = if (File("gradle.properties").exists()) "" else "../"
+        val resourcesDir = File("${base()}run/resources")
+        val resources = File("${base()}run/resources.zip")
+        val metadata = File("${base()}run/resources.json")
 
         fun zipDirectory(sourceDir: File, zipFile: File) {
             ZipUtil.pack(sourceDir, zipFile)
