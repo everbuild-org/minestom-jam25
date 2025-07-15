@@ -1,10 +1,8 @@
 package org.everbuild.jam25.state.lobby
 
-import kotlin.time.Duration.Companion.seconds
-import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
-import net.minestom.server.adventure.audience.Audiences
 import net.minestom.server.coordinate.Pos
+import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
@@ -12,18 +10,16 @@ import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerDisconnectEvent
 import net.minestom.server.event.player.PlayerMoveEvent
 import net.minestom.server.instance.Instance
-import net.minestom.server.instance.LightingChunk
-import net.minestom.server.instance.block.Block
-import net.minestom.server.utils.chunk.ChunkSupplier
-import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.celestia.orion.core.util.sendMiniMessageActionBar
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.celestia.orion.platform.minestom.util.scheduler
 import org.everbuild.jam25.state.GameState
 import org.everbuild.jam25.world.LobbyWorld
+import kotlin.time.Duration.Companion.seconds
 
 class LobbyGameState : GameState {
-    private val groups = mutableListOf<LobbyGroup>()
+    val groups = mutableListOf<LobbyGroup>()
 
     private val eventNode =
         EventNode.type(this.key().asString(), EventFilter.PLAYER) { _, player -> players.contains(player) }
@@ -62,15 +58,18 @@ class LobbyGameState : GameState {
     override fun key(): Key = Key.key("jam", "lobby")
 
     fun process() {
-        players.filter { !groups.any { g -> g.containsPlayer(it) } }.forEach {
-            val group = groups.filter { g -> g.hasSpace() }.maxByOrNull { g -> g.players.size }
-            if (group != null) {
-                group.addPlayer(it)
-            } else {
-                val newGroup = LobbyGroup()
-                newGroup.addPlayer(it)
-                groups.add(newGroup)
-            }
+        //players.filter { !groups.any { g -> g.containsPlayer(it) } }.forEach {
+        //    val group = groups.filter { g -> g.hasSpace() }.maxByOrNull { g -> g.players.size }
+        //    if (group != null) {
+        //        group.addPlayer(it)
+        //    } else {
+        //        val newGroup = LobbyGroup()
+        //        newGroup.addPlayer(it)
+        //        groups.add(newGroup)
+        //    }
+        //}
+        players.filter { !groups.any { g -> g.containsPlayer(it) } }.filter { it.gameMode != GameMode.SPECTATOR }.forEach {
+            it.sendMiniMessageActionBar("<yellow>Start the game with /queue</yellow>")
         }
 
         groups.reversed().forEach { it.process() }

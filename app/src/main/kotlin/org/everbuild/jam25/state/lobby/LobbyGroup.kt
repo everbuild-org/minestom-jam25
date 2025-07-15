@@ -26,7 +26,8 @@ class LobbyGroup {
         if (canStart && startAt == null) {
             startAt = Clock.System.now() + getStartOffsetTime()
             audience.sendMiniMessage("${Jam.PREFIX} <gray>Start has been scheduled. You're playing with:")
-            players.forEach { audience.sendMiniMessage("${Jam.PREFIX} <gray>- <white>${it.username}") }
+            // Nur aktive Spieler anzeigen (keine Spectators)
+            getActivePlayers().forEach { audience.sendMiniMessage("${Jam.PREFIX} <gray>- <white>${it.username}") }
         } else if (!canStart && startAt != null) {
             startAt = null
         }
@@ -45,13 +46,15 @@ class LobbyGroup {
     }
 
     fun canStartTheoretically(): Boolean {
-        return players.size >= LobbyGameState.MIN_PLAYERS_PER_INSTANCE && players.size <= LobbyGameState.PLAYERS_PER_INSTANCE
+        val activePlayerCount = getActivePlayers().size
+        return activePlayerCount >= LobbyGameState.MIN_PLAYERS_PER_INSTANCE && activePlayerCount <= LobbyGameState.PLAYERS_PER_INSTANCE
     }
 
     fun getStartOffsetTime(): Duration {
-        return if (players.size >= LobbyGameState.PLAYERS_PER_INSTANCE) {
+        val activePlayerCount = getActivePlayers().size
+        return if (activePlayerCount >= LobbyGameState.PLAYERS_PER_INSTANCE) {
             5.seconds
-        } else if (players.size >= LobbyGameState.PLAYERS_PER_INSTANCE_SLOW_START) {
+        } else if (activePlayerCount >= LobbyGameState.PLAYERS_PER_INSTANCE_SLOW_START) {
             10.seconds
         } else {
             30.seconds
@@ -73,6 +76,13 @@ class LobbyGroup {
     }
 
     fun hasSpace(): Boolean {
-        return players.size < LobbyGameState.PLAYERS_PER_INSTANCE
+        return getActivePlayers().size < LobbyGameState.PLAYERS_PER_INSTANCE
+    }
+    
+    /**
+     * Gibt nur die aktiven Spieler zurück (keine Spectators)
+     */
+    fun getActivePlayers(): List<Player> {
+        return players.filter { !Jam.gameStates.isLobbySpectator(it) }
     }
 }

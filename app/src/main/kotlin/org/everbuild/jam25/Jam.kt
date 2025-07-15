@@ -19,14 +19,15 @@ import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDe
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.command.GiveCommand
+import org.everbuild.jam25.command.QueueCommand
 import org.everbuild.jam25.command.QuickStartCommand
 import org.everbuild.jam25.command.SetAllowPlayingCommand
+import org.everbuild.jam25.command.SpectatorCommand
 import org.everbuild.jam25.item.api.ItemLoader
 import org.everbuild.jam25.item.api.withCustomItemListeners
 import org.everbuild.jam25.listener.ClientSelectTradePacketListener
 import org.everbuild.jam25.listener.setupPlayerDropEvent
 import org.everbuild.jam25.state.GameStateController
-
 
 object Jam : OrionServer() {
     const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
@@ -52,7 +53,7 @@ object Jam : OrionServer() {
             .addChild(gameStates.eventNode())
             .addChild(PingResponder.eventNode())
             .addChild(BlockController.eventNode())
-            .addChild(PerInstanceTabList.eventNode())
+            //.addChild(PerInstanceTabList.eventNode())
 
         Mc.packetListener.setPlayListener(ClientSelectTradePacket::class.java, ClientSelectTradePacketListener::listener)
 
@@ -71,8 +72,18 @@ object Jam : OrionServer() {
         }
 
         listen<PlayerSpawnEvent> { event ->
-            event.player.gameMode = GameMode.SURVIVAL
-            event.player.getAttribute(Attribute.BLOCK_BREAK_SPEED).baseValue = 0.0
+            val player = event.player
+            val inGameState = gameStates.getInGamePhase(player)
+            if (inGameState != null) {
+                val spectatorState = gameStates.getOrCreateSpectatorState(inGameState)
+                if (spectatorState.isSpectator(player)) {
+                    player.gameMode = GameMode.SPECTATOR
+                    player.getAttribute(Attribute.BLOCK_BREAK_SPEED).baseValue = 0.0
+                    return@listen
+                }
+            }
+            player.gameMode = GameMode.SURVIVAL
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).baseValue = 0.0
         }
 
         val models = extractToDir("models")
@@ -82,6 +93,8 @@ object Jam : OrionServer() {
         SetAllowPlayingCommand.register()
         QuickStartCommand.register()
         GiveCommand.register()
+        QueueCommand.register()
+        SpectatorCommand.register()
 
         withGlobalTickEvent()
     }

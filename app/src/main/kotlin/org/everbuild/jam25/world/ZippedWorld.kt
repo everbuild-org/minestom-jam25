@@ -23,7 +23,10 @@ open class ZippedWorld(name: String) {
                 .forEach { entry ->
                     val targetFile = File(worldDir, entry.name)
                     targetFile.parentFile.mkdirs()
-                    Files.copy(zip, targetFile.toPath())
+                    if (targetFile.exists()) targetFile.delete()
+                    runCatching {
+                        Files.copy(zip, targetFile.toPath())
+                    }
                 }
         }
 
