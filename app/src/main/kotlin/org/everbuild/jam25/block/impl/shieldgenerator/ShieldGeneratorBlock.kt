@@ -6,6 +6,7 @@ import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.event.instance.InstanceUnregisterEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
+import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.api.BlockController
@@ -72,7 +73,7 @@ object ShieldGeneratorBlock : CustomBlock {
         instance.setBlock(
             position.add(0, 0, -1),
             Block.BARRIER
-                .withTag(PipeBlock.canConnectTag, true)
+                .withTag(PipeBlock.faceCanConnectTag, BlockFace.NORTH.name)
                 .withTag(BlockController.unbreakable, true)
                 .withTag(BlockController.refillable, BioScrapsItem.id.asString())
         )

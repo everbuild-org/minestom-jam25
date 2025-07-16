@@ -17,6 +17,7 @@ import org.everbuild.jam25.block.impl.impulse.ImpulseBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
+import org.everbuild.jam25.block.impl.vacuum.VacuumBlock
 import org.everbuild.jam25.item.api.get
 import org.everbuild.jam25.item.api.has
 import org.everbuild.jam25.item.api.with
@@ -26,7 +27,8 @@ object BlockController {
         PipeBlock,
         ImpulseBlock,
         ShieldGeneratorBlock,
-        Missile1Block
+        Missile1Block,
+        VacuumBlock
     )
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)

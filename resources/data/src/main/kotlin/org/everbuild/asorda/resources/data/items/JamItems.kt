@@ -13,6 +13,7 @@ object JamItems : ContentList("jam") {
         val digitalComponent = item(2, 0)
         val metalScraps = item(3, 0)
         val hammer = item(4, 0)
+        val vacuum = item(5, 0)
     }
 
     private val pipeTexture = Texture("jam/pipe")
@@ -31,6 +32,7 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val vacuumItem = defaultModelItem("vacuum", ItemSprites.vacuum)
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {

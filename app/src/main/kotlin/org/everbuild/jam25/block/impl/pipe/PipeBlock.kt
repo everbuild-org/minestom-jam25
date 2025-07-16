@@ -7,7 +7,6 @@ import net.kyori.adventure.nbt.ListBinaryTag
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
-import net.minestom.server.entity.Player
 import net.minestom.server.event.instance.InstanceUnregisterEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
@@ -23,7 +22,7 @@ import org.everbuild.jam25.listener.dropItemOnFloor
 object PipeBlock : CustomBlock {
     val entities = hashMapOf<Instance, HashMap<Long, MutableSet<Entity>>>()
     val state = Tag.NBT("state")
-    val canConnectTag = Tag.Boolean("canConnectToPipe").defaultValue(false)
+    val faceCanConnectTag = Tag.String("faceCanConnectToPipe")
 
     init {
         listen<InstanceUnregisterEvent> {
@@ -98,7 +97,7 @@ object PipeBlock : CustomBlock {
     }
 
     fun shouldConnect(block: Block, face: BlockFace): Boolean {
-        return BlockController.getBlock(block) == PipeBlock || block.getTag(canConnectTag)
+        return BlockController.getBlock(block) == PipeBlock || (block.getTag(faceCanConnectTag)?.let { BlockFace.valueOf(it) == face } ?: false)
     }
 
     enum class BlockStateType {
