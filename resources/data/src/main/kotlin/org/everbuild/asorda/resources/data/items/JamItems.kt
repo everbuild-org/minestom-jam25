@@ -13,17 +13,21 @@ object JamItems : ContentList("jam") {
         val digitalComponent = item(2, 0)
         val metalScraps = item(3, 0)
         val hammer = item(4, 0)
-        val vacuum = item(5, 0)
+        val siliconDust = item(5, 0)
+        val oil = item(0, 1)
     }
 
     private val pipeTexture = Texture("jam/pipe")
+    private val vacuumTexture = Texture("jam/vacuum")
 
     val bioScraps = defaultModelItem("bio_scraps", ItemSprites.bioScraps)
     val cableComponent = defaultModelItem("cable_component", ItemSprites.cableComponent)
     val digitalComponent = defaultModelItem("digital_component", ItemSprites.digitalComponent)
     val metalScraps = defaultModelItem("metal_scraps", ItemSprites.metalScraps)
     val hammer = defaultModelItem("hammer", ItemSprites.hammer)
+    val siliconDust = defaultModelItem("silicon", ItemSprites.siliconDust)
     val missile1 = defaultModelItem("missile1", Texture("jam/missile1") )
+    val oil = defaultModelItem("oil", ItemSprites.oil )
     val pipeItem = createItem("pipeItem") {
         model(createModel {
             parent(includeModel("jam/pipe_hand"))
@@ -32,7 +36,14 @@ object JamItems : ContentList("jam") {
             )
         })
     }
-    val vacuumItem = defaultModelItem("vacuum", ItemSprites.vacuum)
+    val vacuumItem = createItem("vacuumItem") {
+        model(createModel {
+            parent(includeModel("jam/vacuum"))
+            textures(
+                "0" to vacuumTexture
+            )
+        })
+    }
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {

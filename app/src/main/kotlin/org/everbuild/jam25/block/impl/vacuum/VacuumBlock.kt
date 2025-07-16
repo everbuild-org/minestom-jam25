@@ -14,6 +14,7 @@ import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
 import org.everbuild.jam25.item.impl.VacuumBlockItem
 import org.everbuild.jam25.listener.dropItemOnFloor
+import org.everbuild.jam25.world.vacuum.Vacuum
 
 object VacuumBlock : CustomBlock {
     const val INVENTORY_SIZE = 10
@@ -50,6 +51,8 @@ object VacuumBlock : CustomBlock {
             }
         }
 
+        player.getTeam()?.game?.advanceable?.add(Vacuum(position))
+
         update(instance, position)
     }
 
@@ -66,6 +69,13 @@ object VacuumBlock : CustomBlock {
         dropItemOnFloor(Pos.fromPoint(position), VacuumBlockItem.createItem(), instance)
         block.getInventory()?.items?.forEach { itemStack ->
             dropItemOnFloor(Pos.fromPoint(position), itemStack, instance)
+        }
+
+        player.getTeam()?.game?.advanceable?.removeIf {
+            if (it is Vacuum && it.position == position) {
+                it.drop(instance)
+                true
+            } else false
         }
     }
 

@@ -46,7 +46,8 @@ void main() {
                 || (arcSegment == 2 && !(pxAngle > QUARTER_CIRCLE + (FIFTH * 3) || pxAngle < QUARTER_CIRCLE - FIFTH))) {
             discard;
         }
+    } else if (functionId == 2) {
+        discard;
     }
-
     fragColor = apply_fog(color, sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
 }

@@ -10,12 +10,16 @@ import org.everbuild.jam25.block.api.attachCustomBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.item.api.AbstractItem
 import org.everbuild.jam25.item.api.itemStackOf
+import org.everbuild.jam25.item.api.lore
 import org.everbuild.jam25.item.api.name
 
 object Missile1Item : AbstractItem(
     key = "missile1",
     item = itemStackOf(JamItems.missile1)
         .name("<red>Basic Missile")
+        .withMaxStackSize(64)
+        .lore("<gray>Explode your enemies! Place on Mycelium.")
+        .lore("<yellow>")
         .attachCustomBlock(Missile1Block)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {

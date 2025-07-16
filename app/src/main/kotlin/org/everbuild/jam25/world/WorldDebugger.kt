@@ -4,7 +4,7 @@ import net.minestom.server.entity.Player
 import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debuggable
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debugger
-import org.everbuild.jam25.resource.Resource
+import org.everbuild.jam25.resource.SpawneableResource
 
 object WorldDebugger : Debugger {
     override val identifier: String = "world"
@@ -13,14 +13,14 @@ object WorldDebugger : Debugger {
     fun resourceNode(player: Player) {
         val pos = player.getTargetBlockPosition(4) ?: return
         val block = player.instance!!.getBlock(pos)
-        val resource = when (block.defaultState()) {
-            Block.OAK_PRESSURE_PLATE.defaultState() -> Resource.BIO_SCRAPS
-            Block.POLISHED_BLACKSTONE_PRESSURE_PLATE.defaultState() -> Resource.SILICON_DUST
-            Block.HEAVY_WEIGHTED_PRESSURE_PLATE.defaultState() -> Resource.METAL_SCRAPS
+        val spawneableResource = when (block.defaultState()) {
+            Block.OAK_PRESSURE_PLATE.defaultState() -> SpawneableResource.BIO_SCRAPS
+            Block.POLISHED_BLACKSTONE_PRESSURE_PLATE.defaultState() -> SpawneableResource.SILICON_DUST
+            Block.HEAVY_WEIGHTED_PRESSURE_PLATE.defaultState() -> SpawneableResource.METAL_SCRAPS
             else -> return player.sendMessage("not a resource node")
         }
 
-        val codegen = "ResourceNode(Pos.fromPoint(BlockVec(${pos.blockX()}, ${pos.blockY()}, ${pos.blockZ()})), Resource.${resource.name}),"
+        val codegen = "ResourceNode(Pos.fromPoint(BlockVec(${pos.blockX()}, ${pos.blockY()}, ${pos.blockZ()})), SpawneableResource.${spawneableResource.name}),"
         player.sendMessage(codegen)
         println(codegen)
     }

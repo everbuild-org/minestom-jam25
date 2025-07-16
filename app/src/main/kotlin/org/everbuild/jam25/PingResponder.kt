@@ -2,7 +2,6 @@ package org.everbuild.jam25
 
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import java.io.File
 import javax.imageio.ImageIO
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventNode

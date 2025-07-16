@@ -10,6 +10,7 @@ import org.everbuild.jam25.block.api.attachCustomBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.item.api.AbstractItem
 import org.everbuild.jam25.item.api.itemStackOf
+import org.everbuild.jam25.item.api.lore
 import org.everbuild.jam25.item.api.name
 
 object PipeBlockItem : AbstractItem(
@@ -17,6 +18,8 @@ object PipeBlockItem : AbstractItem(
     item = itemStackOf(JamItems.pipeItem)
         .name("<color:#ff983d>Item & Fluid Pipe")
         .attachCustomBlock(PipeBlock)
+        .lore("<gray>Use Pipes to transfer items and fluids between machines")
+        .lore("<yellow>Try placing a Vacuum next to oil and connecting it to the shield generator")
         .withMaxStackSize(64)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {

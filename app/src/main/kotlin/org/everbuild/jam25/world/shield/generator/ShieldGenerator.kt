@@ -19,15 +19,13 @@ import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 data class ShieldGenerator(
     val position: BlockVec
 ) : AdvanceableWorldElement {
-    companion object {
-        private const val POWERLOSS_PER_MINUTE = 50.0
-        private const val POWERLOSS_PER_TICK = POWERLOSS_PER_MINUTE / (20 * 60)
-        private val POWER_LEVEL_NOTIFICATIONS = listOf(10, 25)
+    private val POWERLOSS_PER_MINUTE = 50.0
+    private val POWERLOSS_PER_TICK = POWERLOSS_PER_MINUTE / (20 * 60)
+    private val POWER_LEVEL_NOTIFICATIONS = listOf(10, 25)
 
-        private const val REFILL_POWERGAIN = 10.0
-        private const val REFILL_POWERGAIN_PER_SECOND = 5.0
-        private const val REFILL_POWERGAIN_PER_TICK = REFILL_POWERGAIN_PER_SECOND / 20
-    }
+    private val REFILL_POWERGAIN = 1.0
+    private val REFILL_POWERGAIN_PER_SECOND = 5.0
+    private val REFILL_POWERGAIN_PER_TICK = REFILL_POWERGAIN_PER_SECOND / 20
 
     var team: GameTeam? = null
 

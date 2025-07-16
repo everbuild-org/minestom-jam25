@@ -10,9 +10,9 @@ object ResourceDebugger : Debugger {
     override val identifier: String = "resource"
 
     @Debuggable
-    fun spawnBio(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(Resource.BIO_SCRAPS, player.position.roundToBlock())
+    fun spawnBio(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(SpawneableResource.BIO_SCRAPS, player.position.roundToBlock())
     @Debuggable
-    fun spawnMetal(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(Resource.METAL_SCRAPS, player.position.roundToBlock())
+    fun spawnMetal(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(SpawneableResource.METAL_SCRAPS, player.position.roundToBlock())
     @Debuggable
-    fun spawnSi(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(Resource.SILICON_DUST, player.position.roundToBlock())
+    fun spawnSi(player: Player) = Jam.gameStates.getInGamePhase(player)?.createResourceNode(SpawneableResource.SILICON_DUST, player.position.roundToBlock())
 }

@@ -3,7 +3,7 @@ package org.everbuild.jam25.world
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import org.everbuild.jam25.map.WarroomMap
-import org.everbuild.jam25.resource.Resource
+import org.everbuild.jam25.resource.SpawneableResource
 import org.everbuild.jam25.resource.ResourceNode
 import org.everbuild.jam25.shop.MechanicNPC
 import org.everbuild.jam25.shop.ShopNPC
@@ -45,16 +45,16 @@ class GameWorld : ZippedWorld("map") {
             map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f)),
             shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30)),
             nodes = listOf(
-                ResourceNode(Pos.fromPoint(BlockVec(-11, 7, 43)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(-32, 6, 27)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(-16, 7, 33)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(-20, 7, 20)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(-25, -15, 38)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(-18, -15, 42)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(22, -23, 2)), Resource.SILICON_DUST),
-                ResourceNode(Pos.fromPoint(BlockVec(-9, -19, -5)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(4, -23, 56)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(23, -25, 45)), Resource.SILICON_DUST),
+                ResourceNode(Pos.fromPoint(BlockVec(-11, 7, 43)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-32, 6, 27)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-16, 7, 33)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-20, 7, 20)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-25, -15, 38)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-18, -15, 42)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(22, -23, 2)), SpawneableResource.SILICON_DUST),
+                ResourceNode(Pos.fromPoint(BlockVec(-9, -19, -5)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(4, -23, 56)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(23, -25, 45)), SpawneableResource.SILICON_DUST),
             ),
             shops = listOf(
                 MechanicNPC(Pos(11.0, -14.00, 43.5, -90f, 0f)),
@@ -79,16 +79,16 @@ class GameWorld : ZippedWorld("map") {
             map = WarroomMap(Pos(16.5, -12.8, 111.5, 0f, 0f)),
             shieldGenerator = ShieldGenerator(BlockVec(4, -4, 134)),
             nodes = listOf(
-                ResourceNode(Pos.fromPoint(BlockVec(43, 7, 121)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(48, 7, 131)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(52, 7, 144)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(64, 6, 137)), Resource.BIO_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(50, -15, 122)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(57, -15, 126)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(28, -23, 108)), Resource.METAL_SCRAPS),
-                ResourceNode(Pos.fromPoint(BlockVec(9, -25, 119)), Resource.SILICON_DUST),
-                ResourceNode(Pos.fromPoint(BlockVec(10, -23, 162)), Resource.SILICON_DUST),
-                ResourceNode(Pos.fromPoint(BlockVec(41, -19, 169)), Resource.METAL_SCRAPS)
+                ResourceNode(Pos.fromPoint(BlockVec(43, 7, 121)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(48, 7, 131)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(52, 7, 144)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(64, 6, 137)), SpawneableResource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(50, -15, 122)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(57, -15, 126)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(28, -23, 108)), SpawneableResource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(9, -25, 119)), SpawneableResource.SILICON_DUST),
+                ResourceNode(Pos.fromPoint(BlockVec(10, -23, 162)), SpawneableResource.SILICON_DUST),
+                ResourceNode(Pos.fromPoint(BlockVec(41, -19, 169)), SpawneableResource.METAL_SCRAPS)
             ),
             shops = listOf(
                 UpgradeNPC(Pos(11.0, -14.00, 121.5, -90f, 0f)),

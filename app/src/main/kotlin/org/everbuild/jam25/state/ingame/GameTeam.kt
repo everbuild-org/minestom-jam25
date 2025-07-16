@@ -17,7 +17,7 @@ import org.everbuild.jam25.missile.MissileController
 import org.everbuild.jam25.missile.MissileControllerImpl
 import org.everbuild.jam25.world.shield.ShieldRenderer
 
-class GameTeam(val players: List<Player>, val type: GameTeamType) : DynamicGroup({ players.contains(it) }), MissileController by MissileControllerImpl() {
+class GameTeam(val players: List<Player>, val type: GameTeamType, val game: InGameState) : DynamicGroup({ players.contains(it) }), MissileController by MissileControllerImpl() {
     val poi = type.poi()
     var shield: ShieldRenderer? = null
     val node = EventNode.type("game-team-$type", EventFilter.PLAYER) { _, player -> players.contains(player) }

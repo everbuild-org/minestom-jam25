@@ -10,6 +10,7 @@ import org.everbuild.jam25.block.api.attachCustomBlock
 import org.everbuild.jam25.block.impl.vacuum.VacuumBlock
 import org.everbuild.jam25.item.api.AbstractItem
 import org.everbuild.jam25.item.api.itemStackOf
+import org.everbuild.jam25.item.api.lore
 import org.everbuild.jam25.item.api.name
 
 object VacuumBlockItem : AbstractItem(
@@ -17,6 +18,8 @@ object VacuumBlockItem : AbstractItem(
     item = itemStackOf(JamItems.vacuumItem)
         .name("<gold>Vacuum")
         .attachCustomBlock(VacuumBlock)
+        .lore("<gray>Vacuums are used to collect items and fluids in a area around them.")
+        .lore("<yellow>Range: 4 Blocks in each direction")
         .withMaxStackSize(16)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {

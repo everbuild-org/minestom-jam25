@@ -9,21 +9,14 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
 import net.minestom.server.event.EventNode
-import net.minestom.server.instance.LightingChunk
-import net.minestom.server.instance.block.Block
-import net.minestom.server.utils.chunk.ChunkSupplier
-import org.everbuild.asorda.resources.data.addWseeModels
 import org.everbuild.celestia.orion.core.util.Cooldown
-import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.GlobalTickEvent
-import org.everbuild.jam25.Jam
-import org.everbuild.jam25.resource.Resource
+import org.everbuild.jam25.resource.SpawneableResource
 import org.everbuild.jam25.resource.ResourceNode
 import org.everbuild.jam25.state.GameState
 import org.everbuild.jam25.state.lobby.LobbyGroup
-import org.everbuild.jam25.util.background
 import org.everbuild.jam25.world.GameWorld
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 
@@ -62,8 +55,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
         val teamSize = players.size / 2
         val redPlayers = players.subList(0, teamSize)
         val bluePlayers = players.subList(teamSize, players.size)
-        teamRed = GameTeam(redPlayers, GameTeamType.RED)
-        teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE)
+        teamRed = GameTeam(redPlayers, GameTeamType.RED, this)
+        teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE, this)
         teams = listOf(teamRed, teamBlue)
 
         playerEvents.addChild(teamRed.node)
@@ -92,7 +85,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
 
     fun teamOf(player: Player): GameTeam? = teams.find { it.players.contains(player) }
 
-    fun createResourceNode(type: Resource, pos: Pos) {
+    fun createResourceNode(type: SpawneableResource, pos: Pos) {
         advanceable.add(ResourceNode(pos, type).also { it.setInstance(world.instance) })
     }
 
