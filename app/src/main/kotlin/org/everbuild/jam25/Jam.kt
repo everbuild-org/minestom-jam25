@@ -14,6 +14,7 @@ import net.minestom.server.world.biome.BiomeEffects
 import net.worldseed.multipart.ModelEngine
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.celestia.orion.platform.minestom.api.utils.logger
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
 import org.everbuild.celestia.orion.platform.minestom.util.listen
@@ -64,10 +65,11 @@ object Jam : OrionServer() {
 
         TabListController.schedule()
 
-        if (JamConfig.velocityEnable) {
+        if (System.getenv("VELOCITY_SECRET") != null) {
+            logger.info("Using Velocity Secret Manager")
             VelocityProxy.enable(System.getenv("VELOCITY_SECRET"))
-            withResourcePack(JamConfig.resourcePackUri)
         } else {
+            logger.info("Using Dev Resources")
             withResourcePacksInDev()
         }
 

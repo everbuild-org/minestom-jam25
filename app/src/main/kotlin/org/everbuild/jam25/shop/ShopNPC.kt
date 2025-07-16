@@ -16,7 +16,7 @@ import org.everbuild.celestia.orion.core.util.minimessage
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 
 
-abstract class ShopNPC(val name: String, val skin: PlayerSkin) : LivingEntity(EntityType.PLAYER) {
+abstract class ShopNPC(val name: String, val skin: PlayerSkin?) : LivingEntity(EntityType.PLAYER) {
     init {
         isCustomNameVisible = true
         set(DataComponents.CUSTOM_NAME, name.minimessage())
@@ -48,13 +48,15 @@ abstract class ShopNPC(val name: String, val skin: PlayerSkin) : LivingEntity(En
         if (entityType === EntityType.PLAYER) {
             val properties: MutableList<PlayerInfoUpdatePacket.Property?> =
                 ArrayList()
-            properties.add(
-                PlayerInfoUpdatePacket.Property(
-                    "textures",
-                    skin.textures(),
-                    skin.signature()
+            if (skin != null) {
+                properties.add(
+                    PlayerInfoUpdatePacket.Property(
+                        "textures",
+                        skin.textures(),
+                        skin.signature()
+                    )
                 )
-            )
+            }
             val playerEntry = PlayerInfoUpdatePacket.Entry(
                 uuid, getTrimmedPlayerUsername(), properties,
                 false, 0, GameMode.CREATIVE, Component.empty(), null, 0
@@ -70,7 +72,7 @@ abstract class ShopNPC(val name: String, val skin: PlayerSkin) : LivingEntity(En
     }
 
     companion object {
-        val SKIN_MECHANIC = PlayerSkin.fromUuid("022122c9-b99f-4a6f-813d-75d6c01995e6")!!
-        val SKIN_ENGINEER = PlayerSkin.fromUuid("cd8be6f5-2155-4e71-aa74-7dc2a61abb2a")!!
+        val SKIN_MECHANIC = PlayerSkin.fromUuid("022122c9-b99f-4a6f-813d-75d6c01995e6")
+        val SKIN_ENGINEER = PlayerSkin.fromUuid("cd8be6f5-2155-4e71-aa74-7dc2a61abb2a")
     }
 }
