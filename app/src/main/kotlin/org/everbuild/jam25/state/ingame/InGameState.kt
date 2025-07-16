@@ -4,6 +4,7 @@ import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.time.Duration.Companion.seconds
 import net.kyori.adventure.key.Key
+import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
@@ -13,12 +14,14 @@ import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.GlobalTickEvent
+import org.everbuild.jam25.block.impl.pipe.PipeNetworkController
 import org.everbuild.jam25.resource.SpawneableResource
 import org.everbuild.jam25.resource.ResourceNode
 import org.everbuild.jam25.state.GameState
 import org.everbuild.jam25.state.lobby.LobbyGroup
 import org.everbuild.jam25.world.GameWorld
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
+import org.everbuild.jam25.world.placeable.ItemConsumer
 
 class InGameState(lobby: LobbyGroup) : GameState {
     private val id = UUID.randomUUID()
@@ -30,6 +33,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
     val teamBlue: GameTeam
     val teams: List<GameTeam>
     val advanceable = mutableSetOf<AdvanceableWorldElement>()
+    val networkController = PipeNetworkController(this)
 
     private val instanceEvents = EventNode.event("in-game/$id/instance", EventFilter.INSTANCE) {
         it.instance == world.instance
@@ -45,7 +49,8 @@ class InGameState(lobby: LobbyGroup) : GameState {
         .addChild(instanceEvents)
         .addChild(playerEvents)
         .listen<GlobalTickEvent, _> {
-            advanceable.forEach { it.advance(world.instance) }
+            val myAdvanceables = advanceable.map { it }
+            myAdvanceables.forEach { it.advance(world.instance) }
             if (!sendNukesCooldown.get()) return@listen
             teams.map(GameTeam::tryLaunch)
         }
@@ -89,8 +94,17 @@ class InGameState(lobby: LobbyGroup) : GameState {
         advanceable.add(ResourceNode(pos, type).also { it.setInstance(world.instance) })
     }
 
-    override fun events(): EventNode<out Event> = eventNode
+    fun teamAt(position: BlockVec): GameTeam {
+        return teams.find { it.poi.area.contains(position) }
+            ?: throw IllegalArgumentException("No team found at $position")
+    }
 
+    inline fun <reified T> getAdvanceable(pos: BlockVec): T? = advanceable
+        .filter { it.getBlockPosition() == pos }
+        .filterIsInstance<T>()
+        .firstOrNull()
+
+    override fun events(): EventNode<out Event> = eventNode
     override fun players(): List<Player> = players
     override fun key(): Key = key
 }

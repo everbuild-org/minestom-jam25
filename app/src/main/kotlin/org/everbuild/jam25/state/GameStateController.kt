@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
+import net.minestom.server.instance.Instance
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.state.ingame.InGameState
 import org.everbuild.jam25.state.lobby.LobbyGameState
@@ -62,6 +63,10 @@ class GameStateController {
         val activeGame = controlledStates.find { it is InGameState && it.players().contains(player) } as? InGameState
         if (activeGame != null) return activeGame
         return spectatorToGame[player]
+    }
+
+    fun getInGamePhase(instance: Instance): InGameState? {
+        return controlledStates.find { it is InGameState && it.world.instance == instance } as? InGameState
     }
 
     fun getLobby(player: Player): LobbyGroup? {

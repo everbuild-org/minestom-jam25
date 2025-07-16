@@ -1,11 +1,16 @@
 package org.everbuild.jam25.world.shield.generator
 
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.trait.PlayerEvent
 import net.minestom.server.instance.Instance
+import net.minestom.server.instance.block.BlockFace
+import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
@@ -14,7 +19,10 @@ import org.everbuild.jam25.block.api.ShieldGeneratorRefillComponent
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
 import org.everbuild.jam25.item.api.get
 import org.everbuild.jam25.state.ingame.GameTeam
+import org.everbuild.jam25.state.ingame.GameTeamType
+import org.everbuild.jam25.world.Resource
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
+import org.everbuild.jam25.world.placeable.ItemConsumer
 
 data class ShieldGenerator(
     val position: BlockVec
@@ -23,9 +31,10 @@ data class ShieldGenerator(
     private val POWERLOSS_PER_TICK = POWERLOSS_PER_MINUTE / (20 * 60)
     private val POWER_LEVEL_NOTIFICATIONS = listOf(10, 25)
 
-    private val REFILL_POWERGAIN = 1.0
     private val REFILL_POWERGAIN_PER_SECOND = 5.0
     private val REFILL_POWERGAIN_PER_TICK = REFILL_POWERGAIN_PER_SECOND / 20
+    val refillBioScrapsPowerGain = 1.0
+    val refillOilPowerGain = 1.0
 
     var team: GameTeam? = null
 
@@ -43,8 +52,10 @@ data class ShieldGenerator(
     private var group: DynamicGroup? = null
     private var pendingRefill = 0.0
 
+    private val recheckCooldown = Cooldown(1.seconds)
+
     fun setInstance(instance: Instance) {
-        ShieldGeneratorBlock.placeBlock(instance, position, PlacementActor.ByServer)
+        ShieldGeneratorBlock.placeBlock(instance, position, PlacementActor.ByTeam(team!!))
         this.instance = instance
         powerRenderer = ShieldGeneratorRefillRenderer(instance, position.asVec().add(0.5, 0.5, 0.5))
     }
@@ -59,7 +70,7 @@ data class ShieldGenerator(
             val itemStack = event.player.getItemInHand(event.hand)
             if (itemStack.get<ShieldGeneratorRefillComponent>()?.canRefill != true) return@listen
             if (event.blockPosition !in ShieldGeneratorBlock.generatorPositions(position)) return@listen
-            pendingRefill += REFILL_POWERGAIN
+            pendingRefill += refillBioScrapsPowerGain
             event.player.pling()
 
             if (event.player.gameMode != GameMode.CREATIVE) {
@@ -69,9 +80,51 @@ data class ShieldGenerator(
         }
     }
 
+    private fun recheckPipes() {
+        val left = power + pendingRefill
+        if (left >= 75.0) {
+            return
+        }
+
+        val block = position.add(0, 0, -1)
+        team!!.game.networkController.let {
+            it.request(
+                ItemConsumer.ItemOrOil.Oil(
+                    20
+                ),
+                block,
+                BlockFace.NORTH
+            )
+
+            it.request(
+                ItemConsumer.ItemOrOil.Item(
+                    Resource.BIO_SCRAPS.symbol.withAmount(
+                        20
+                    )
+                ),
+                block,
+                BlockFace.NORTH
+
+            )
+        }
+    }
+
     fun hasPower(): Boolean = power > 0
 
+    fun refill(amount: Double) {
+        if (amount + pendingRefill > 100.0) {
+            pendingRefill = 100.0 - amount
+        } else {
+            pendingRefill += amount
+        }
+        if (pendingRefill > 100.0) pendingRefill = 100.0
+        if (!running) running = true
+        powerRenderer?.update(power, pendingRefill)
+        team?.shield?.set(running)
+    }
+
     override fun advance(instance: Instance) {
+        if (recheckCooldown.get()) recheckPipes()
         if (pendingRefill > 0) {
             power = (power + REFILL_POWERGAIN_PER_TICK).coerceAtMost(100.0)
             pendingRefill = (pendingRefill - REFILL_POWERGAIN_PER_TICK).coerceAtLeast(0.0)
@@ -92,4 +145,6 @@ data class ShieldGenerator(
         }
         powerRenderer?.update(power, pendingRefill)
     }
+
+    override fun getBlockPosition(): BlockVec = BlockVec(position)
 }

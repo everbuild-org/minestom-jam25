@@ -13,6 +13,8 @@ import org.everbuild.celestia.orion.core.util.minimessage
 import org.everbuild.jam25.listener.dropItemOnFloor
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import kotlin.time.Duration.Companion.milliseconds
+import net.minestom.server.coordinate.BlockVec
+import net.minestom.server.coordinate.Point
 import net.minestom.server.entity.metadata.item.ItemEntityMeta
 
 class ResourceNode(val pos: Pos, val spawneableResource: SpawneableResource) : AdvanceableWorldElement {
@@ -74,4 +76,6 @@ class ResourceNode(val pos: Pos, val spawneableResource: SpawneableResource) : A
         if (!cooldown.get()) trySetTimer(isFull)
         else if (!isFull) spawnAttempt()
     }
+
+    override fun getBlockPosition(): BlockVec = BlockVec(pos)
 }

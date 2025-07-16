@@ -63,4 +63,6 @@ class Turret(pos: BlockVec, rotation: Rotation) : Structure<TurretState, TurretE
 
         consumeEvent(instance, TurretEvent.Progress)
     }
+
+    override fun getBlockPosition(): BlockVec = centerPos
 }

@@ -11,8 +11,10 @@ import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.utils.dropItem
 import org.everbuild.jam25.world.Resource
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
+import org.everbuild.jam25.world.placeable.ItemConsumer
+import org.everbuild.jam25.world.placeable.ItemHolder
 
-class Vacuum(val position: BlockVec) : AdvanceableWorldElement {
+class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
     val fluidCooldown = Cooldown(1.seconds)
     val items = HashMap<Resource, Int>()
     val hologramLines = HashMap<Resource, ResourceHologramLine>()
@@ -40,6 +42,8 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement {
         if (fluidCooldown.get()) pickUpFluid(instance)
         updateHologram(instance)
     }
+
+    override fun getBlockPosition(): BlockVec = position
 
     private fun updateHologram(instance: Instance) {
         if (hologramLines.keys == items.keys) {
@@ -92,6 +96,45 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement {
                         return
                     }
                 }
+            }
+        }
+    }
+
+    override fun hasItem(item: ItemConsumer.ItemOrOil): Boolean {
+        when (item) {
+            is ItemConsumer.ItemOrOil.Oil -> {
+                return (items[Resource.OIL] ?: 0) > 0
+            }
+
+            is ItemConsumer.ItemOrOil.Item -> {
+                val resource = Resource.entries.find { item.itemStack.isSimilar(it.symbol) } ?: return false
+                return (items[resource] ?: 0) > 0
+            }
+        }
+    }
+
+    override fun removeItem(item: ItemConsumer.ItemOrOil): ItemConsumer.ItemOrOil? {
+        when (item) {
+            is ItemConsumer.ItemOrOil.Oil -> {
+                val stackSize = item.amount
+                val currentAmount = items[Resource.OIL] ?: 0
+                if (currentAmount < stackSize) {
+                    items.remove(Resource.OIL)
+                    return ItemConsumer.ItemOrOil.Oil(stackSize)
+                }
+                items[Resource.OIL] = currentAmount - stackSize
+                return ItemConsumer.ItemOrOil.Oil(stackSize)
+            }
+            is ItemConsumer.ItemOrOil.Item -> {
+                val stackSize = item.itemStack.amount()
+                val resource = Resource.entries.find { item.itemStack.isSimilar(it.symbol) } ?: return null
+                val currentAmount = items[resource] ?: 0
+                if (currentAmount < stackSize) {
+                    items.remove(resource)
+                    return ItemConsumer.ItemOrOil.Item(item.itemStack.withAmount(currentAmount))
+                }
+                items[resource] = currentAmount - stackSize
+                return ItemConsumer.ItemOrOil.Item(item.itemStack.withAmount(stackSize))
             }
         }
     }

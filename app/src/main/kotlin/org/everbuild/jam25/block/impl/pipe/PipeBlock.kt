@@ -24,6 +24,8 @@ object PipeBlock : CustomBlock {
     val state = Tag.NBT("state")
     val faceCanConnectTag = Tag.String("faceCanConnectToPipe")
 
+    val isPipeBlock = Tag.Boolean("isPipeBlock").defaultValue(false)
+
     init {
         listen<InstanceUnregisterEvent> {
             entities.remove(it.instance)
@@ -33,9 +35,8 @@ object PipeBlock : CustomBlock {
     override fun key(): Key = Key.key("jam", "pipe")
 
     override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
-        instance.setBlock(position, Block.BARRIER
-            .withTypeTag()
-            .withTag(state, BlockState.EMPTY.toNBT())
+        instance.setBlock(
+            position, Block.BARRIER.withTypeTag().withTag(state, BlockState.EMPTY.toNBT()).withTag(isPipeBlock, true)
         )
 
         update(instance, position)
@@ -48,16 +49,13 @@ object PipeBlock : CustomBlock {
     }
 
     override fun update(
-        instance: Instance,
-        position: BlockVec
+        instance: Instance, position: BlockVec
     ) {
-        val connectingTo = BlockFace.entries
-            .filter { dir -> shouldConnect(
-                instance.getBlock(position.relative(dir)),
-                dir.oppositeFace
-            )}
-            .map { dir -> dir to BlockStateType.CONNECTING }
-            .toMutableSet()
+        val connectingTo = BlockFace.entries.filter { dir ->
+                shouldConnect(
+                    instance.getBlock(position.relative(dir)), dir.oppositeFace
+                )
+            }.map { dir -> dir to BlockStateType.CONNECTING }.toMutableSet()
 
         if (connectingTo.isEmpty()) {
             connectingTo.add(BlockFace.NORTH to BlockStateType.END)
@@ -88,21 +86,20 @@ object PipeBlock : CustomBlock {
             entitiesPerPos.add(PipePartEntity("conn", face))
         }
 
-        if (state.connectedTo.size != 2 || state.connectedTo.any { v -> !state.connectedTo.any { it.first == v.first.oppositeFace }}) {
+        if (state.connectedTo.size != 2 || state.connectedTo.any { v -> !state.connectedTo.any { it.first == v.first.oppositeFace } }) {
             entitiesPerPos.add(PipePartEntity("middle", null))
         }
 
         entitiesPerPos.forEach { it.setInstance(instance, position) }
-//        BlockController.updateAround(instance, position)
     }
 
     fun shouldConnect(block: Block, face: BlockFace): Boolean {
-        return BlockController.getBlock(block) == PipeBlock || (block.getTag(faceCanConnectTag)?.let { BlockFace.valueOf(it) == face } ?: false)
+        return BlockController.getBlock(block) == PipeBlock || (block.getTag(faceCanConnectTag)?.split("|")
+            ?.map { BlockFace.valueOf(it) }?.contains(face) ?: false)
     }
 
     enum class BlockStateType {
-        CONNECTING,
-        END
+        CONNECTING, END
     }
 
     data class BlockState(val connectedTo: List<Pair<BlockFace, BlockStateType>>) {
@@ -110,12 +107,9 @@ object PipeBlock : CustomBlock {
         fun toNBT(): CompoundBinaryTag {
             return CompoundBinaryTag.builder()
                 .put("connectedTo", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, connectedTo.map {
-                    CompoundBinaryTag.builder()
-                        .putString("face", it.first.name)
-                        .putString("type", it.second.name)
+                    CompoundBinaryTag.builder().putString("face", it.first.name).putString("type", it.second.name)
                         .build()
-                }))
-                .build()
+                })).build()
         }
 
         companion object {
@@ -125,8 +119,7 @@ object PipeBlock : CustomBlock {
                 return BlockState(nbt.getList("connectedTo").map {
                     val nbtPair = it as CompoundBinaryTag
                     Pair(
-                        BlockFace.valueOf(nbtPair.getString("face")),
-                        BlockStateType.valueOf(nbtPair.getString("type"))
+                        BlockFace.valueOf(nbtPair.getString("face")), BlockStateType.valueOf(nbtPair.getString("type"))
                     )
                 })
             }
