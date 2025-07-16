@@ -1,16 +1,22 @@
 package org.everbuild.jam25.world.shield.generator
 
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.minestom.server.coordinate.BlockVec
+import net.minestom.server.coordinate.Point
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.trait.PlayerEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.BlockFace
+import net.minestom.server.network.packet.server.play.ParticlePacket
+import net.minestom.server.particle.Particle
 import org.everbuild.celestia.orion.core.util.Cooldown
+import org.everbuild.celestia.orion.platform.minestom.api.utils.asVec
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
@@ -19,7 +25,6 @@ import org.everbuild.jam25.block.api.ShieldGeneratorRefillComponent
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
 import org.everbuild.jam25.item.api.get
 import org.everbuild.jam25.state.ingame.GameTeam
-import org.everbuild.jam25.state.ingame.GameTeamType
 import org.everbuild.jam25.world.Resource
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import org.everbuild.jam25.world.placeable.ItemConsumer
@@ -53,6 +58,7 @@ data class ShieldGenerator(
     private var pendingRefill = 0.0
 
     private val recheckCooldown = Cooldown(1.seconds)
+    private val particleCooldown = Cooldown(250.milliseconds)
 
     fun setInstance(instance: Instance) {
         ShieldGeneratorBlock.placeBlock(instance, position, PlacementActor.ByTeam(team!!))
@@ -144,6 +150,47 @@ data class ShieldGenerator(
             }
         }
         powerRenderer?.update(power, pendingRefill)
+
+        if (running && particleCooldown.get()) {
+            spawnParticles(instance)
+        }
+    }
+
+    private fun spawnParticles(instance: Instance) {
+        val from = position.add(0.5, 4.3, 0.5)
+        team!!.poi.mainShield.toVertices().flatten().toSet().forEach {
+            spawnTrail(100, from, Pos(it.x.toDouble(), it.y.toDouble(), it.z.toDouble()), instance)
+        }
+
+        instance.sendGroupedPacket(
+            ParticlePacket(
+                Particle.PORTAL,
+                true, false,
+                position.add(0.5, 3.5, 0.5),
+                Pos(0.0, 0.5, 0.0),
+                0.6f,
+                50
+            )
+        )
+    }
+
+    private fun spawnTrail(steps: Int, from: Point, to: Point, instance: Instance) {
+        val directionVec = to.sub(from).asVec()
+        val perStep = directionVec.div(steps.toDouble())
+        var currentPos = from
+        (0..steps).forEach { step ->
+            currentPos = currentPos.add(perStep)
+            instance.sendGroupedPacket(
+                ParticlePacket(
+                    Particle.SCRAPE,
+                    true, true,
+                    currentPos,
+                    Pos.ZERO,
+                    0.3f,
+                    1
+                )
+            )
+        }
     }
 
     override fun getBlockPosition(): BlockVec = BlockVec(position)
