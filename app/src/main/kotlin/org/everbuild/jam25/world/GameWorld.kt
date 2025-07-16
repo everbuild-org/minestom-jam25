@@ -44,7 +44,18 @@ class GameWorld : ZippedWorld("map") {
             ),
             map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f)),
             shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30)),
-            nodes = listOf(),
+            nodes = listOf(
+                ResourceNode(Pos.fromPoint(BlockVec(-11, 7, 43)), Resource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-32, 6, 27)), Resource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-16, 7, 33)), Resource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-20, 7, 20)), Resource.BIO_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-25, -15, 38)), Resource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(-18, -15, 42)), Resource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(22, -23, 2)), Resource.SILICON_DUST),
+                ResourceNode(Pos.fromPoint(BlockVec(-9, -19, -5)), Resource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(4, -23, 56)), Resource.METAL_SCRAPS),
+                ResourceNode(Pos.fromPoint(BlockVec(23, -25, 45)), Resource.SILICON_DUST),
+            ),
             shops = listOf(
                 MechanicNPC(Pos(11.0, -14.00, 43.5, -90f, 0f)),
                 UpgradeNPC(Pos(22.0, -14.00, 43.5, 90f, 0f))

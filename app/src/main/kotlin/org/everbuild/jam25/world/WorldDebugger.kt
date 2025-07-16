@@ -16,7 +16,7 @@ object WorldDebugger : Debugger {
         val resource = when (block.defaultState()) {
             Block.OAK_PRESSURE_PLATE.defaultState() -> Resource.BIO_SCRAPS
             Block.POLISHED_BLACKSTONE_PRESSURE_PLATE.defaultState() -> Resource.SILICON_DUST
-            Block.LIGHT_WEIGHTED_PRESSURE_PLATE.defaultState() -> Resource.METAL_SCRAPS
+            Block.HEAVY_WEIGHTED_PRESSURE_PLATE.defaultState() -> Resource.METAL_SCRAPS
             else -> return player.sendMessage("not a resource node")
         }
 
