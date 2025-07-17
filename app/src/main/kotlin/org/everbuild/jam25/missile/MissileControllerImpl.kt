@@ -17,7 +17,7 @@ class MissileControllerImpl : MissileController {
 
     override fun tryLaunch() {
         if (missileTracker.isEmpty()) return
-        while (true) {
+        while (targetPositions.isNotEmpty()) {
             targetPositions.removeFirstOrNull()?.let {
                 val missile = missileTracker.first()
                 val result = missile.shoot(it) {

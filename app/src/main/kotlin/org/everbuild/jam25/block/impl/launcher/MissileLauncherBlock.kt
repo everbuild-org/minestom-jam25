@@ -1,5 +1,6 @@
 package org.everbuild.jam25.block.impl.launcher
 
+import kotlin.time.Duration.Companion.seconds
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.nbt.CompoundBinaryTag
 import net.minestom.server.coordinate.BlockVec
@@ -8,12 +9,15 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.utils.Direction
+import org.everbuild.celestia.orion.platform.minestom.util.later
 import org.everbuild.jam25.block.api.*
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
+import org.everbuild.jam25.item.api.AbstractItem
 import org.everbuild.jam25.item.impl.MissileLauncherItem
 import org.everbuild.jam25.item.impl.VacuumBlockItem
 import org.everbuild.jam25.listener.dropItemOnFloor
+import org.everbuild.jam25.state.ingame.GameTeam
 import org.everbuild.jam25.world.launcher.Launcher
 import org.everbuild.jam25.world.vacuum.Vacuum
 
@@ -35,7 +39,9 @@ object MissileLauncherBlock : CustomBlock {
             }
         }
 
-        player.getTeam()?.game?.advanceable?.add(Launcher(position))
+        player.getTeam()?.let {
+            it.game.advanceable.add(Launcher(position, it))
+        }
 
         update(instance, position)
     }
@@ -55,5 +61,20 @@ object MissileLauncherBlock : CustomBlock {
 
     override fun update(instance: Instance, position: BlockVec) {
 
+    }
+
+    fun trySpawn(
+        instance: Instance,
+        position: BlockVec,
+        target: BlockVec,
+        missile: CustomBlock,
+        team: GameTeam,
+        then: () -> Unit
+    ) {
+        val entity = entities[instance]?.get(position.asId()) ?: return then()
+        entity.run(then)
+        1.6.seconds later {
+            missile.placeBlock(instance, target, PlacementActor.ByTeam(team))
+        }
     }
 }

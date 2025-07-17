@@ -22,9 +22,10 @@ class MissileLauncherEntity() : EntityCreature(EntityType.ITEM_DISPLAY) {
         return super.setInstance(instance, spawnPosition)
     }
 
-    fun run() {
+    fun run(then: () -> Unit) {
         anim.playOnce("place") {
             anim.playRepeat("idle")
+            then()
         }
     }
 

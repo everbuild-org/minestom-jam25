@@ -47,7 +47,9 @@ object MissileDebugger : Debugger {
     @Debuggable
     fun assemble(player: Player) {
         MissileLauncherBlock.entities.values.flatMap { it.values }.forEach {
-            it.run()
+            it.run {
+                player.sendMessage("done $this")
+            }
         }
     }
 }

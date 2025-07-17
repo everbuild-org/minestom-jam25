@@ -68,7 +68,7 @@ class PipeNetworkController(val game: InGameState) {
         return endNodes.toList()
     }
 
-    private fun neighbouringPipes(block: BlockVec, instance: Instance): List<BlockVec> {
+    fun neighbouringPipes(block: BlockVec, instance: Instance): List<BlockVec> {
         return BlockFace.entries.map { block.relative(it) }.filter { pos ->
             val block = instance.getBlock(pos)
             return@filter (block.getTag(BlockController.typeTag) == PipeBlock.key().toString())
