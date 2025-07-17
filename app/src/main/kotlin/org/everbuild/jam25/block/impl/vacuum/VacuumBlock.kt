@@ -36,7 +36,6 @@ object VacuumBlock : CustomBlock {
                 .withTypeTag()
                 .withTag(state, blockState.toNBT())
                 .withTag(PipeBlock.faceCanConnectTag, BlockFace.fromDirection(blockState.facing.opposite()).name)
-                .withInventory(BlockInventory(INVENTORY_SIZE))
                 .withTag(isBottomBlock, true)
         )
         instance.setBlock(
@@ -67,9 +66,6 @@ object VacuumBlock : CustomBlock {
         instance.setBlock(position.add(0, 1, 0), Block.AIR)
         entities[instance]?.remove(position.asId())?.remove()
         dropItemOnFloor(Pos.fromPoint(position), VacuumBlockItem.createItem(), instance)
-        block.getInventory()?.items?.forEach { itemStack ->
-            dropItemOnFloor(Pos.fromPoint(position), itemStack, instance)
-        }
 
         player.getTeam()?.game?.advanceable?.removeIf {
             if (it is Vacuum && it.position == position) {
