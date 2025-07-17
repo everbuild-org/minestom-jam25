@@ -1,6 +1,5 @@
-package org.everbuild.jam25.world.vacuum
+package org.everbuild.jam25.world
 
-import kotlin.math.log
 import net.kyori.adventure.text.Component
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.entity.Entity
@@ -8,9 +7,9 @@ import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.display.AbstractDisplayMeta
 import net.minestom.server.entity.metadata.display.ItemDisplayMeta
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
+import net.minestom.server.instance.Instance
 import org.everbuild.asorda.resources.data.shader.TextShader
 import org.everbuild.celestia.orion.core.util.minimessage
-import org.everbuild.jam25.world.Resource
 
 class ResourceHologramLine(pos: BlockVec, index: Int, resource: Resource) {
     val basePos = pos.add(0.5, 0.5 + 0.5 * index, 0.5)
@@ -52,7 +51,7 @@ class ResourceHologramLine(pos: BlockVec, index: Int, resource: Resource) {
         return "<${TextShader.INVIS}>. ${" ".repeat(amountLen.coerceAtLeast(0))}      <white>x$amount".minimessage()
     }
 
-    fun setInstance(instance: net.minestom.server.instance.Instance) {
+    fun setInstance(instance: Instance) {
         baseEntity.setInstance(instance, basePos)
         textEntity.setInstance(instance, textPos)
     }

@@ -14,6 +14,7 @@ import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.impl.impulse.ImpulseBlock
+import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
@@ -23,12 +24,13 @@ import org.everbuild.jam25.item.api.has
 import org.everbuild.jam25.item.api.with
 
 object BlockController {
-    val blocks = listOf<CustomBlock>(
+    val blocks = listOf(
         PipeBlock,
         ImpulseBlock,
         ShieldGeneratorBlock,
         Missile1Block,
-        VacuumBlock
+        VacuumBlock,
+        MissileLauncherBlock
     )
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)

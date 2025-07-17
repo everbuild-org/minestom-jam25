@@ -10,6 +10,7 @@ import org.everbuild.asorda.resources.data.api.lockfile.instruments
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debuggable
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debugger
 import org.everbuild.jam25.Jam
+import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
 import org.joml.Vector2i
 
 object MissileDebugger : Debugger {
@@ -40,6 +41,13 @@ object MissileDebugger : Debugger {
 
             }
             player.instance.explode(pos.x.toFloat(), pos.y.toFloat(), pos.z.toFloat(), 20f)
+        }
+    }
+
+    @Debuggable
+    fun assemble(player: Player) {
+        MissileLauncherBlock.entities.values.flatMap { it.values }.forEach {
+            it.run()
         }
     }
 }

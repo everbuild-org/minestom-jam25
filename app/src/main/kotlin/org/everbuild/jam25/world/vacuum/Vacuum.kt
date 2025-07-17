@@ -10,6 +10,7 @@ import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.utils.dropItem
 import org.everbuild.jam25.world.Resource
+import org.everbuild.jam25.world.ResourceHologramLine
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import org.everbuild.jam25.world.placeable.ItemConsumer
 import org.everbuild.jam25.world.placeable.ItemHolder
