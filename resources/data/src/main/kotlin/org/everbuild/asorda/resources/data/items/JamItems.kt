@@ -60,6 +60,14 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val missileCrafterItem = createItem("missile_crafter") {
+        model(createModel {
+            parent(includeModel("jam/basic_missile_assembler"))
+            textures(
+                "0" to Texture("jam/basic_missile_assembler")
+            )
+        })
+    }
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {

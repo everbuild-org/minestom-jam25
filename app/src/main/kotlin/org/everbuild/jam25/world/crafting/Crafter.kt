@@ -12,7 +12,7 @@ import org.everbuild.jam25.world.placeable.ItemConsumer
 import org.everbuild.jam25.world.placeable.ItemHolder
 import kotlin.math.min
 import kotlin.math.roundToInt
-import org.everbuild.jam25.block.impl.crafting.PipeCrafterBlock
+import org.everbuild.jam25.block.impl.crafting.MissileCrafterBlock
 
 class Crafter(
     val position: BlockVec,
@@ -87,7 +87,7 @@ class Crafter(
                 inputItems.compute(ingredientResource) { _, amount -> (amount ?: 0) - ingredient.amount() }
                 if (inputItems[ingredientResource] == 0) inputItems.remove(ingredientResource)
             }
-            PipeCrafterBlock.craft(instance, position) {
+            MissileCrafterBlock.craft(instance, position) {
                 isCrafting = false
                 val outputResource = Resource.fromItemOrOil(recipeOutput) ?: return@craft
                 outputItem = StoredResource(outputResource, recipeOutput.amount())

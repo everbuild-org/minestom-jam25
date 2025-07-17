@@ -13,13 +13,13 @@ import org.everbuild.jam25.item.api.itemStackOf
 import org.everbuild.jam25.item.api.lore
 import org.everbuild.jam25.item.api.name
 
-object PipeCrafterBlockItem : AbstractItem(
-    key = "pipe_crafter",
-    item = itemStackOf(JamItems.pipeCrafterItem)
-        .name("<gold>Pipe Crafter")
+object MissileCrafterBlockItem : AbstractItem(
+    key = "missile_crafter",
+    item = itemStackOf(JamItems.missileCrafterItem)
+        .name("<gold>Missile Crafter")
         .attachCustomBlock(MissileCrafterBlock)
-        .lore("<gray>Pipe crafters are used to craft pipes, using <white>Metal Scraps<gray>.")
-        .lore("<yellow>Connect pipes supplying <white>Metal Scraps<yellow> to start crafting.")
+        .lore("<gray>Missile Crafters are used to craft missiles, using <white>Digital Components<gray> and <gold>Cable Components<gray>.")
+        .lore("<yellow>Connect pipes supplying these items to start crafting.")
         .withMaxStackSize(16)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {

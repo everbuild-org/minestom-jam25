@@ -41,6 +41,7 @@ abstract class CrafterBlock(
         entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) {
             CrafterEntity(getModelId(), blockState.facing).also {
                 it.setInstance(instance, position)
+                it.anim.playRepeat("idle")
             }
         }
 
