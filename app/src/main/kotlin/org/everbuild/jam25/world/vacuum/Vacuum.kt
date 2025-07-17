@@ -72,7 +72,7 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
         instance.getNearbyEntities(position, 2.0)
             .mapPickupableItem()
             .forEach { (entity, meta) ->
-                val resource = Resource.entries.find { meta.item.isSimilar(it.symbol) } ?: return@forEach
+                val resource = Resource.fromItem(meta.item) ?: return@forEach
                 entity.remove()
                 items[resource] = (items[resource] ?: 0) + meta.item.amount()
             }
@@ -84,7 +84,7 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
                 val meta = it.entityMeta as? ItemEntityMeta ?: return@mapNotNull null
                 it to meta
             }
-            .filter { (_, meta) -> Resource.entries.any { meta.item.isSimilar(it.symbol) } }
+            .filter { (_, meta) -> Resource.fromItem(meta.item) != null }
     }
 
     private fun pickUpFluid(instance: Instance) {
@@ -108,7 +108,7 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
             }
 
             is ItemConsumer.ItemOrOil.Item -> {
-                val resource = Resource.entries.find { item.itemStack.isSimilar(it.symbol) } ?: return false
+                val resource = Resource.fromItem(item.itemStack)?: return false
                 return (items[resource] ?: 0) > 0
             }
         }
@@ -128,7 +128,7 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
             }
             is ItemConsumer.ItemOrOil.Item -> {
                 val stackSize = item.itemStack.amount()
-                val resource = Resource.entries.find { item.itemStack.isSimilar(it.symbol) } ?: return null
+                val resource = Resource.fromItem(item.itemStack) ?: return null
                 val currentAmount = items[resource] ?: 0
                 if (currentAmount < stackSize) {
                     items.remove(resource)

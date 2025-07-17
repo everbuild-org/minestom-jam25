@@ -17,8 +17,6 @@ import org.everbuild.jam25.listener.dropItemOnFloor
 import org.everbuild.jam25.world.vacuum.Vacuum
 
 object VacuumBlock : CustomBlock {
-    const val INVENTORY_SIZE = 10
-
     val entities = hashMapOf<Instance, HashMap<Long, VacuumEntity>>()
     val state = Tag.NBT("state")
     val isBottomBlock = Tag.Boolean("isBottomBlock")

@@ -15,6 +15,7 @@ object JamItems : ContentList("jam") {
         val hammer = item(4, 0)
         val siliconDust = item(5, 0)
         val oil = item(0, 1)
+        val pipeCrafter = item(1, 1)
     }
 
     private val pipeTexture = Texture("jam/pipe")
@@ -52,6 +53,7 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val pipeCrafterItem = defaultModelItem("pipe_crafter", ItemSprites.pipeCrafter)
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {
