@@ -1,7 +1,10 @@
 package org.everbuild.jam25.world
 
+import net.minestom.server.collision.BoundingBox
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
+import net.minestom.server.coordinate.Vec
+import org.everbuild.jam25.map.MapMapper
 import org.everbuild.jam25.map.WarroomMap
 import org.everbuild.jam25.resource.SpawneableResource
 import org.everbuild.jam25.resource.ResourceNode
@@ -24,7 +27,8 @@ class GameWorld : ZippedWorld("map") {
         val map: WarroomMap,
         val shieldGenerator: ShieldGenerator,
         val nodes: List<ResourceNode>,
-        val shops: List<ShopNPC>
+        val shops: List<ShopNPC>,
+        val mapper: MapMapper
     ) {
         class Red : Poi(
             spawn = Pos(16.5, -7.0, 40.5, 0f, 0f),
@@ -42,7 +46,8 @@ class GameWorld : ZippedWorld("map") {
                 Vector2i(32, 14),
                 Vector2i(37, 34)
             ),
-            map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f)),
+            map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f), Vec(1.0, 0.0, 0.0)),
+            mapper = MapMapper(Vec(77.5, 2.5, 69.5), Vec(-40.5, 1.5, -18.5)),
             shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30)),
             nodes = listOf(
                 ResourceNode(Pos.fromPoint(BlockVec(-11, 7, 43)), SpawneableResource.BIO_SCRAPS),
@@ -76,7 +81,8 @@ class GameWorld : ZippedWorld("map") {
                 Vector2i(22, 150),
                 Vector2i(-2, 148)
             ),
-            map = WarroomMap(Pos(16.5, -12.8, 111.5, 0f, 0f)),
+            map = WarroomMap(Pos(16.5, -12.8, 111.5, 0f, 0f), Vec(-1.0, 0.0, 0.0)),
+            mapper = MapMapper(Vec(-44.5, 2.5, 96.5), Vec(73.5, 3.5, 184.5)),
             shieldGenerator = ShieldGenerator(BlockVec(4, -4, 134)),
             nodes = listOf(
                 ResourceNode(Pos.fromPoint(BlockVec(43, 7, 121)), SpawneableResource.BIO_SCRAPS),
@@ -101,16 +107,16 @@ class GameWorld : ZippedWorld("map") {
         val redShield = Shield(
             listOf(
                 listOf(
-                    Pos(2.5, 10.00, -3.5),
-                    Pos(28.5, 10.00, -3.5),
-                    Pos(28.5, 10.00, 33.5),
-                    Pos(2.5, 10.00, 33.5)
+                    Pos(7.5, 10.00, 24.5),
+                    Pos(33.5, 10.00, 24.5),
+                    Pos(33.5, 10.00, 61.5),
+                    Pos(7.5, 10.00, 61.5)
                 ),
                 listOf(
-                    Pos(28.5, 10.00, 33.5),
-                    Pos(2.5, 10.00, 33.5),
-                    Pos(2.5, 3.00, 40.5),
-                    Pos(28.5, 3.00, 40.5)
+                    Pos(33.5, 10.00, 61.5),
+                    Pos(7.5, 10.00, 61.5),
+                    Pos(7.5, 3.00, 68.5),
+                    Pos(33.5, 3.00, 68.5)
                 )
             )
         )
@@ -118,16 +124,16 @@ class GameWorld : ZippedWorld("map") {
         val blueShield = Shield(
             listOf(
                 listOf(
-                    Pos(-5.5, 12.00, 129.5),
-                    Pos(20.5, 12.00, 129.5),
-                    Pos(20.5, 12.00, 92.5),
-                    Pos(-5.5, 12.00, 92.5)
+                    Pos(-1.5, 12.00, 138.5),
+                    Pos(24.5, 12.00, 138.5),
+                    Pos(24.5, 12.00, 101.5),
+                    Pos(-1.5, 12.00, 101.5)
                 ),
                 listOf(
-                    Pos(20.5, 12.00, 92.5),
-                    Pos(-5.5, 12.00, 92.5),
-                    Pos(-5.5, 5.00, 85.5),
-                    Pos(20.5, 5.00, 85.5)
+                    Pos(24.5, 12.00, 101.5),
+                    Pos(-1.5, 12.00, 101.5),
+                    Pos(-1.5, 5.00, 94.5),
+                    Pos(24.5, 5.00, 94.5)
                 )
             )
         )

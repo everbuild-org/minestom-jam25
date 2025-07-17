@@ -7,10 +7,14 @@ import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.instance.Instance
+import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.minimessage
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.jam25.state.ingame.GameTeam
+import org.joml.Vector2i
 
-class WarroomMap(val base: Pos) : Entity(EntityType.TEXT_DISPLAY) {
+class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) {
     val infoChild = Entity(EntityType.TEXT_DISPLAY).also {
         it.editEntityMeta(TextDisplayMeta::class.java) { meta ->
             meta.text =
@@ -24,6 +28,10 @@ class WarroomMap(val base: Pos) : Entity(EntityType.TEXT_DISPLAY) {
 
     val displayBase = DisplayBase()
 
+    val xEntities = mutableListOf<Entity>()
+
+    lateinit var team: GameTeam
+
     init {
         editEntityMeta(TextDisplayMeta::class.java) { meta ->
             meta.text = "\n\n\n\n ${OrionPacks.getCharacterCodepoint("war_map")} \n".minimessage()
@@ -34,10 +42,61 @@ class WarroomMap(val base: Pos) : Entity(EntityType.TEXT_DISPLAY) {
     }
 
     override fun setInstance(instance: Instance): CompletableFuture<Void?>? {
-        interactionController = InteractionController(base.add(base.direction().normalize().rotateAroundY(90.0).mul(2.0)), instance)
+        interactionController = InteractionController(base, dir, instance, 2, 3, 0.05, ::onClick)
         infoChild.setInstance(instance, base.add(base.direction().normalize().mul(0.01)))
         displayBase.setInstance(instance, base)
         return super.setInstance(instance, base)
+    }
+
+    fun createX(x: Int, y: Int, bp: Pos, tp: Vector2i) {
+        xEntities.add(Entity(EntityType.TEXT_DISPLAY).also {
+            it.setNoGravity(true)
+            it.setInstance(instance, bp.add(bp.direction().mul(0.01)))
+            it.editEntityMeta(TextDisplayMeta::class.java) { meta ->
+                meta.text = "<dark_red><b>⨯".minimessage()
+                meta.backgroundColor = 0x0
+                meta.scale = Vec(0.5, 0.5, 0.5)
+                meta.translation = Vec(-0.001, -0.025, -0.001)
+            }
+            it.setTag(xTag, x)
+            it.setTag(yTag, y)
+            it.setTag(tpTag, tp)
+        })
+
+        team.targetPositions.add(tp)
+    }
+
+    fun removeX(x: Int, y: Int) = xEntities.removeIf { entity ->
+        val xTagVal = entity.getTag(xTag)
+        val yTagVal = entity.getTag(yTag)
+
+        if (xTagVal == x && yTagVal == y) {
+            val tp = entity.getTag(tpTag)
+            team.targetPositions.remove(tp)
+            entity.remove()
+            return@removeIf true
+        } else {
+            return@removeIf false
+        }
+    }
+
+    fun removeX(pos: Vector2i) {
+        xEntities.removeIf {
+            if (!it.hasTag(tpTag)) return@removeIf false
+            val tag = it.getTag(tpTag)
+            if (tag != pos) return@removeIf false
+            it.remove()
+            return@removeIf true
+        }
+    }
+
+    fun toggleX(x: Int, y: Int, bp: Pos, tp: Vector2i) {
+        if (!removeX(x, y)) createX(x, y, bp, tp)
+    }
+
+    fun onClick(x: Int, y: Int, bp: Pos) {
+        val pos = team.opposite.poi.mapper.mapToWorld(x, y)
+        toggleX(x, y, bp, pos)
     }
 
     override fun remove() {
@@ -45,5 +104,11 @@ class WarroomMap(val base: Pos) : Entity(EntityType.TEXT_DISPLAY) {
         displayBase.remove()
         interactionController?.remove()
         super.remove()
+    }
+
+    companion object {
+        val xTag = Tag.Integer("x")
+        val yTag = Tag.Integer("y")
+        val tpTag = Tag.Transient<Vector2i>("tp")
     }
 }

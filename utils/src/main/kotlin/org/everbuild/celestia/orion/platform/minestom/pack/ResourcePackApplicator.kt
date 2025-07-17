@@ -1,5 +1,6 @@
 package org.everbuild.celestia.orion.platform.minestom.pack
 
+import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.origin
@@ -27,13 +28,13 @@ import org.everbuild.celestia.orion.platform.minestom.api.utils.logger
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 
 private fun withInternalServer(): String {
-
     embeddedServer(Netty, port=3013, host="0.0.0.0") {
         routing {
             get("/pack.zip") {
                 logger.info("Received resource pack request from ${call.request.origin.remoteHost}")
+                val its = javaClass.getResourceAsStream("/resources.zip")!!.readAllBytes()
                 call.respondBytes(
-                    bytes = javaClass.getResourceAsStream("/resources.zip")!!.readAllBytes(),
+                    bytes = its,
                     contentType = io.ktor.http.ContentType.Application.Zip,
                     status = io.ktor.http.HttpStatusCode.OK
                 )

@@ -4,7 +4,10 @@ import net.minestom.server.item.ItemStack
 import org.everbuild.asorda.resources.data.items.JamItems
 import org.everbuild.jam25.item.api.itemStackOf
 import org.everbuild.jam25.item.impl.BioScrapsItem
+import org.everbuild.jam25.item.impl.CableComponentItem
+import org.everbuild.jam25.item.impl.DigitalComponentItem
 import org.everbuild.jam25.item.impl.MetalScrapsItem
+import org.everbuild.jam25.item.impl.Missile1Item
 import org.everbuild.jam25.item.impl.PipeBlockItem
 import org.everbuild.jam25.item.impl.SiliconItem
 import org.everbuild.jam25.world.placeable.ItemConsumer
@@ -14,6 +17,9 @@ enum class Resource(val symbol: ItemStack, val doDrop: Boolean) {
     SILICON_DUST(SiliconItem.createItem(), true),
     METAL_SCRAPS(MetalScrapsItem.createItem(), true),
     PIPE(PipeBlockItem.createItem(), true),
+    BASIC_MISSILE(Missile1Item.createItem(), true),
+    CABLE(CableComponentItem.createItem(), true),
+    DIGITAL(DigitalComponentItem.createItem(), true),
     OIL(itemStackOf(JamItems.oil), false);
 
     fun toItemOrOil(amount: Int = 1): ItemConsumer.ItemOrOil {

@@ -20,6 +20,7 @@ import org.everbuild.jam25.world.shield.ShieldRenderer
 class GameTeam(val players: List<Player>, val type: GameTeamType, val game: InGameState) : DynamicGroup({ players.contains(it) }), MissileController by MissileControllerImpl() {
     val poi = type.poi()
     var shield: ShieldRenderer? = null
+    val opposite: GameTeam get() = game.teams.first { it != this }
     val node = EventNode.type("game-team-$type", EventFilter.PLAYER) { _, player -> players.contains(player) }
         .listen { event: PlayerMoveEvent ->
             if (event.newPosition.y < poi.minY) {
@@ -30,6 +31,9 @@ class GameTeam(val players: List<Player>, val type: GameTeamType, val game: InGa
 
     init {
         poi.shieldGenerator.team = this
+        poi.map.team = this
+
+        setSelf(this)
 
         val pipesAtStart = 32
         val pipesPerPlayer = pipesAtStart / players.size.coerceAtLeast(1)

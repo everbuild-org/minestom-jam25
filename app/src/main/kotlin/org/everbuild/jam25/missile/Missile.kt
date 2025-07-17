@@ -71,7 +71,6 @@ open class Missile(val entity: Entity) {
 
     fun shoot(position: Vector2i, continuation: (Pos) -> Unit): Boolean {
         val maxY = (-100 until 100).reversed().firstOrNull { instance.getBlock(position.x, it, position.y).isSolid } ?: run {
-            println("No solid block found above $position")
             return false
         }
         val current = this.entity.position

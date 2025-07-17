@@ -4,6 +4,7 @@ import net.minestom.server.entity.Player
 import net.minestom.server.instance.block.Block
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debuggable
 import org.everbuild.celestia.orion.platform.minestom.command.debug.Debugger
+import org.everbuild.jam25.Jam
 import org.everbuild.jam25.resource.SpawneableResource
 
 object WorldDebugger : Debugger {
@@ -23,6 +24,14 @@ object WorldDebugger : Debugger {
         val codegen = "ResourceNode(Pos.fromPoint(BlockVec(${pos.blockX()}, ${pos.blockY()}, ${pos.blockZ()})), SpawneableResource.${spawneableResource.name}),"
         player.sendMessage(codegen)
         println(codegen)
+    }
+
+    @Debuggable
+    fun refillGenerators(player: Player) {
+        val game = Jam.gameStates.getInGamePhase(player) ?: return
+        game.teams.forEach { team ->
+            team.poi.shieldGenerator.refill(100.0)
+        }
     }
 }
 

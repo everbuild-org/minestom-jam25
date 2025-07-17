@@ -2,6 +2,7 @@ package org.everbuild.jam25.missile
 
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.instance.Instance
+import org.everbuild.jam25.state.ingame.GameTeam
 import org.joml.Vector2i
 
 interface MissileController {
@@ -10,4 +11,5 @@ interface MissileController {
     fun spawnMissile(pos: BlockVec, instance: Instance, missile: Missile)
 
     fun tryLaunch()
+    fun setSelf(team: GameTeam)
 }

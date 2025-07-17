@@ -28,6 +28,7 @@ import org.everbuild.jam25.item.api.ItemLoader
 import org.everbuild.jam25.item.api.withCustomItemListeners
 import org.everbuild.jam25.listener.ClientSelectTradePacketListener
 import org.everbuild.jam25.listener.setupPlayerDropEvent
+import org.everbuild.jam25.map.InteractionController
 import org.everbuild.jam25.state.GameStateController
 import org.everbuild.jam25.world.placeable.ItemHolder
 
@@ -56,6 +57,7 @@ object Jam : OrionServer() {
             .addChild(PingResponder.eventNode())
             .addChild(BlockController.eventNode())
             .addChild(ItemHolder.interactEventNode())
+            .addChild(InteractionController.eventNode())
             //.addChild(PerInstanceTabList.eventNode())
 
         Mc.packetListener.setPlayListener(ClientSelectTradePacket::class.java, ClientSelectTradePacketListener::listener)
