@@ -98,7 +98,7 @@ abstract class CrafterBlock(
     }
 
     fun craft(instance: Instance, position: BlockVec, then: () -> Unit) {
-        val crafter = entities[instance]?.get(position.asId()) ?: return
+        val crafter = entities[instance]?.get(position.asId()) ?: return then()
         crafter.craft(then)
     }
 

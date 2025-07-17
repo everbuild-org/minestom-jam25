@@ -15,7 +15,7 @@ object MissileCrafterBlock : CrafterBlock(
     BlockFace.NORTH
 ) {
     override fun recipeIngredients() = listOf(
-        ItemConsumer.ItemOrOil.Item(DigitalComponentItem.createNewStack(2)),
+        ItemConsumer.ItemOrOil.Item(DigitalComponentItem.createNewStack(1)),
         ItemConsumer.ItemOrOil.Item(CableComponentItem.createNewStack(1)),
     )
     override fun recipeOutput() = ItemConsumer.ItemOrOil.Item(Missile1Item.createItem().withAmount(1))

@@ -13,6 +13,8 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.block.impl.crafting.CableComponentCrafterBlock
+import org.everbuild.jam25.block.impl.crafting.DigitalComponentCrafterBlock
 import org.everbuild.jam25.block.impl.crafting.MissileCrafterBlock
 import org.everbuild.jam25.block.impl.impulse.ImpulseBlock
 import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
@@ -32,7 +34,9 @@ object BlockController {
         Missile1Block,
         VacuumBlock,
         MissileCrafterBlock,
-        MissileLauncherBlock
+        MissileLauncherBlock,
+        CableComponentCrafterBlock,
+        DigitalComponentCrafterBlock
     )
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)

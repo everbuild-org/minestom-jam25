@@ -9,6 +9,6 @@ import kotlin.time.Duration.Companion.seconds
 
 enum class SpawneableResource(val display: String, val item: ItemStack, val timeToSpawn: Duration, val maxSize: Int) {
     BIO_SCRAPS("<gold>Spawning:<br><green>Bio Scraps", BioScrapsItem.createItem(), 3.seconds, 64),
-    METAL_SCRAPS("<gold>Spawning:<br><white>Metal Scraps", MetalScrapsItem.createItem(), 6.seconds, 32),
-    SILICON_DUST("<gold>Spawning:<br><white>Silicon Dust", SiliconItem.createItem(), 10.seconds, 16),
+    METAL_SCRAPS("<gold>Spawning:<br><white>Metal Scraps", MetalScrapsItem.createItem(), 4.seconds, 32),
+    SILICON_DUST("<gold>Spawning:<br><white>Silicon Dust", SiliconItem.createItem(), 5.seconds, 32),
 }

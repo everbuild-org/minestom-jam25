@@ -87,6 +87,7 @@ class Crafter(
                 inputItems.compute(ingredientResource) { _, amount -> (amount ?: 0) - ingredient.amount() }
                 if (inputItems[ingredientResource] == 0) inputItems.remove(ingredientResource)
             }
+
             MissileCrafterBlock.craft(instance, position) {
                 isCrafting = false
                 val outputResource = Resource.fromItemOrOil(recipeOutput) ?: return@craft

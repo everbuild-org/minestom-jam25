@@ -69,17 +69,13 @@ class MissileControllerImpl : MissileController {
                         boom(instance, block, explosionScore)
                         visited.add(block)
                         genHit += tryHitGenerator(block, instance, explosionScore)
-                        println(genHit)
                         if (neighbours.isEmpty()) continue
                         neighbours.forEach {
                             if (!visited.contains(it) && !toVisit.contains(it)) {
                                 toVisit.add(it)
                             }
                         }
-                        println(".")
                     }
-
-                    println(genHit)
 
                     if (genHit > 0) {
                         self.sendMiniMessage("${Jam.PREFIX} <green>Shield generator hit for $genHit damage!")
@@ -122,11 +118,9 @@ class MissileControllerImpl : MissileController {
         for (dx in -2..2) for (dy in -2..2) for (dz in -2..2) {
             val blockPos = BlockVec(block.blockX() + dx, block.blockY() + dy, block.blockZ() + dz)
             val blockAt = instance.getBlock(blockPos)
-            println(blockAt)
             if (!blockAt.nbtOrEmpty().getBoolean("shieldGenerator")) continue
-            println("yoooooo")
 
-            self.opposite.poi.shieldGenerator.damage(4 * explosionScore)
+            self.opposite.poi.shieldGenerator.damage(8 * explosionScore)
 
             return 4 * explosionScore
         }
