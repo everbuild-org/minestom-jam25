@@ -37,6 +37,7 @@ object BlockController {
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)
     val refillable = Tag.String("refillable")
+    val shieldGenerator = Tag.Boolean("shieldGenerator")
 
     fun getBlockImpl(key: Key): CustomBlock? = blocks.find { it.key() == key }
     fun getBlock(key: Key): CustomBlock = getBlockImpl(key) ?: throw IllegalArgumentException("Block with key $key not found")
@@ -114,6 +115,13 @@ object BlockController {
                 }
             }
         }
+    }
+
+    fun breakBlock(instance: Instance, vec: BlockVec) {
+        val block = instance.getBlock(vec)
+        val blockType = getBlock(block) ?: return
+        blockType.breakBlock(instance, vec, PlacementActor.ByServer)
+        updateAround(instance, vec)
     }
 }
 

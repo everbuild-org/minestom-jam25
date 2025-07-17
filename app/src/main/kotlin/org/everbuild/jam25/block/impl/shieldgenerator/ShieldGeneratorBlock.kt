@@ -66,12 +66,14 @@ object ShieldGeneratorBlock : CustomBlock {
                 Block.BARRIER
                     .withTag(BlockController.unbreakable, true)
                     .withTag(BlockController.refillable, BioScrapsItem.id.asString())
+                    .withTag(BlockController.shieldGenerator, true)
             )
         }
         instance.setBlock(
             position, Block.BARRIER
                 .withTypeTag()
                 .withTag(state, blockState.toNBT())
+                .withTag(BlockController.shieldGenerator, true)
         )
         instance.setBlock(
             position.add(0, 0, -1),
@@ -79,6 +81,7 @@ object ShieldGeneratorBlock : CustomBlock {
                 .withTag(PipeBlock.faceCanConnectTag, BlockFace.NORTH.name)
                 .withTag(BlockController.unbreakable, true)
                 .withTag(BlockController.refillable, BioScrapsItem.id.asString())
+                .withTag(BlockController.shieldGenerator, true)
         )
 
         val consumer = ShieldGeneratorConsumer(team.poi.shieldGenerator, instance, position.add(0, 0, -1))

@@ -193,5 +193,13 @@ data class ShieldGenerator(
         }
     }
 
+    fun damage(i: Int) {
+        val powerBeforeDamage = power
+        power = (power - i).coerceAtLeast(0.0)
+
+        if (powerBeforeDamage > 0 && !hasPower()) {
+            running = false
+        }
+    }
     override fun getBlockPosition(): BlockVec = BlockVec(position)
 }

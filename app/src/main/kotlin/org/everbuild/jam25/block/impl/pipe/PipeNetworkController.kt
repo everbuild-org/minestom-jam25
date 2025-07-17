@@ -68,6 +68,24 @@ class PipeNetworkController(val game: InGameState) {
         return endNodes.toList()
     }
 
+    fun searchElements(block: BlockVec): List<BlockVec> {
+        val visited = mutableSetOf<BlockVec>()
+        val toVisit = mutableListOf(block)
+
+        while (toVisit.isNotEmpty()) {
+            val current = toVisit.removeAt(0)
+            val pipes = neighbouringPipes(current, instance)
+            visited.add(current)
+            for (pipe in pipes) {
+                if (pipe !in visited) {
+                    toVisit.add(pipe)
+                }
+            }
+        }
+
+        return visited.toList()
+    }
+
     fun neighbouringPipes(block: BlockVec, instance: Instance): List<BlockVec> {
         return BlockFace.entries.map { block.relative(it) }.filter { pos ->
             val block = instance.getBlock(pos)
@@ -78,7 +96,8 @@ class PipeNetworkController(val game: InGameState) {
     private fun neighbouringEnds(block: BlockVec, instance: Instance): List<BlockVec> {
         return BlockFace.entries.filter { dir ->
             val pos = block.relative(dir)
-            return@filter instance.getBlock(pos).getTag(faceCanConnectTag)?.split("|")?.contains(dir.oppositeFace.name) ?: false
+            return@filter instance.getBlock(pos).getTag(faceCanConnectTag)?.split("|")?.contains(dir.oppositeFace.name)
+                ?: false
         }.map { block.relative(it) }
     }
 
@@ -88,6 +107,10 @@ class PipeNetworkController(val game: InGameState) {
             position = holder.let { (it as AdvanceableWorldElement).getBlockPosition() },
             holder = holder
         )
+    }
+
+    fun isItem(pos: BlockVec): Boolean {
+        return requests.any { it.isAround(pos) }
     }
 
     data class PositionedItemHolder(val position: BlockVec, val holder: ItemHolder)

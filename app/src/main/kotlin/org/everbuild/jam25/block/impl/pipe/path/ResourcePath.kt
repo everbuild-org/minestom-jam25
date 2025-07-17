@@ -2,14 +2,11 @@ package org.everbuild.jam25.block.impl.pipe.path
 
 import kotlin.time.Duration.Companion.seconds
 import net.minestom.server.coordinate.BlockVec
-import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.display.ItemDisplayMeta
 import net.minestom.server.instance.Instance
-import net.minestom.server.network.packet.server.play.ParticlePacket
-import net.minestom.server.particle.Particle
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.jam25.state.ingame.InGameState
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
