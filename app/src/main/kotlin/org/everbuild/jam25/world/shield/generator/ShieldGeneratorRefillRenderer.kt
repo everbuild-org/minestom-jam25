@@ -12,8 +12,8 @@ import org.everbuild.celestia.orion.core.util.minimessage
 class ShieldGeneratorRefillRenderer(instance: Instance, position: Vec) : AutoCloseable {
     private val refillTooltip: Entity = createTooltip(instance, Pos(position.add(0.0, -0.45, 1.85), 0f, -55f))
     private val powerBarRenderers: List<PowerBarRenderer> = listOf(
-        PowerBarRenderer(instance, Pos(position.add(-0.875, 0.59375, 0.0), 90f, 0f)),
-        PowerBarRenderer(instance, Pos(position.add(0.875, 0.59375, 0.0), -90f, 0f)),
+        PowerBarRenderer(instance, Pos(position.add(-0.875, 0.59375, 0.0), -90f, 0f)),
+        PowerBarRenderer(instance, Pos(position.add(0.875, 0.59375, 0.0), 90f, 0f)),
     )
 
     fun update(powerLevel: Double, pendingRefill: Double) {

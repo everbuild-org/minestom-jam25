@@ -29,6 +29,7 @@ import org.everbuild.jam25.item.api.withCustomItemListeners
 import org.everbuild.jam25.listener.ClientSelectTradePacketListener
 import org.everbuild.jam25.listener.setupPlayerDropEvent
 import org.everbuild.jam25.state.GameStateController
+import org.everbuild.jam25.world.placeable.ItemHolder
 
 object Jam : OrionServer() {
     const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
@@ -54,6 +55,7 @@ object Jam : OrionServer() {
             .addChild(gameStates.eventNode())
             .addChild(PingResponder.eventNode())
             .addChild(BlockController.eventNode())
+            .addChild(ItemHolder.interactEventNode())
             //.addChild(PerInstanceTabList.eventNode())
 
         Mc.packetListener.setPlayListener(ClientSelectTradePacket::class.java, ClientSelectTradePacketListener::listener)

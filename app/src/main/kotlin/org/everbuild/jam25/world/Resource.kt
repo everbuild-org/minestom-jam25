@@ -16,6 +16,14 @@ enum class Resource(val symbol: ItemStack, val doDrop: Boolean) {
     PIPE(PipeBlockItem.createItem(), true),
     OIL(itemStackOf(JamItems.oil), false);
 
+    fun toItemOrOil(amount: Int = 1): ItemConsumer.ItemOrOil {
+        return if (doDrop) {
+            ItemConsumer.ItemOrOil.Item(symbol.withAmount(amount))
+        } else {
+            ItemConsumer.ItemOrOil.Oil(amount)
+        }
+    }
+
     companion object {
         fun fromItem(itemStack: ItemStack): Resource? = Resource.entries.find { it.symbol.isSimilar(itemStack) }
         fun fromItemOrOil(itemOrOil: ItemConsumer.ItemOrOil): Resource? = when (itemOrOil) {

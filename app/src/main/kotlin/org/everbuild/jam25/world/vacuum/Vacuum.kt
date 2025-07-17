@@ -139,4 +139,19 @@ class Vacuum(val position: BlockVec) : AdvanceableWorldElement, ItemHolder {
             }
         }
     }
+
+    override fun getItems(): List<ItemConsumer.ItemOrOil> {
+        return items.mapNotNull { (resource, amount) ->
+            when (resource) {
+                Resource.OIL -> ItemConsumer.ItemOrOil.Oil(amount)
+                else -> ItemConsumer.ItemOrOil.Item(resource.symbol.withAmount(amount))
+            }
+        }
+            .sortedBy { it.amount() }
+            .toList()
+    }
+
+    override fun clearItems() {
+        items.clear()
+    }
 }

@@ -96,6 +96,11 @@ abstract class CrafterBlock(
     override fun update(instance: Instance, position: BlockVec) {
     }
 
+    fun craft(instance: Instance, position: BlockVec, then: () -> Unit) {
+        val crafter = entities[instance]?.get(position.asId()) ?: return
+        crafter.craft(then)
+    }
+
     abstract fun getModelId(): String?
     abstract fun createItem(): ItemStack
     abstract fun recipeIngredients(): List<ItemConsumer.ItemOrOil>

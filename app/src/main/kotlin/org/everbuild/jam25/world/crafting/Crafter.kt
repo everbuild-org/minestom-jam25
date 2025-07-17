@@ -12,6 +12,7 @@ import org.everbuild.jam25.world.placeable.ItemConsumer
 import org.everbuild.jam25.world.placeable.ItemHolder
 import kotlin.math.min
 import kotlin.math.roundToInt
+import org.everbuild.jam25.block.impl.crafting.PipeCrafterBlock
 
 class Crafter(
     val position: BlockVec,
@@ -28,6 +29,7 @@ class Crafter(
 
     private val inputItems = HashMap<Resource, Int>()
     private var outputItem: StoredResource? = null
+    private var isCrafting = false
 
     val hologramLines = HashMap<Resource, ResourceHologramLine>()
 
@@ -48,6 +50,17 @@ class Crafter(
         return item.withAmount(retrievedAmount)
     }
 
+    override fun getItems(): List<ItemConsumer.ItemOrOil> {
+        val input = inputItems.map { (res, amount) -> res.toItemOrOil(amount) }
+        if (outputItem == null) return input
+        return input + listOf(outputItem!!.resource.toItemOrOil(outputItem!!.amount))
+    }
+
+    override fun clearItems() {
+        inputItems.clear()
+        outputItem = null
+    }
+
     override fun advance(instance: Instance) {
         if ((outputItem?.amount ?: 0) == 0) {
             for (ingredient in recipeIngredients) {
@@ -56,24 +69,29 @@ class Crafter(
                 if (storedAmount >= ingredient.amount()) continue
                 game.networkController.request(ingredient.withAmount(ingredient.amount() - storedAmount), position, inputFace)
             }
-            tryCraft()
+            tryCraft(instance)
         }
         updateHologram(instance)
     }
 
-    private fun tryCraft() {
+    private fun tryCraft(instance: Instance) {
+        if (isCrafting) return
         if (recipeIngredients.all { ingredient ->
                 val ingredientResource = Resource.fromItemOrOil(ingredient) ?: return@all false
                 return@all (inputItems[ingredientResource] ?: 0) >= ingredient.amount()
             }
         ) {
+            isCrafting = true
             for (ingredient in recipeIngredients) {
                 val ingredientResource = Resource.fromItemOrOil(ingredient) ?: continue
                 inputItems.compute(ingredientResource) { _, amount -> (amount ?: 0) - ingredient.amount() }
                 if (inputItems[ingredientResource] == 0) inputItems.remove(ingredientResource)
             }
-            val outputResource = Resource.fromItemOrOil(recipeOutput) ?: return
-            outputItem = StoredResource(outputResource, recipeOutput.amount())
+            PipeCrafterBlock.craft(instance, position) {
+                isCrafting = false
+                val outputResource = Resource.fromItemOrOil(recipeOutput) ?: return@craft
+                outputItem = StoredResource(outputResource, recipeOutput.amount())
+            }
         }
     }
 
@@ -120,6 +138,8 @@ class Crafter(
                     remaining -= pickUp
                 }
             }
+
+        hologramLines.forEach { (_, hologram) -> hologram.remove() }
     }
 
     private fun allStoredResources(): Map<Resource, Int> = buildMap {
