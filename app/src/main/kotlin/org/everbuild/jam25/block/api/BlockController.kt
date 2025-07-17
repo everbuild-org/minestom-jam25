@@ -13,6 +13,7 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.Jam
 import org.everbuild.jam25.block.impl.impulse.ImpulseBlock
 import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block

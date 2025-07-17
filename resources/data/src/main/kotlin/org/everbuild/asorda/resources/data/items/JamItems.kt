@@ -44,6 +44,14 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val assemblyArmItem = createItem("assemblyArmItem") {
+        model(createModel {
+            parent(includeModel("jam/assembly_arm_item"))
+            textures(
+                "0" to Texture("jam/arm_item")
+            )
+        })
+    }
 
     private fun defaultModelItem(descriptor: String, texture: Texture) = createItem(descriptor) {
         model(createModel {

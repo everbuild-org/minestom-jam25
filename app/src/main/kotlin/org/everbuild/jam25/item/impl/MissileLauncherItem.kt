@@ -17,7 +17,7 @@ import org.everbuild.jam25.item.api.name
 
 object MissileLauncherItem : AbstractItem(
     key = "missile_launcher",
-    item = itemStackOf(Material.PISTON)
+    item = itemStackOf(JamItems.assemblyArmItem)
         .name("<gold>Missile Launcher")
         .withMaxStackSize(64)
         .lore("<gray>Auto-explode your enemies!")

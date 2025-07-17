@@ -11,6 +11,7 @@ import net.minestom.server.utils.Direction
 import org.everbuild.jam25.block.api.*
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.pipe.PipeBlock.asId
+import org.everbuild.jam25.item.impl.MissileLauncherItem
 import org.everbuild.jam25.item.impl.VacuumBlockItem
 import org.everbuild.jam25.listener.dropItemOnFloor
 import org.everbuild.jam25.world.launcher.Launcher
@@ -40,13 +41,9 @@ object MissileLauncherBlock : CustomBlock {
     }
 
     override fun breakBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
-        val block = instance.getBlock(position)
         instance.setBlock(position, Block.AIR)
         entities[instance]?.remove(position.asId())?.remove()
-        dropItemOnFloor(Pos.fromPoint(position), VacuumBlockItem.createItem(), instance)
-        block.getInventory()?.items?.forEach { itemStack ->
-            dropItemOnFloor(Pos.fromPoint(position), itemStack, instance)
-        }
+        dropItemOnFloor(Pos.fromPoint(position), MissileLauncherItem.createItem(), instance)
 
         player.getTeam()?.game?.advanceable?.removeIf {
             if (it is Launcher && it.pos == position) {

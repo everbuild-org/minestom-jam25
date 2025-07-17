@@ -8,6 +8,7 @@ import org.everbuild.jam25.item.impl.CableComponentItem
 import org.everbuild.jam25.item.impl.DigitalComponentItem
 import org.everbuild.jam25.item.impl.MetalScrapsItem
 import org.everbuild.jam25.item.impl.Missile1Item
+import org.everbuild.jam25.item.impl.MissileLauncherItem
 import org.everbuild.jam25.item.impl.PipeBlockItem
 import org.everbuild.jam25.item.impl.SiliconItem
 import org.everbuild.jam25.item.impl.VacuumBlockItem
@@ -24,6 +25,7 @@ class MechanicNPC(val pos: Pos) : ShopNPC("Mechanic", SKIN_MECHANIC) {
             ShopGUI.ShopEntry.Item(DigitalComponentItem.createNewStack(2), CableComponentItem.createItem(), Missile1Item.createItem()),
             ShopGUI.ShopEntry.Item(MetalScrapsItem.createNewStack(2), null, PipeBlockItem.createNewStack(2)),
             ShopGUI.ShopEntry.Item(MetalScrapsItem.createNewStack(3), DigitalComponentItem.createItem(), VacuumBlockItem.createItem()),
+            ShopGUI.ShopEntry.Item(PipeBlockItem.createNewStack(2), DigitalComponentItem.createItem(), MissileLauncherItem.createItem()),
         )))
     }
 }
