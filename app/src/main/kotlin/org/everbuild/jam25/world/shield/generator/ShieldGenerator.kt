@@ -15,6 +15,7 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
+import net.minestom.server.utils.Direction
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.utils.asVec
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
@@ -31,7 +32,8 @@ import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import org.everbuild.jam25.world.placeable.ItemConsumer
 
 data class ShieldGenerator(
-    val position: BlockVec
+    val position: BlockVec,
+    val direction: Direction
 ) : AdvanceableWorldElement {
     private val POWERLOSS_PER_MINUTE = 50.0
     private val POWERLOSS_PER_TICK = POWERLOSS_PER_MINUTE / (20 * 60)
@@ -65,7 +67,7 @@ data class ShieldGenerator(
     fun setInstance(instance: Instance) {
         ShieldGeneratorBlock.placeBlock(instance, position, PlacementActor.ByTeam(team!!))
         this.instance = instance
-        powerRenderer = ShieldGeneratorRefillRenderer(instance, position.asVec().add(0.5, 0.5, 0.5))
+        powerRenderer = ShieldGeneratorRefillRenderer(instance, position.asVec().add(0.5, 0.5, 0.5), direction)
     }
 
     fun setGroup(dynamicGroup: DynamicGroup) {
@@ -88,20 +90,28 @@ data class ShieldGenerator(
         }
     }
 
+    fun inputDirection() = when(direction) {
+        Direction.NORTH -> Direction.WEST
+        Direction.EAST -> Direction.NORTH
+        Direction.SOUTH -> Direction.EAST
+        Direction.WEST -> Direction.SOUTH
+        else -> Direction.NORTH
+    }
+
     private fun recheckPipes() {
         val left = power + pendingRefill
         if (left >= 75.0) {
             return
         }
 
-        val block = position.add(0, 0, -1)
+        val block = position.add(BlockVec(inputDirection().vec()))
         team!!.game.networkController.let {
             it.request(
                 ItemConsumer.ItemOrOil.Oil(
                     20
                 ),
                 block,
-                BlockFace.NORTH
+                BlockFace.fromDirection(inputDirection())
             )
 
             it.request(
@@ -111,7 +121,7 @@ data class ShieldGenerator(
                     )
                 ),
                 block,
-                BlockFace.NORTH
+                BlockFace.fromDirection(inputDirection())
 
             )
         }

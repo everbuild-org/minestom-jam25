@@ -7,13 +7,22 @@ import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.display.AbstractDisplayMeta
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.instance.Instance
+import net.minestom.server.utils.Direction
 import org.everbuild.celestia.orion.core.util.minimessage
+import org.everbuild.celestia.orion.platform.minestom.api.utils.rotateAroundYDegrees
 
-class ShieldGeneratorRefillRenderer(instance: Instance, position: Vec) : AutoCloseable {
-    private val refillTooltip: Entity = createTooltip(instance, Pos(position.add(0.0, -0.45, 1.85), 0f, -55f))
+class ShieldGeneratorRefillRenderer(instance: Instance, position: Vec, direction: Direction) : AutoCloseable {
+    val yaw = when (direction) {
+        Direction.EAST -> -90f
+        Direction.WEST -> 90f
+        Direction.NORTH -> 180f
+        else -> 0f
+    } + 90f
+    val refillTooltipYaw = yaw - 90f
+    private val refillTooltip: Entity = createTooltip(instance, Pos(position.add(Vec(0.0, -0.45, 1.85).rotateAroundYDegrees(-refillTooltipYaw.toDouble())), refillTooltipYaw, -55f))
     private val powerBarRenderers: List<PowerBarRenderer> = listOf(
-        PowerBarRenderer(instance, Pos(position.add(-0.875, 0.59375, 0.0), -90f, 0f)),
-        PowerBarRenderer(instance, Pos(position.add(0.875, 0.59375, 0.0), 90f, 0f)),
+        PowerBarRenderer(instance, Pos(position.add(Vec(-0.875, 0.59375, 0.0).rotateAroundYDegrees(-yaw.toDouble())), -90f + yaw, 0f)),
+        PowerBarRenderer(instance, Pos(position.add(Vec(0.875, 0.59375, 0.0).rotateAroundYDegrees(-yaw.toDouble())), 90f + yaw, 0f)),
     )
 
     fun update(powerLevel: Double, pendingRefill: Double) {
