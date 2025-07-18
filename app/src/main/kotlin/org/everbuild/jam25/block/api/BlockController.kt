@@ -1,6 +1,7 @@
 package org.everbuild.jam25.block.api
 
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.collision.BoundingBox
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.entity.GameMode
@@ -45,6 +46,17 @@ object BlockController {
     val refillable = Tag.String("refillable")
     val shieldGenerator = Tag.Boolean("shieldGenerator")
 
+    private val placeSound = Sound.sound {
+        it.type(Key.key("block.iron.place"))
+        it.source(Sound.Source.BLOCK)
+        it.volume(0.5f)
+    }
+    private val breakSound = Sound.sound {
+        it.type(Key.key("block.iron.break"))
+        it.source(Sound.Source.BLOCK)
+        it.volume(0.5f)
+    }
+
     fun getBlockImpl(key: Key): CustomBlock? = blocks.find { it.key() == key }
     fun getBlock(key: Key): CustomBlock = getBlockImpl(key) ?: throw IllegalArgumentException("Block with key $key not found")
     fun getBlock(itemStack: ItemStack): CustomBlock? = itemStack.get<BlockItemComponent>()?.let { getBlock(Key.key(it.customBlock)) }
@@ -81,6 +93,7 @@ object BlockController {
                 if (!blockAtTargetPos.isAir && !blockAtTargetPos.registry().isReplaceable) return@listen
 
                 block.placeBlock(event.player.instance!!, targetPos, PlacementActor.ByPlayer(event.player))
+                event.instance.playSound(placeSound, targetPos)
                 updateAround(event.player.instance!!, targetPos)
 
                 if (event.player.gameMode != GameMode.CREATIVE) {
@@ -94,6 +107,7 @@ object BlockController {
                 val targetType = event.block.getTag(typeTag) ?: return@listen
                 val targetBlock = getBlockImpl(Key.key(targetType)) ?: return@listen
                 targetBlock.breakBlock(event.player.instance!!, event.blockPosition, PlacementActor.ByPlayer(event.player))
+                event.instance.playSound(breakSound, event.blockPosition)
                 updateAround(event.player.instance!!, event.blockPosition)
                 event.player.swingMainHand()
             }

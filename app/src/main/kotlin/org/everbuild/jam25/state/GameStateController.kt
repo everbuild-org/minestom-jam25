@@ -1,5 +1,7 @@
 package org.everbuild.jam25.state
 
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import kotlin.time.Duration.Companion.seconds
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
@@ -26,6 +28,15 @@ class GameStateController {
         .listen<AsyncPlayerConfigurationEvent, _> {
             addPlayer(it)
         }
+
+    val victorySound = Sound.sound {
+        it.type(Key.key("ui.toast.challenge_complete"))
+        it.volume(0.65f)
+    }
+    val loseSound = Sound.sound {
+        it.type(Key.key("entity.wither.hurt"))
+        it.volume(0.65f)
+    }
 
     fun addPlayer(player: Player) {
         lobbyState.addPlayer(player)
@@ -107,7 +118,9 @@ class GameStateController {
 
     fun endGame(game: InGameState, team: GameTeam) {
         team.sendMiniMessageTitle("<green>You won against ${team.opposite.type.long}!", "<gray>${team.opposite.formatNames()}")
+        team.forEach { it.playSound(victorySound, Sound.Emitter.self()) }
         team.opposite.sendMiniMessageTitle("<red>You lost against ${team.type.long}!", "<gray>${team.formatNames()}")
+        team.opposite.forEach { it.playSound(loseSound, Sound.Emitter.self()) }
         3.seconds later {
             dissolve(game)
         }

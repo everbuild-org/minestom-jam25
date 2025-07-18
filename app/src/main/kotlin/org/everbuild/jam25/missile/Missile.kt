@@ -1,11 +1,7 @@
 package org.everbuild.jam25.missile
 
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.max
-import kotlin.math.pow
-import kotlin.math.sqrt
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
@@ -17,9 +13,22 @@ import net.minestom.server.timer.TaskSchedule
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.jam25.util.peeking
 import org.joml.Vector2i
+import kotlin.math.*
 
 open class Missile(val entity: Entity) {
     private lateinit var instance: Instance
+
+    val explosionSound = Sound.sound { it.type(Key.key("minecraft:entity.generic.explode")) }
+    val launchSound = Sound.sound {
+        it.type(Key.key("entity.cat.hiss"))
+        it.volume(0.5f)
+    }
+    val flySound = Sound.sound {
+        it.type(Key.key("entity.generic.extinguish_fire"))
+        it.volume(0.35f)
+    }
+    val flySoundFrequencyTicks = 10
+
     fun setInstance(instance: Instance, pos: BlockVec) {
         this.instance = instance
         entity.setInstance(instance, pos.add(0.5, 0.0, 0.5))
@@ -78,33 +87,41 @@ open class Missile(val entity: Entity) {
         val sequence = generateParabolicFlightPathSequence(current, target, 16.0, 100).toList().iterator().peeking()
         var task: Task? = null
         var counter = 0
-        task = Mc.scheduler.buildTask{
+        this.entity.instance.playSound(launchSound, this.entity.position)
+        task = Mc.scheduler.buildTask {
             if (!sequence.hasNext()) {
                 continuation(target)
-                this.entity.instance.sendGroupedPacket(ParticlePacket(
-                    Particle.EXPLOSION,
-                    false, true,
-                    this.entity.position.add(0.0, 1.0, 0.0),
-                    Pos.ZERO,
-                    1.5f,
-                    50
-                ))
-                this.entity.instance.sendGroupedPacket(ParticlePacket(
-                    Particle.GUST,
-                    false, true,
-                    this.entity.position.add(0.0, 1.0, 0.0),
-                    Pos.ZERO,
-                    1.5f,
-                    100
-                ))
-                this.entity.instance.sendGroupedPacket(ParticlePacket(
-                    Particle.SMALL_FLAME,
-                    false, true,
-                    this.entity.position.add(0.0, 1.0, 0.0),
-                    Pos.ZERO,
-                    0.5f,
-                    100
-                ))
+                this.entity.instance.playSound(explosionSound, this.entity.position)
+                this.entity.instance.sendGroupedPacket(
+                    ParticlePacket(
+                        Particle.EXPLOSION,
+                        false, true,
+                        this.entity.position.add(0.0, 1.0, 0.0),
+                        Pos.ZERO,
+                        1.5f,
+                        50
+                    )
+                )
+                this.entity.instance.sendGroupedPacket(
+                    ParticlePacket(
+                        Particle.GUST,
+                        false, true,
+                        this.entity.position.add(0.0, 1.0, 0.0),
+                        Pos.ZERO,
+                        1.5f,
+                        100
+                    )
+                )
+                this.entity.instance.sendGroupedPacket(
+                    ParticlePacket(
+                        Particle.SMALL_FLAME,
+                        false, true,
+                        this.entity.position.add(0.0, 1.0, 0.0),
+                        Pos.ZERO,
+                        0.5f,
+                        100
+                    )
+                )
                 task!!.cancel()
                 this.entity.remove()
                 return@buildTask
@@ -124,22 +141,29 @@ open class Missile(val entity: Entity) {
                 this.entity.teleport(pos.withYaw(fixYaw(pos.yaw + 180)).withPitch(90f))
             }
             if (counter % 3 == 0) {
-                this.entity.instance.sendGroupedPacket(ParticlePacket(
-                    Particle.CLOUD,
-                    false, true,
-                    this.entity.position,
-                    Pos.ZERO,
-                    0f,
-                    3
-                ))
-                this.entity.instance.sendGroupedPacket(ParticlePacket(
-                    Particle.FLAME,
-                    false, true,
-                    this.entity.position,
-                    Pos.ZERO,
-                    0f,
-                    3
-                ))
+                this.entity.instance.sendGroupedPacket(
+                    ParticlePacket(
+                        Particle.CLOUD,
+                        false, true,
+                        this.entity.position,
+                        Pos.ZERO,
+                        0f,
+                        3
+                    )
+                )
+                this.entity.instance.sendGroupedPacket(
+                    ParticlePacket(
+                        Particle.FLAME,
+                        false, true,
+                        this.entity.position,
+                        Pos.ZERO,
+                        0f,
+                        3
+                    )
+                )
+            }
+            if(counter % flySoundFrequencyTicks == 0) {
+                this.entity.instance.playSound(flySound, this.entity.position)
             }
         }.repeat(TaskSchedule.nextTick()).schedule()
 

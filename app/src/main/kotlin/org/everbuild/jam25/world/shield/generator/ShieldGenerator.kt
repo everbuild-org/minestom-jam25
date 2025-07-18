@@ -1,9 +1,7 @@
 package org.everbuild.jam25.world.shield.generator
 
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Point
 import net.minestom.server.coordinate.Pos
@@ -15,8 +13,10 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
+import net.minestom.server.timer.TaskSchedule
 import net.minestom.server.utils.Direction
 import org.everbuild.celestia.orion.core.util.Cooldown
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.api.utils.asVec
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
@@ -30,6 +30,8 @@ import org.everbuild.jam25.state.ingame.GameTeam
 import org.everbuild.jam25.world.Resource
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import org.everbuild.jam25.world.placeable.ItemConsumer
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 data class ShieldGenerator(
     val position: BlockVec,
@@ -64,6 +66,12 @@ data class ShieldGenerator(
     private val recheckCooldown = Cooldown(1.seconds)
     private val particleCooldown = Cooldown(250.milliseconds)
 
+    val lowPowerSound = Sound.sound {
+        it.type(Key.key("block.note_block.bass"))
+        it.volume(0.8f)
+        it.pitch(0.7f)
+    }
+
     fun setInstance(instance: Instance) {
         ShieldGeneratorBlock.placeBlock(instance, position, PlacementActor.ByTeam(team!!))
         this.instance = instance
@@ -90,7 +98,7 @@ data class ShieldGenerator(
         }
     }
 
-    fun inputDirection() = when(direction) {
+    fun inputDirection() = when (direction) {
         Direction.NORTH -> Direction.WEST
         Direction.EAST -> Direction.NORTH
         Direction.SOUTH -> Direction.EAST
@@ -154,11 +162,20 @@ data class ShieldGenerator(
             for (notificationLevel in POWER_LEVEL_NOTIFICATIONS) {
                 if (powerBeforeLoss > notificationLevel && power <= notificationLevel) {
                     group?.sendMiniMessage("${Jam.PREFIX} <red>Your shield generator is now at $notificationLevel% power level")
+                    group?.forEach { it.playSound(lowPowerSound, Sound.Emitter.self()) }
+                    break
                 }
             }
             if (!hasPower() && running) {
                 running = false
                 group?.sendMiniMessage("${Jam.PREFIX} <red>Your shield generator has run out of power")
+                var timesPlayed = 0
+                Mc.scheduler.submitTask {
+                    group?.forEach { it.playSound(lowPowerSound, Sound.Emitter.self()) }
+                    timesPlayed++
+                    if (timesPlayed < 3) return@submitTask TaskSchedule.tick(2)
+                    return@submitTask null
+                }
             }
         }
         powerRenderer?.update(power, pendingRefill)
@@ -213,5 +230,6 @@ data class ShieldGenerator(
             running = false
         }
     }
+
     override fun getBlockPosition(): BlockVec = BlockVec(position)
 }

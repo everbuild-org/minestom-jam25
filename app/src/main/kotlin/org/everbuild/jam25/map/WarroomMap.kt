@@ -1,22 +1,21 @@
 package org.everbuild.jam25.map
 
-import java.util.concurrent.CompletableFuture
-import kotlin.time.Duration.Companion.minutes
-import net.minestom.server.coordinate.BlockVec
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
+import net.minestom.server.entity.Player
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.instance.Instance
-import net.minestom.server.instance.block.Block
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.minimessage
-import org.everbuild.jam25.block.api.Highlighter
 import org.everbuild.jam25.state.ingame.GameTeam
 import org.everbuild.jam25.state.ingame.GameTeamType
 import org.joml.Vector2i
+import java.util.concurrent.CompletableFuture
 
 class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) {
     val infoChild = Entity(EntityType.TEXT_DISPLAY).also {
@@ -35,6 +34,17 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
     val xEntities = mutableListOf<Entity>()
 
     lateinit var team: GameTeam
+
+    val enableSound = Sound.sound {
+        it.type(Key.key("ui.button.click"))
+        it.volume(0.2f)
+        it.pitch(1f)
+    }
+    val disableSound = Sound.sound {
+        it.type(Key.key("ui.button.click"))
+        it.volume(0.2f)
+        it.pitch(0.8f)
+    }
 
     init {
         editEntityMeta(TextDisplayMeta::class.java) { meta ->
@@ -94,11 +104,15 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
         }
     }
 
-    fun toggleX(x: Int, y: Int, bp: Pos, tp: Vector2i) {
-        if (!removeX(x, y)) createX(x, y, bp, tp)
+    fun toggleX(x: Int, y: Int, bp: Pos, tp: Vector2i): Boolean {
+        if (!removeX(x, y)) {
+            createX(x, y, bp, tp)
+            return true
+        }
+        return false
     }
 
-    fun onClick(x: Int, y: Int, bp: Pos) {
+    fun onClick(x: Int, y: Int, bp: Pos, player: Player) {
         println("WarroomMap: clicked on ($x, $y) at $bp")
         var pos = team.opposite.poi.mapper.mapToWorld(x, y)
         if (team.opposite.type == GameTeamType.RED) {
@@ -106,7 +120,8 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
         } else {
             pos = pos.add(0, -6)
         }
-        toggleX(x, y, bp, pos)
+        if (toggleX(x, y, bp, pos)) player.playSound(enableSound, Sound.Emitter.self())
+        else player.playSound(disableSound, Sound.Emitter.self())
     }
 
     override fun remove() {

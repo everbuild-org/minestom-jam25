@@ -1,6 +1,8 @@
 package org.everbuild.jam25.endgame
 
 import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
@@ -40,7 +42,12 @@ class HomeBase(val team: GameTeam) {
         BossBar.Color.GREEN,
         BossBar.Overlay.NOTCHED_10
     )
-    
+
+    val damageSound = Sound.sound {
+        it.type(Key.key("entity.guardian.hurt"))
+        it.volume(0.5f)
+    }
+
     init {
         updateHealth()
     }
@@ -78,6 +85,7 @@ class HomeBase(val team: GameTeam) {
             enabled = false
             return
         }
+        team.forEach { it.playSound(damageSound, Sound.Emitter.self()) }
         updateHealth()
     }
 

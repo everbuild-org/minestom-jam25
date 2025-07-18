@@ -1,11 +1,14 @@
 package org.everbuild.jam25.missile
 
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
+import org.everbuild.celestia.orion.platform.minestom.api.utils.playSound
 import org.everbuild.jam25.Jam
 import org.everbuild.jam25.block.api.BlockController
 import org.everbuild.jam25.state.ingame.GameTeam
@@ -16,6 +19,12 @@ class MissileControllerImpl : MissileController {
     override val targetPositions = mutableListOf<Vector2i>()
     private lateinit var self: GameTeam
     private var lastTickNoPos = true
+
+    val boomSound = Sound.sound {
+        it.type(Key.key("entity.generic.explode"))
+        it.pitch(0.7f)
+        it.volume(0.25f)
+    }
 
     override fun spawnMissile(pos: BlockVec, instance: Instance, missile: Missile) {
         missile.setInstance(instance, pos)
@@ -106,6 +115,7 @@ class MissileControllerImpl : MissileController {
     }
 
     fun boom(instance: Instance, block: BlockVec, explosionScore: Int) {
+        instance.playSound(boomSound, block)
         instance.sendGroupedPacket(
             ParticlePacket(
                 Particle.EXPLOSION,
