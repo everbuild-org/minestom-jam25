@@ -13,7 +13,6 @@ import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.core.util.minimessage
 import org.everbuild.celestia.orion.platform.minestom.util.later
 import org.everbuild.celestia.orion.platform.minestom.util.listen
-import org.everbuild.celestia.orion.platform.minestom.util.tickLater
 import org.everbuild.jam25.listener.dropItem
 
 class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryType.MERCHANT, name.minimessage()) {
@@ -45,7 +44,7 @@ class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryT
                 if (entry.right != null) {
                     setItemStack(1, getItemStack(1).withAmount(getItemStack(1).amount() - (entry.right?.amount() ?: 0)))
                 }
-                event.player.inventory.setItemStack(2, ItemStack.AIR)
+                setItemStack(2, ItemStack.AIR)
                 check()
             }
             .listen { event: InventoryCloseEvent ->
