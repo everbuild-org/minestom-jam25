@@ -58,7 +58,7 @@ object Jam : OrionServer() {
             .addChild(BlockController.eventNode())
             .addChild(ItemHolder.interactEventNode())
             .addChild(InteractionController.eventNode())
-            //.addChild(PerInstanceTabList.eventNode())
+            .addChild(PerInstanceTabList.eventNode())
 
         Mc.packetListener.setPlayListener(ClientSelectTradePacket::class.java, ClientSelectTradePacketListener::listener)
 

@@ -21,6 +21,7 @@ import org.everbuild.celestia.orion.platform.minestom.util.toPos
 import java.net.URI
 import java.util.*
 import net.minestom.server.event.player.AsyncPlayerPreLoginEvent
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
 
 class MinestomOrionPlatform : OrionPlatform {
     override fun registerJoinEvent(handler: (PlatformIndependentJoinEvent) -> Unit) {
@@ -56,7 +57,7 @@ class MinestomOrionPlatform : OrionPlatform {
     }
 
     override fun sendMessageAs(player: OrionPlayer, component: Component) {
-        globalServer.chat.send(ChatMessage.text(player, component, "-"))
+        globalServer.chat.send(ChatMessage.text(player, component, "-", Mc.connection.onlinePlayers.map { it.orion }))
     }
 
     override fun executeCommandAs(player: OrionPlayer, command: String) {

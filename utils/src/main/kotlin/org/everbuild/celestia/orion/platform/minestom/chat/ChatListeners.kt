@@ -16,6 +16,7 @@ import org.everbuild.celestia.orion.platform.minestom.util.orion
 import org.everbuild.celestia.orion.platform.minestom.util.sendTranslated
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
+import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
 
 fun registerChatListeners(chat: BufferedChat) {
     val cachedTex = mutableMapOf<UUID, LuckPermsSnapshot>()
@@ -33,7 +34,20 @@ fun registerChatListeners(chat: BufferedChat) {
                 return@listen
             }
             val processed = ChatProcessor.process(message, event.player.hasPermission("orion.chat.format"))
-            chat.send(ChatMessage.text(event.player.orion, processed, message))
+            chat.send(
+                ChatMessage.text(
+                    event.player.orion,
+                    processed,
+                    message,
+                    Mc.connection
+                        .onlinePlayers
+                        .filter { it.instance == event.player.instance }
+                        .filter {
+                            (tabListExtras[it] ?: "") == (tabListExtras[event.player] ?: "")
+                        }
+                        .map { it.orion },
+                )
+            )
         }
     })
 

@@ -1,5 +1,6 @@
 package org.everbuild.jam25.endgame
 
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -60,8 +61,7 @@ class HomeBase(val team: GameTeam) {
     }
 
     private fun ensureRemoved() {
-        team.players.forEach { bossBar.removeViewer(it) }
-        team.opposite.players.forEach { bossBar.removeViewer(it) }
+        bossBar.viewers().forEach { bossBar.removeViewer(it as? Audience ?: return@forEach) }
         entity.remove()
     }
 
