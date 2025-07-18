@@ -114,7 +114,10 @@ class GameStateController {
     }
 
     fun dissolve(game: InGameState) {
-        game.players().forEach(::addPlayer)
+        game.players().forEach{
+            addPlayer(it)
+            it.inventory.clear()
+        }
         node.removeChild(game.events())
         game.dissolve()
         controlledStates.remove(game)

@@ -80,4 +80,9 @@ class HomeBase(val team: GameTeam) {
         }
         updateHealth()
     }
+
+    fun disable() {
+        enabled = false
+        ensureRemoved()
+    }
 }

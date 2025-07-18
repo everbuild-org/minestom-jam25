@@ -110,6 +110,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
     }
 
     fun dissolve() {
+        teams.forEach { it.homeBase.disable() }
         Mc.instance.unregisterInstance(world.instance)
     }
 
