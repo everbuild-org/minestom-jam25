@@ -23,6 +23,7 @@ class PipeNetworkController(val game: InGameState) {
         if (requests.any { it.target == to }) return // already running
 
         val source = searchNodes(to)
+            .filter { it != to }
             .mapNotNull { game.getAdvanceable<ItemHolder>(it) }
             .filter { it.hasItem(resource) }
             .nearest(to) ?: return
@@ -53,7 +54,7 @@ class PipeNetworkController(val game: InGameState) {
             }
         }
 
-        if (!found) return println("n")
+        if (!found) return
         val path = mutableListOf<BlockVec>()
         var current = target
         while (current != source.position) {

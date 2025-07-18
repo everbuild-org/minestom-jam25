@@ -76,6 +76,14 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val storageTankItem = createItem("storage_tank") {
+        model(createModel {
+            parent(includeModel("jam/storage_tank"))
+            textures(
+                "0" to Texture("jam/storage_tank")
+            )
+        })
+    }
     val missileCrafterItem = createItem("missile_crafter") {
         model(createModel {
             parent(includeModel("jam/basic_missile_assembler"))

@@ -26,6 +26,7 @@ import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.block.impl.pipe.PipeBlock
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
+import org.everbuild.jam25.block.impl.storageTank.StorageTankBlock
 import org.everbuild.jam25.block.impl.vacuum.VacuumBlock
 import org.everbuild.jam25.item.api.get
 import org.everbuild.jam25.item.api.has
@@ -42,7 +43,8 @@ object BlockController {
         MissileLauncherBlock,
         CableComponentCrafterBlock,
         DigitalComponentCrafterBlock,
-        PipeCrafterBlock
+        PipeCrafterBlock,
+        StorageTankBlock
     )
     val typeTag = Tag.String("blocktype")
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)

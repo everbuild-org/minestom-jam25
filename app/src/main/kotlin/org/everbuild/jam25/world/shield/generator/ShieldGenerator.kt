@@ -32,6 +32,8 @@ import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import org.everbuild.jam25.world.placeable.ItemConsumer
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import net.minestom.server.instance.block.Block
+import org.everbuild.jam25.block.api.Highlighter
 
 data class ShieldGenerator(
     val position: BlockVec,

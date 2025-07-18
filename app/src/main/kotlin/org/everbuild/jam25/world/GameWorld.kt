@@ -51,7 +51,7 @@ class GameWorld : ZippedWorld("map") {
             ),
             map = WarroomMap(Pos(16.5, -12.8, 53.5, 180f, 0f), Vec(1.0, 0.0, 0.0)),
             mapper = MapMapper(72, 77, -39, -17),
-            shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30), Direction.WEST),
+            shieldGenerator = ShieldGenerator(BlockVec(28, -4, 30), Direction.SOUTH),
             nodes = listOf(
                 ResourceNode(Pos.fromPoint(BlockVec(-11, 7, 43)), SpawneableResource.BIO_SCRAPS),
                 ResourceNode(Pos.fromPoint(BlockVec(-32, 6, 27)), SpawneableResource.BIO_SCRAPS),
@@ -87,7 +87,7 @@ class GameWorld : ZippedWorld("map") {
             ),
             map = WarroomMap(Pos(16.5, -12.8, 111.5, 0f, 0f), Vec(-1.0, 0.0, 0.0)),
             mapper = MapMapper(-44, 92, 73, 182),
-            shieldGenerator = ShieldGenerator(BlockVec(4, -4, 134), Direction.SOUTH),
+            shieldGenerator = ShieldGenerator(BlockVec(4, -4, 134), Direction.NORTH),
             nodes = listOf(
                 ResourceNode(Pos.fromPoint(BlockVec(43, 7, 121)), SpawneableResource.BIO_SCRAPS),
                 ResourceNode(Pos.fromPoint(BlockVec(48, 7, 131)), SpawneableResource.BIO_SCRAPS),
