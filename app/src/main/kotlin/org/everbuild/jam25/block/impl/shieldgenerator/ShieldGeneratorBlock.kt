@@ -77,12 +77,14 @@ object ShieldGeneratorBlock : CustomBlock {
         instance.setBlock(
             position, Block.BARRIER
                 .withTypeTag()
+                .withTag(BlockController.unbreakable, true)
                 .withTag(state, blockState.toNBT())
                 .withTag(BlockController.shieldGenerator, true)
         )
         instance.setBlock(
             position.add(team.poi.shieldGenerator.inputDirection().vec()),
             Block.BARRIER
+                .withTag(BlockController.unbreakable, true)
                 .withTag(PipeBlock.faceCanConnectTag, BlockFace.fromDirection(team.poi.shieldGenerator.inputDirection()).name)
                 .withTag(BlockController.unbreakable, true)
                 .withTag(BlockController.refillable, BioScrapsItem.id.asString())

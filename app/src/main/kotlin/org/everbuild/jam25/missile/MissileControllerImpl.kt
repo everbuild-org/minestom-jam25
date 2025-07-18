@@ -57,6 +57,14 @@ class MissileControllerImpl : MissileController {
                     val toDestroy = mutableListOf<BlockVec>()
                     var explosionScore = 1
                     var genHit = 0
+                    val opposingMissiles = self.opposite.missileTracker.filter { v -> v.entity.instance == instance && v.entity.position.distanceSquared(pos) < 4.0 * 4.0 }
+                    if (opposingMissiles.isNotEmpty()) {
+                        opposingMissiles.forEach {
+                            boom(instance, BlockVec(it.entity.position), 3)
+                            it.remove()
+                            self.opposite.missileTracker.remove(it)
+                        }
+                    }
                     for (dx in -4..4) for (dy in -4..4) for (dz in -4..4) {
                         val pos = BlockVec(pos.blockX() + dx, pos.blockY() + dy, pos.blockZ() + dz)
                         val block = instance.getBlock(pos)

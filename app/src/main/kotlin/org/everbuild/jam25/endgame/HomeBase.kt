@@ -1,5 +1,7 @@
 package org.everbuild.jam25.endgame
 
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.key.Key
@@ -11,6 +13,7 @@ import net.minestom.server.entity.metadata.display.AbstractDisplayMeta
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.minimessage
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.jam25.Jam
 import org.everbuild.jam25.state.ingame.GameTeam
 
@@ -36,6 +39,12 @@ class HomeBase(val team: GameTeam) {
             it.billboardRenderConstraints = AbstractDisplayMeta.BillboardConstraints.VERTICAL
         }
     }
+
+    val timer = Mc.scheduler.buildTask {
+        hpLeft++
+        if (hpLeft > hpTotal) hpLeft = hpTotal
+        updateHealth()
+    }.repeat(60.seconds.toJavaDuration()).schedule()
 
     val bossBar = BossBar.bossBar(
         "${team.type.short} ${team.type.long} <gray>Home Base</gray>".minimessage(),
@@ -92,5 +101,9 @@ class HomeBase(val team: GameTeam) {
     fun disable() {
         enabled = false
         ensureRemoved()
+        Mc.connection.onlinePlayers.forEach {
+            it.hideBossBar(bossBar)
+        }
+        timer.cancel()
     }
 }

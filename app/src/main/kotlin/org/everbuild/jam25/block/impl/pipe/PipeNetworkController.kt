@@ -27,15 +27,39 @@ class PipeNetworkController(val game: InGameState) {
             .filter { it.hasItem(resource) }
             .nearest(to) ?: return
 
-        val astar = AStarSearch(
-            startNode = source.position,
-            endNode = to.relative(blockFace),
-            getNeighbors = { node -> neighbouringPipes(node, instance) },
-            heuristic = { n1, n2 -> n1.distance(n2) },
-            getCost = { n1, n2 -> n1.distance(n2) },
-        )
 
-        val path = astar.findPath() ?: return
+        val visited = mutableSetOf<BlockVec>()
+        val queue = ArrayDeque<BlockVec>()
+        val parent = mutableMapOf<BlockVec, BlockVec>()
+        val target = to.relative(blockFace)
+
+        queue.add(source.position)
+        visited.add(source.position)
+
+        var found = false
+        while (queue.isNotEmpty() && !found) {
+            val current = queue.removeFirst()
+            if (current == target) {
+                found = true
+                continue
+            }
+
+            for (next in neighbouringPipes(current, instance)) {
+                if (next !in visited) {
+                    visited.add(next)
+                    queue.add(next)
+                    parent[next] = current
+                }
+            }
+        }
+
+        if (!found) return println("n")
+        val path = mutableListOf<BlockVec>()
+        var current = target
+        while (current != source.position) {
+            path.add(0, current)
+            current = parent[current] ?: break
+        }
         val realResource = source.holder.removeItem(resource) ?: return
         if (path.isEmpty()) {
             game.getAdvanceable<ItemConsumer>(to)?.consumeItem(realResource)

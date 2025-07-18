@@ -32,6 +32,7 @@ class Highlighter(
         isAutoViewable = false
         for (player in team.players) {
             addViewer(player)
+            println(player.username + " is now viewing " + this.entityId)
         }
     }
 

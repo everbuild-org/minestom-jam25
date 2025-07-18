@@ -12,9 +12,28 @@ object QuickStartCommand : Kommand("quickstart") {
     init {
         permission = "jam.quickstart"
         default { _, _ ->
+            val playerGroup = Jam.gameStates.getLobby(player)
+            if (playerGroup != null) {
+                player.sendMiniMessage("<green>Quickstart activated")
+                for (i in 1..3) i.seconds later {
+                    Jam.gameStates.getLobby(player)?.audience?.sendMiniMessage("${Jam.PREFIX} <green>Quickstart in ${4 - i}</green>")
+                }
+                3.seconds later {
+                    Jam.gameStates.tryQuickStart(player)
+                }
+                return@default
+            }
+
             val group = QueueCommand.groups.filter { g -> g.hasSpace() }.maxByOrNull { g -> g.players.size }
             if (group != null) {
                 group.addPlayer(player)
+                player.sendMiniMessage("<green>Quickstart activated")
+                for (i in 1..3) i.seconds later {
+                    Jam.gameStates.getLobby(player)?.audience?.sendMiniMessage("${Jam.PREFIX} <green>Quickstart in ${4 - i}</green>")
+                }
+                3.seconds later {
+                    Jam.gameStates.tryQuickStart(player)
+                }
             } else {
                 val newGroup = LobbyGroup()
                 newGroup.addPlayer(player)

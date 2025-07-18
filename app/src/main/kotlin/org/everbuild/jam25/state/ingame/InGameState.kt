@@ -30,7 +30,7 @@ import org.everbuild.jam25.world.placeable.ItemConsumer
 class InGameState(lobby: LobbyGroup) : GameState {
     private val id = UUID.randomUUID()
     private val key = Key.key("jam", "in-game/$id")
-    private val players = mutableListOf<Player>()
+    private val players = mutableSetOf<Player>()
     private val audience = DynamicGroup { players.contains(it) }
     val world = GameWorld()
     val teamRed: GameTeam
@@ -67,9 +67,13 @@ class InGameState(lobby: LobbyGroup) : GameState {
 
     init {
         players.addAll(lobby.players)
-        val teamSize = players.size / 2
-        val redPlayers = players.subList(0, teamSize)
-        val bluePlayers = players.subList(teamSize, players.size)
+        var isRed = false
+        val redPlayers = mutableListOf<Player>()
+        val bluePlayers = mutableListOf<Player>()
+        players.forEach {
+            if (isRed) redPlayers.add(it) else bluePlayers.add(it)
+            isRed = !isRed
+        }
         teamRed = GameTeam(redPlayers, GameTeamType.RED, this)
         teamBlue = GameTeam(bluePlayers, GameTeamType.BLUE, this)
         teams = listOf(teamRed, teamBlue)
@@ -110,7 +114,12 @@ class InGameState(lobby: LobbyGroup) : GameState {
     }
 
     fun dissolve() {
-        teams.forEach { it.homeBase.disable() }
+        teams.forEach {
+            it.homeBase.disable()
+            for (missile in it.missileTracker) {
+                missile.remove()
+            }
+        }
         Mc.instance.unregisterInstance(world.instance)
     }
 
@@ -119,6 +128,6 @@ class InGameState(lobby: LobbyGroup) : GameState {
         .filterIsInstance<T>()
         .firstOrNull()
     override fun events(): EventNode<out Event> = eventNode
-    override fun players(): List<Player> = players
+    override fun players(): List<Player> = players.toList()
     override fun key(): Key = key
 }

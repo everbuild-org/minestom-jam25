@@ -1,10 +1,12 @@
 package org.everbuild.jam25.block.api
 
+import kotlin.time.Duration.Companion.seconds
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.minestom.server.collision.BoundingBox
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.entity.GameMode
+import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.PlayerBlockBreakEvent
@@ -13,6 +15,7 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
+import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.block.impl.crafting.CableComponentCrafterBlock
 import org.everbuild.jam25.block.impl.crafting.DigitalComponentCrafterBlock
@@ -45,6 +48,7 @@ object BlockController {
     val unbreakable = Tag.Boolean("unbreakable").defaultValue(false)
     val refillable = Tag.String("refillable")
     val shieldGenerator = Tag.Boolean("shieldGenerator")
+    val cooldowns = HashMap<Player, Cooldown>()
 
     private val placeSound = Sound.sound {
         it.type(Key.key("block.iron.place"))
@@ -87,6 +91,8 @@ object BlockController {
                 val targetPos = event.blockPosition.relative(event.blockFace)
                 val item = event.player.getItemInHand(event.hand)
                 val block = getBlock(item) ?: return@listen
+                val cooldown = cooldowns.getOrPut(event.player) {Cooldown(0.25.seconds)}
+                if (!cooldown.get()) return@listen
                 val bounds = BoundingBox(1.0, 1.0, 1.0)
                 if (bounds.intersectEntity(targetPos, event.player)) return@listen
                 val blockAtTargetPos = event.player.instance!!.getBlock(targetPos)

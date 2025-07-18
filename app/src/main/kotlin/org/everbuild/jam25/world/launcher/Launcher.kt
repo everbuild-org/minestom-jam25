@@ -46,6 +46,7 @@ class Launcher(val pos: BlockVec, val team: GameTeam) : AdvanceableWorldElement,
         hologramLines.forEach { (_, hologram) -> hologram.remove() }
         hologramLines.clear()
         items.clear()
+        hl?.remove()
     }
 
     override fun consumeItem(item: ItemConsumer.ItemOrOil) {
@@ -79,10 +80,11 @@ class Launcher(val pos: BlockVec, val team: GameTeam) : AdvanceableWorldElement,
         }
 
         if (!instance.getBlock(spawnPos).registry().isReplaceable) {
-            if (hl != null) {
+            if (hl == null) {
                 team.sendMiniMessage("${Jam.PREFIX} <red>Missile launcher blocked by a block!")
                 hl = Highlighter(instance, BlockVec(spawnPos), 0xff0000, Block.RED_STAINED_GLASS, team)
             }
+
             return
         }
 
@@ -96,6 +98,7 @@ class Launcher(val pos: BlockVec, val team: GameTeam) : AdvanceableWorldElement,
         } else {
           items.remove(Missile1Item)
         }
+
         MissileLauncherBlock.trySpawn(instance, pos, BlockVec(spawnPos), Missile1Block, team) {
             isRunning = false
         }

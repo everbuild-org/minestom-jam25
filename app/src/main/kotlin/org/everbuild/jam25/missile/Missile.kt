@@ -17,6 +17,7 @@ import kotlin.math.*
 
 open class Missile(val entity: Entity) {
     private lateinit var instance: Instance
+    var task: Task? = null
 
     val explosionSound = Sound.sound { it.type(Key.key("minecraft:entity.generic.explode")) }
     val launchSound = Sound.sound {
@@ -85,7 +86,6 @@ open class Missile(val entity: Entity) {
         val current = this.entity.position
         val target = Pos(position.x.toDouble(), maxY.toDouble(), position.y.toDouble())
         val sequence = generateParabolicFlightPathSequence(current, target, 16.0, 100).toList().iterator().peeking()
-        var task: Task? = null
         var counter = 0
         this.entity.instance.playSound(launchSound, this.entity.position)
         task = Mc.scheduler.buildTask {
@@ -180,5 +180,10 @@ open class Missile(val entity: Entity) {
 
     fun Float.toDegrees(): Float {
         return this * (180f / PI.toFloat())
+    }
+
+    fun remove() {
+        entity.remove()
+        task?.cancel()
     }
 }

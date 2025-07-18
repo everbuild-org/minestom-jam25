@@ -12,6 +12,7 @@ import org.everbuild.jam25.world.placeable.ItemConsumer
 import org.everbuild.jam25.world.placeable.ItemHolder
 import kotlin.math.min
 import kotlin.math.roundToInt
+import net.minestom.server.utils.Direction
 import org.everbuild.jam25.block.impl.crafting.MissileCrafterBlock
 
 class Crafter(
@@ -67,7 +68,21 @@ class Crafter(
                 val ingredientResource = Resource.fromItemOrOil(ingredient) ?: continue
                 val storedAmount = ingredientResource.let { inputItems[it] } ?: 0
                 if (storedAmount >= ingredient.amount()) continue
-                game.networkController.request(ingredient.withAmount(ingredient.amount() - storedAmount), position, inputFace)
+                for (vec in game.networkController.neighbouringPipes(position, instance)) {
+                    val dirVec = position.sub(vec).asVec().normalize()
+                    val dirs = Direction.entries.toTypedArray()
+                    var minDir = dirs[0]
+                    var minDot = 10000
+                    for (dir in dirs) {
+                        val dot = dir.vec().dot(dirVec)
+                        if (minDot > dot) {
+                            minDir = dir
+                            minDot = dot.roundToInt()
+                        }
+                    }
+                    val dir = BlockFace.fromDirection(minDir)
+                    game.networkController.request(ingredient.withAmount(ingredient.amount() - storedAmount), position, dir)
+                }
             }
             tryCraft(instance)
         }
