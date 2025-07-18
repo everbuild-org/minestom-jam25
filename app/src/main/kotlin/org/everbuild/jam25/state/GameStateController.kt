@@ -1,11 +1,16 @@
 package org.everbuild.jam25.state
 
+import kotlin.time.Duration.Companion.seconds
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.event.EventNode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import net.minestom.server.instance.Instance
+import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
+import org.everbuild.celestia.orion.platform.minestom.util.later
 import org.everbuild.celestia.orion.platform.minestom.util.listen
+import org.everbuild.jam25.Jam
+import org.everbuild.jam25.state.ingame.GameTeam
 import org.everbuild.jam25.state.ingame.InGameState
 import org.everbuild.jam25.state.lobby.LobbyGameState
 import org.everbuild.jam25.state.lobby.LobbyGroup
@@ -24,7 +29,10 @@ class GameStateController {
 
     fun addPlayer(player: Player) {
         lobbyState.addPlayer(player)
-        player.setInstance(lobbyState.getInstance(), lobbyState.getSpawn())
+        if (player.instance != lobbyState.getInstance()) player.setInstance(lobbyState.getInstance(), lobbyState.getSpawn())
+        else player.teleport(lobbyState.getSpawn())
+
+        tabListExtras[player] = ""
     }
 
     fun addPlayer(event: AsyncPlayerConfigurationEvent) {
@@ -95,5 +103,20 @@ class GameStateController {
     // Methode um Spectator aus dem System zu entfernen (bei Disconnect)
     fun removeSpectatorFromGame(player: Player) {
         spectatorToGame.remove(player)
+    }
+
+    fun endGame(game: InGameState, team: GameTeam) {
+        team.sendMiniMessageTitle("<green>You won against ${team.opposite.type.long}!", "<gray>${team.opposite.formatNames()}")
+        team.opposite.sendMiniMessageTitle("<red>You lost against ${team.type.long}!", "<gray>${team.formatNames()}")
+        3.seconds later {
+            dissolve(game)
+        }
+    }
+
+    fun dissolve(game: InGameState) {
+        game.players().forEach(::addPlayer)
+        node.removeChild(game.events())
+        game.dissolve()
+        controlledStates.remove(game)
     }
 }

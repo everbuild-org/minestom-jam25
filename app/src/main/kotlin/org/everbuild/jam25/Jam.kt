@@ -33,8 +33,8 @@ import org.everbuild.jam25.state.GameStateController
 import org.everbuild.jam25.world.placeable.ItemHolder
 
 object Jam : OrionServer() {
-    const val NAME = "<gradient:#FFAA00:#FF5555>Border Defense</gradient>"
-    const val PREFIX = "<gradient:#FFAA00:#FF5555>BD ✧</gradient>"
+    const val NAME = "<gradient:#FFAA00:#FF5555>Shield Defense</gradient>"
+    const val PREFIX = "<gradient:#FFAA00:#FF5555>SD ✧</gradient>"
 
     val oilBiome = Mc.biome.register(
         "jam:oil", Biome.builder()

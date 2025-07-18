@@ -3,6 +3,7 @@ package org.everbuild.jam25.state.ingame
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.datetime.Clock
 import net.kyori.adventure.key.Key
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
@@ -10,10 +11,13 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.Event
 import net.minestom.server.event.EventFilter
 import net.minestom.server.event.EventNode
+import net.minestom.server.event.player.PlayerDisconnectEvent
 import org.everbuild.celestia.orion.core.util.Cooldown
+import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.GlobalTickEvent
+import org.everbuild.jam25.Jam
 import org.everbuild.jam25.block.impl.pipe.PipeNetworkController
 import org.everbuild.jam25.resource.SpawneableResource
 import org.everbuild.jam25.resource.ResourceNode
@@ -34,6 +38,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
     val teams: List<GameTeam>
     val advanceable = mutableSetOf<AdvanceableWorldElement>()
     val networkController = PipeNetworkController(this)
+    val start = Clock.System.now()
 
     private val instanceEvents = EventNode.event("in-game/$id/instance", EventFilter.INSTANCE) {
         it.instance == world.instance
@@ -41,6 +46,11 @@ class InGameState(lobby: LobbyGroup) : GameState {
 
     private val playerEvents = EventNode.event("in-game/$id/player", EventFilter.PLAYER) {
         players.contains(it.player)
+    }.listen { event: PlayerDisconnectEvent ->
+        players.remove(event.player)
+        if (players.isEmpty()) {
+            Jam.gameStates.dissolve(this)
+        }
     }
 
     private val sendNukesCooldown = Cooldown(3.seconds)
@@ -91,7 +101,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
     fun teamOf(player: Player): GameTeam? = teams.find { it.players.contains(player) }
 
     fun createResourceNode(type: SpawneableResource, pos: Pos) {
-        advanceable.add(ResourceNode(pos, type).also { it.setInstance(world.instance) })
+        advanceable.add(ResourceNode(pos, type).also { it.setInstance(world.instance, teamRed) })
     }
 
     fun teamAt(position: BlockVec): GameTeam {
@@ -99,11 +109,14 @@ class InGameState(lobby: LobbyGroup) : GameState {
             ?: throw IllegalArgumentException("No team found at $position")
     }
 
+    fun dissolve() {
+        Mc.instance.unregisterInstance(world.instance)
+    }
+
     inline fun <reified T> getAdvanceable(pos: BlockVec): T? = advanceable
         .filter { it.getBlockPosition() == pos }
         .filterIsInstance<T>()
         .firstOrNull()
-
     override fun events(): EventNode<out Event> = eventNode
     override fun players(): List<Player> = players
     override fun key(): Key = key

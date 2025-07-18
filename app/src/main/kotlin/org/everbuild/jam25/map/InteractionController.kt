@@ -11,7 +11,7 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 
-class InteractionController(base: Pos, dir: Vec, instance: Instance, w: Int = 1, h: Int = 1, r: Double = 0.1, val cb: (Int, Int, Pos) -> Unit) {
+class InteractionController(base: Pos, dir: Vec, instance: Instance, w: Int = 1, h: Int = 1, r: Double = 0.1, val inv: Boolean, val cb: (Int, Int, Pos) -> Unit) {
     val scaledIHat = dir.normalize().mul(r)
     val scaledJHat = Vec(0.0, 1.0, 0.0).mul(r)
     val discreteWSteps = (w / r).toInt()
@@ -32,7 +32,10 @@ class InteractionController(base: Pos, dir: Vec, instance: Instance, w: Int = 1,
                 }
                 it.setTag(xTag, wStep)
                 it.setTag(yTag, hStep)
+                it.setTag(sih, scaledIHat)
+                it.setTag(sjh, scaledJHat)
                 it.setTag(controller, this)
+                it.setTag(invTag, inv)
             }
         }
     }
@@ -44,6 +47,9 @@ class InteractionController(base: Pos, dir: Vec, instance: Instance, w: Int = 1,
     companion object {
         val xTag = Tag.Integer("px")
         val yTag = Tag.Integer("py")
+        val sih = Tag.Transient<Vec>("sih")
+        val sjh = Tag.Transient<Vec>("sjh")
+        val invTag = Tag.Boolean("inv")
         val controller = Tag.Transient<InteractionController>("ctrl")
 
         fun eventNode() = EventNode.all("map")
@@ -54,8 +60,14 @@ class InteractionController(base: Pos, dir: Vec, instance: Instance, w: Int = 1,
                 if (!entity.hasTag(controller)) return@listen
                 val x = entity.getTag(xTag)
                 val y = entity.getTag(yTag)
+                val iHat = entity.getTag(sih)
+                val jHat = entity.getTag(sjh)
+                val inv = entity.getTag(invTag)
                 val controller = entity.getTag(controller)
-                controller.cb(x, y, entity.position)
+                val subpixel = event.interactPosition
+                val dx = (if(subpixel.x() < 0.0) 1 else 0).let { if (inv) 1-it else it}
+                val dy = (if(subpixel.y() > 0.02) 1 else 0).let { if (inv) it else it}
+                controller.cb(x * 2 + dx, y * 2 + dy, entity.position.add(iHat.mul(0.5 * dx)).add(jHat.mul(0.5 * dy)))
             }
     }
 }

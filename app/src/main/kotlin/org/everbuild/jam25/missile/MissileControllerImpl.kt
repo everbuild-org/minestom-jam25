@@ -60,6 +60,20 @@ class MissileControllerImpl : MissileController {
                             }
                     }
 
+                    if (pos.distance(self.opposite.poi.spawn) < 8 && self.opposite.homeBase.enabled) {
+                        self.opposite.homeBase.damage(explosionScore * 2)
+                        instance.sendGroupedPacket(
+                            ParticlePacket(
+                                Particle.EXPLOSION,
+                                false, true,
+                                self.opposite.poi.spawn.add(0.0, 1.0, 0.0),
+                                Pos.ZERO,
+                                1.5f,
+                                50
+                            )
+                        )
+                    }
+
                     toDestroy.forEach { block -> boom(instance, block, explosionScore) }
                     val toVisit = mutableListOf<BlockVec>().also { it.addAll(checkedBlocks) }
                     val visited = mutableListOf<BlockVec>()

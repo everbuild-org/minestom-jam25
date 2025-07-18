@@ -11,6 +11,7 @@ import org.everbuild.celestia.orion.platform.minestom.scoreboard.tabListExtras
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
 import org.everbuild.jam25.Jam
+import org.everbuild.jam25.endgame.HomeBase
 import org.everbuild.jam25.item.impl.HammerItem
 import org.everbuild.jam25.item.impl.PipeBlockItem
 import org.everbuild.jam25.missile.MissileController
@@ -19,6 +20,7 @@ import org.everbuild.jam25.world.shield.ShieldRenderer
 
 class GameTeam(val players: List<Player>, val type: GameTeamType, val game: InGameState) : DynamicGroup({ players.contains(it) }), MissileController by MissileControllerImpl() {
     val poi = type.poi()
+    val homeBase = HomeBase(this)
     var shield: ShieldRenderer? = null
     val opposite: GameTeam get() = game.teams.first { it != this }
     val node = EventNode.type("game-team-$type", EventFilter.PLAYER) { _, player -> players.contains(player) }
@@ -72,7 +74,11 @@ class GameTeam(val players: List<Player>, val type: GameTeamType, val game: InGa
         spawnShield(instance)
         initOilBiome(instance)
         poi.map.setInstance(instance)
-        poi.nodes.forEach { it.setInstance(instance) }
+        poi.nodes.forEach { it.setInstance(instance, this) }
         poi.shops.forEach { it.setInstance(instance) }
+    }
+
+    fun formatNames(): String {
+        return players.joinToString(", ") { it.username }
     }
 }

@@ -1,17 +1,21 @@
 package org.everbuild.jam25.map
 
 import java.util.concurrent.CompletableFuture
+import kotlin.time.Duration.Companion.minutes
+import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.instance.Instance
+import net.minestom.server.instance.block.Block
 import net.minestom.server.tag.Tag
 import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.minimessage
-import org.everbuild.celestia.orion.platform.minestom.api.Mc
+import org.everbuild.jam25.block.api.Highlighter
 import org.everbuild.jam25.state.ingame.GameTeam
+import org.everbuild.jam25.state.ingame.GameTeamType
 import org.joml.Vector2i
 
 class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) {
@@ -42,7 +46,7 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
     }
 
     override fun setInstance(instance: Instance): CompletableFuture<Void?>? {
-        interactionController = InteractionController(base, dir, instance, 2, 3, 0.05, ::onClick)
+        interactionController = InteractionController(base, dir, instance, 2, 3, 0.05, team.type == GameTeamType.RED, ::onClick)
         infoChild.setInstance(instance, base.add(base.direction().normalize().mul(0.01)))
         displayBase.setInstance(instance, base)
         return super.setInstance(instance, base)
@@ -55,8 +59,8 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
             it.editEntityMeta(TextDisplayMeta::class.java) { meta ->
                 meta.text = "<dark_red><b>⨯".minimessage()
                 meta.backgroundColor = 0x0
-                meta.scale = Vec(0.5, 0.5, 0.5)
-                meta.translation = Vec(-0.001, -0.025, -0.001)
+                meta.scale = Vec(0.25, 0.25, 0.25)
+                meta.translation = Vec(0.01, -0.0125, -0.001)
             }
             it.setTag(xTag, x)
             it.setTag(yTag, y)
@@ -95,7 +99,13 @@ class WarroomMap(val base: Pos, val dir: Vec) : Entity(EntityType.TEXT_DISPLAY) 
     }
 
     fun onClick(x: Int, y: Int, bp: Pos) {
-        val pos = team.opposite.poi.mapper.mapToWorld(x, y)
+        println("WarroomMap: clicked on ($x, $y) at $bp")
+        var pos = team.opposite.poi.mapper.mapToWorld(x, y)
+        if (team.opposite.type == GameTeamType.RED) {
+            pos = pos.add(0, -6)
+        } else {
+            pos = pos.add(0, -6)
+        }
         toggleX(x, y, bp, pos)
     }
 

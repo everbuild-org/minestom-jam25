@@ -20,12 +20,8 @@ class ResourcePath(
     val target: BlockVec,
     val thenRun: (ResourcePath) -> Unit = {}
 ) : AdvanceableWorldElement {
-    //todo dynamic speed
-    //todo better aiming/new map
-    //todo reduce leaf spawning mid-game
-    //todo endgame
     //todo models
-    val blocksPerSecond = 50
+    val blocksPerSecond = (path.size / 2.5).toInt().coerceAtLeast(1) // every path takes 2.5s
     val cooldown = Cooldown(1.seconds / blocksPerSecond)
     val last3Blocks = mutableListOf<BlockVec>()
     var currentBlock = path.removeFirst()

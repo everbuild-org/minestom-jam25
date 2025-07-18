@@ -50,7 +50,6 @@ object Translator {
 
     private fun loadTranslations() {
         keys.clear()
-        // TODO prefix
         val enBundle = ResourceBundle.getBundle("translations/asorda", Locale.ENGLISH)
         val deBundle = ResourceBundle.getBundle("translations/asorda", Locale.GERMAN)
         val frBundle = ResourceBundle.getBundle("translations/asorda", Locale.FRENCH)

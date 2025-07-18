@@ -3,10 +3,13 @@ package org.everbuild.jam25.world.launcher
 import kotlin.time.Duration.Companion.seconds
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.instance.Instance
+import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.utils.Direction
 import org.everbuild.celestia.orion.core.util.Cooldown
 import org.everbuild.celestia.orion.platform.minestom.api.utils.dropItem
+import org.everbuild.jam25.Jam
+import org.everbuild.jam25.block.api.Highlighter
 import org.everbuild.jam25.block.impl.launcher.MissileLauncherBlock
 import org.everbuild.jam25.block.impl.missile1.Missile1Block
 import org.everbuild.jam25.item.api.AbstractItem
@@ -21,6 +24,7 @@ class Launcher(val pos: BlockVec, val team: GameTeam) : AdvanceableWorldElement,
     val hologramLines = HashMap<AbstractItem, ItemStackHologramLine>()
     val spawnCd = Cooldown(1.seconds)
     var isRunning = false
+    var hl: Highlighter? = null
 
     override fun advance(instance: Instance) {
         updateHologram(instance)
@@ -74,7 +78,16 @@ class Launcher(val pos: BlockVec, val team: GameTeam) : AdvanceableWorldElement,
             return
         }
 
-        if (!instance.getBlock(spawnPos).registry().isReplaceable) return
+        if (!instance.getBlock(spawnPos).registry().isReplaceable) {
+            if (hl != null) {
+                team.sendMiniMessage("${Jam.PREFIX} <red>Missile launcher blocked by a block!")
+                hl = Highlighter(instance, BlockVec(spawnPos), 0xff0000, Block.RED_STAINED_GLASS, team)
+            }
+            return
+        }
+
+        hl?.remove()
+        hl = null
 
         isRunning = true
         val thenMissiles = missiles - 1

@@ -13,19 +13,24 @@ import org.everbuild.celestia.orion.core.util.minimessage
 import org.everbuild.jam25.listener.dropItemOnFloor
 import org.everbuild.jam25.world.placeable.AdvanceableWorldElement
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.datetime.Clock
 import net.minestom.server.coordinate.BlockVec
 import net.minestom.server.coordinate.Point
 import net.minestom.server.entity.metadata.item.ItemEntityMeta
+import org.everbuild.jam25.state.ingame.GameTeam
 
 class ResourceNode(val pos: Pos, val spawneableResource: SpawneableResource) : AdvanceableWorldElement {
     lateinit var inst: Instance
     lateinit var labelEntity: Entity
     lateinit var timerEntity: Entity
+    lateinit var team: GameTeam
     val cooldown = Cooldown(spawneableResource.timeToSpawn)
     val timerCooldown = Cooldown(100.milliseconds)
 
-    fun setInstance(instance: Instance) {
+    fun setInstance(instance: Instance, team: GameTeam) {
         this.inst = instance
+        this.team = team
 
         labelEntity = Entity(EntityType.TEXT_DISPLAY).also { entity ->
             entity.editEntityMeta(TextDisplayMeta::class.java) { meta ->
@@ -48,6 +53,9 @@ class ResourceNode(val pos: Pos, val spawneableResource: SpawneableResource) : A
 
     fun trySetTimer(isFull: Boolean) {
         if (!timerCooldown.get()) return
+        if ((team.game.start - Clock.System.now()).absoluteValue > 60.seconds && spawneableResource == SpawneableResource.BIO_SCRAPS) {
+            timerCooldown.duration = 10.seconds
+        }
         val comp = if (isFull) {
             "Resource node full".component().color(NamedTextColor.RED)
         } else {

@@ -20,6 +20,7 @@ import org.everbuild.celestia.orion.platform.minestom.api.utils.asVec
 import org.everbuild.celestia.orion.platform.minestom.api.utils.pling
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.DynamicGroup
+import org.everbuild.jam25.Jam
 import org.everbuild.jam25.block.api.PlacementActor
 import org.everbuild.jam25.block.api.ShieldGeneratorRefillComponent
 import org.everbuild.jam25.block.impl.shieldgenerator.ShieldGeneratorBlock
@@ -49,6 +50,7 @@ data class ShieldGenerator(
             ShieldGeneratorBlock.updateState(instance ?: return, position, value)
 
             team?.shield?.set(value)
+            team?.homeBase?.enabled = !value
         }
     var power: Double = 100.0
         private set
@@ -141,12 +143,12 @@ data class ShieldGenerator(
             power = (power - POWERLOSS_PER_TICK).coerceAtLeast(0.0)
             for (notificationLevel in POWER_LEVEL_NOTIFICATIONS) {
                 if (powerBeforeLoss > notificationLevel && power <= notificationLevel) {
-                    group?.sendMiniMessage("<red>Your shield generator is now at $notificationLevel% power level")
+                    group?.sendMiniMessage("${Jam.PREFIX} <red>Your shield generator is now at $notificationLevel% power level")
                 }
             }
             if (!hasPower() && running) {
                 running = false
-                group?.sendMiniMessage("<red>Your shield generator has run out of power")
+                group?.sendMiniMessage("${Jam.PREFIX} <red>Your shield generator has run out of power")
             }
         }
         powerRenderer?.update(power, pendingRefill)

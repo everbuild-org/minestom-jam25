@@ -3,7 +3,7 @@ package org.everbuild.celestia.orion.core.util
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-class Cooldown(private val duration: Duration) {
+class Cooldown(var duration: Duration) {
     private var lastCall = 0L
 
     fun get(): Boolean {
