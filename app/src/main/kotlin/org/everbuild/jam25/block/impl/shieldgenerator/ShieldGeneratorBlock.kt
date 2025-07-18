@@ -3,11 +3,14 @@ package org.everbuild.jam25.block.impl.shieldgenerator
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.nbt.CompoundBinaryTag
 import net.minestom.server.coordinate.BlockVec
+import net.minestom.server.coordinate.Vec
 import net.minestom.server.event.instance.InstanceUnregisterEvent
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.block.BlockFace
 import net.minestom.server.tag.Tag
+import net.minestom.server.utils.Direction
+import org.everbuild.celestia.orion.platform.minestom.api.utils.rotateAroundYDegrees
 import org.everbuild.celestia.orion.platform.minestom.util.listen
 import org.everbuild.jam25.Jam
 import org.everbuild.jam25.block.api.BlockController
@@ -30,9 +33,10 @@ object ShieldGeneratorBlock : CustomBlock {
     }
 
     override fun placeBlock(instance: Instance, position: BlockVec, player: PlacementActor) {
-        placeShieldGeneratorBlocks(instance, position, BlockState.DEFAULT, player.getTeam()!!)
+        val team = player.getTeam()!!
+        placeShieldGeneratorBlocks(instance, position, BlockState.DEFAULT, team)
         entities.getOrPut(instance) { hashMapOf() }.getOrPut(position.asId()) {
-            ShieldGeneratorEntity(BlockState.DEFAULT.running).also {
+            ShieldGeneratorEntity(BlockState.DEFAULT.running, team.poi.shieldGenerator.direction).also {
                 it.setInstance(instance, position)
             }
         }
@@ -52,9 +56,10 @@ object ShieldGeneratorBlock : CustomBlock {
     fun updateState(instance: Instance, position: BlockVec, running: Boolean) {
         val oldState = BlockState.fromNBT(instance.getBlock(position).getTag(state) as? CompoundBinaryTag ?: return)
         val updatedState = oldState.copy(running = running)
-        placeShieldGeneratorBlocks(instance, position, updatedState, Jam.gameStates.getInGamePhase(instance)!!.teamAt(position))
+        val team = Jam.gameStates.getInGamePhase(instance)!!.teamAt(position)
+        placeShieldGeneratorBlocks(instance, position, updatedState, team)
         entities[instance]?.remove(position.asId())?.remove()
-        entities[instance]?.put(position.asId(), ShieldGeneratorEntity(updatedState.running).also {
+        entities[instance]?.put(position.asId(), ShieldGeneratorEntity(updatedState.running, team.poi.shieldGenerator.direction).also {
             it.setInstance(instance, position)
         })
     }
@@ -76,15 +81,15 @@ object ShieldGeneratorBlock : CustomBlock {
                 .withTag(BlockController.shieldGenerator, true)
         )
         instance.setBlock(
-            position.add(0, 0, -1),
+            position.add(team.poi.shieldGenerator.inputDirection().vec()),
             Block.BARRIER
-                .withTag(PipeBlock.faceCanConnectTag, BlockFace.NORTH.name)
+                .withTag(PipeBlock.faceCanConnectTag, BlockFace.fromDirection(team.poi.shieldGenerator.inputDirection()).name)
                 .withTag(BlockController.unbreakable, true)
                 .withTag(BlockController.refillable, BioScrapsItem.id.asString())
                 .withTag(BlockController.shieldGenerator, true)
         )
 
-        val consumer = ShieldGeneratorConsumer(team.poi.shieldGenerator, instance, position.add(0, 0, -1))
+        val consumer = ShieldGeneratorConsumer(team.poi.shieldGenerator, instance, position.add(BlockVec(team.poi.shieldGenerator.inputDirection().vec())))
         team.game.advanceable.add(consumer)
     }
 
