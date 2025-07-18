@@ -11,14 +11,14 @@ import org.everbuild.jam25.item.impl.DigitalCrafterBlockItem
 import org.everbuild.jam25.item.impl.MetalScrapsItem
 import org.everbuild.jam25.item.impl.SiliconItem
 
-class UpgradeNPC(val pos: Pos) : ShopNPC("Upgrades", SKIN_ENGINEER) {
+class UpgradeNPC(val pos: Pos) : ShopNPC("Helpers", SKIN_ENGINEER) {
     override fun setInstance(instance: Instance): CompletableFuture<Void?>? {
         return super.setInstance(instance, pos)
     }
 
     override fun openMenu(player: Player) {
-        player.openInventory(ShopGUI("Upgrades", listOf(
-            ShopGUI.ShopEntry.Item(MetalScrapsItem.createNewStack(2),null, ItemStack.of(Material.SPYGLASS)),
+        player.openInventory(ShopGUI("Helpers", listOf(
+            ShopGUI.ShopEntry.Item(MetalScrapsItem.createNewStack(2),null, ItemStack.of(Material.SPYGLASS).withMaxStackSize(2)),
         )))
     }
 }

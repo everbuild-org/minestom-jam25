@@ -17,11 +17,11 @@ import org.everbuild.jam25.item.api.name
 
 object DigitalCrafterBlockItem : AbstractItem(
     key = "digital_crafter",
-    item = itemStackOf(JamItems.pipeCrafterItem)
+    item = itemStackOf(JamItems.digitalCrafterItem)
         .name("<gold>Digital Component Crafter")
         .attachCustomBlock(DigitalComponentCrafterBlock)
-        .lore("<gray>Pipe crafters are used to craft pipes, using <white>Metal Scraps<gray>.")
-        .lore("<yellow>Connect pipes supplying <white>Metal Scraps<yellow> to start crafting.")
+        .lore("<gray>Digital Component crafters are used to craft pipes, using <white>Metal Scraps<gray> and <white>Silicon Dust<gray>.")
+        .lore("<yellow>Connect pipes supplying these items to start crafting.")
         .withMaxStackSize(16)
 ) {
     override fun getPlacementHint(lookingAt: Block?): Component {

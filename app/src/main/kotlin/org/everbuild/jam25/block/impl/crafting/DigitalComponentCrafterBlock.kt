@@ -23,7 +23,7 @@ object DigitalComponentCrafterBlock : CrafterBlock(
 
     override fun key(): Key = Key.key("jam", "digital_component_crafter")
     override fun createItem(): ItemStack = DigitalCrafterBlockItem.createItem()
-    override fun getModelId(): String? = "pipe_assembler.geo.bbmodel"
+    override fun getModelId(): String? = "digital_assembler.bbmodel"
 
     override fun verticalHologramOffset() = 1.5
 }

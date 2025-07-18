@@ -16,10 +16,10 @@ import org.everbuild.jam25.item.api.name
 
 object CableCrafterBlockItem : AbstractItem(
     key = "cable_crafter",
-    item = itemStackOf(JamItems.pipeCrafterItem)
+    item = itemStackOf(JamItems.cableCrafterItem)
         .name("<gold>Cable Crafter")
         .attachCustomBlock(CableComponentCrafterBlock)
-        .lore("<gray>Pipe crafters are used to craft pipes, using <white>Metal Scraps<gray>.")
+        .lore("<gray>Cable crafters are used to craft cable components, using <white>Metal Scraps<gray>.")
         .lore("<yellow>Connect pipes supplying <white>Metal Scraps<yellow> to start crafting.")
         .withMaxStackSize(16)
 ) {

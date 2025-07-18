@@ -8,6 +8,7 @@ import org.everbuild.celestia.orion.core.packs.OrionPacks
 import org.everbuild.celestia.orion.core.util.component
 import org.everbuild.jam25.block.api.attachCustomBlock
 import org.everbuild.jam25.block.impl.crafting.MissileCrafterBlock
+import org.everbuild.jam25.block.impl.crafting.PipeCrafterBlock
 import org.everbuild.jam25.item.api.AbstractItem
 import org.everbuild.jam25.item.api.itemStackOf
 import org.everbuild.jam25.item.api.lore
@@ -17,7 +18,7 @@ object PipeCrafterBlockItem : AbstractItem(
     key = "pipe_crafter",
     item = itemStackOf(JamItems.pipeCrafterItem)
         .name("<gold>Pipe Crafter")
-        .attachCustomBlock(MissileCrafterBlock)
+        .attachCustomBlock(PipeCrafterBlock)
         .lore("<gray>Pipe crafters are used to craft pipes, using <white>Metal Scraps<gray>.")
         .lore("<yellow>Connect pipes supplying <white>Metal Scraps<yellow> to start crafting.")
         .withMaxStackSize(16)

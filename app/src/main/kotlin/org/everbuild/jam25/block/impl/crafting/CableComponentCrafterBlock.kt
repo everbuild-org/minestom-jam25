@@ -23,7 +23,7 @@ object CableComponentCrafterBlock : CrafterBlock(
 
     override fun key(): Key = Key.key("jam", "cable_component_crafter")
     override fun createItem(): ItemStack = CableCrafterBlockItem.createItem()
-    override fun getModelId(): String? = "pipe_assembler.geo.bbmodel"
+    override fun getModelId(): String? = "cable_assembler.bbmodel"
 
     override fun verticalHologramOffset() = 1.5
 }

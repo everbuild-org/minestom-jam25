@@ -60,6 +60,22 @@ object JamItems : ContentList("jam") {
             )
         })
     }
+    val cableCrafterItem = createItem("cable_crafter") {
+        model(createModel {
+            parent(includeModel("jam/cable_assembler"))
+            textures(
+                "0" to Texture("jam/cable_assembler")
+            )
+        })
+    }
+    val digitalCrafterItem = createItem("digital_crafter") {
+        model(createModel {
+            parent(includeModel("jam/digital_assembler"))
+            textures(
+                "0" to Texture("jam/digital_assembler")
+            )
+        })
+    }
     val missileCrafterItem = createItem("missile_crafter") {
         model(createModel {
             parent(includeModel("jam/basic_missile_assembler"))
