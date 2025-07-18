@@ -2,9 +2,12 @@ package org.everbuild.jam25
 
 import java.io.InputStreamReader
 import java.io.Reader
+import java.nio.file.Path
 import kotlin.jvm.java
+import me.lucko.spark.minestom.SparkMinestom
 import net.minestom.server.color.Color
 import net.minestom.server.entity.GameMode
+import net.minestom.server.entity.Player
 import net.minestom.server.entity.attribute.Attribute
 import net.minestom.server.event.player.PlayerSpawnEvent
 import net.minestom.server.extras.velocity.VelocityProxy
@@ -15,6 +18,7 @@ import net.worldseed.multipart.ModelEngine
 import org.everbuild.celestia.orion.platform.minestom.OrionServer
 import org.everbuild.celestia.orion.platform.minestom.api.Mc
 import org.everbuild.celestia.orion.platform.minestom.api.utils.logger
+import org.everbuild.celestia.orion.platform.minestom.luckperms.hasPermission
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePack
 import org.everbuild.celestia.orion.platform.minestom.pack.withResourcePacksInDev
 import org.everbuild.celestia.orion.platform.minestom.util.listen
@@ -103,6 +107,12 @@ object Jam : OrionServer() {
         SpectatorCommand.register()
 
         withGlobalTickEvent()
+
+        val directory = Path.of("spark")
+        SparkMinestom.builder(directory)
+            .commands(true)
+            .permissionHandler { sender, permission -> (sender as? Player)?.hasPermission(permission) ?: true}
+            .enable()
     }
 }
 

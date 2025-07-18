@@ -70,7 +70,7 @@ class InGameState(lobby: LobbyGroup) : GameState {
         var isRed = false
         val redPlayers = mutableListOf<Player>()
         val bluePlayers = mutableListOf<Player>()
-        players.forEach {
+        players.toList().shuffled().forEach {
             if (isRed) redPlayers.add(it) else bluePlayers.add(it)
             isRed = !isRed
         }

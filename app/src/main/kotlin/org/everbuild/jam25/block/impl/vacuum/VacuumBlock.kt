@@ -28,6 +28,10 @@ object VacuumBlock : CustomBlock {
             if (player is PlacementActor.ByPlayer) BlockFace.fromYaw(player.player.position.yaw()).toDirection()
             else Direction.SOUTH
         )
+        if (!instance.getBlock(position.add(0, 1, 0)).isAir) {
+            dropItemOnFloor(Pos.fromPoint(position), VacuumBlockItem.createItem(), instance)
+            return
+        }
         instance.setBlock(
             position,
             Block.BARRIER

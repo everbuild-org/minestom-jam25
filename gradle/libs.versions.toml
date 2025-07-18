@@ -4,6 +4,7 @@ kotlinxDatetime = "0.6.1"
 kotlinxSerializationJSON = "1.7.3"
 kotlinxCoroutines = "1.9.0"
 kotlinx-cli = "0.3.6"
+spark = "1.10-SNAPSHOT"
 
 adventure = "4.19.0"
 ktorm = "4.1.0"
@@ -59,6 +60,7 @@ ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor-vers
 ktorServerSse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor-version" }
 ktorServerNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
 ktorServerConfigYaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
+spark = {module = "dev.lu15:spark-minestom", version.ref = "spark"}
 
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
 

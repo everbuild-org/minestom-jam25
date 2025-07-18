@@ -31,6 +31,6 @@ open class ZippedWorld(name: String) {
         }
 
         instance.chunkLoader = AnvilLoader(worldDir.toPath())
-        instance.chunkSupplier = ChunkSupplier { i, x, y -> LightingChunk(i, x, y) }
+//        instance.chunkSupplier = ChunkSupplier { i, x, y -> LightingChunk(i, x, y) }
     }
 }

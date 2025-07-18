@@ -7,6 +7,7 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.minestom.server.inventory.Inventory
 import net.minestom.server.inventory.InventoryType
 import net.minestom.server.inventory.TransactionOption
+import net.minestom.server.inventory.click.Click
 import net.minestom.server.item.ItemStack
 import net.minestom.server.network.packet.server.play.TradeListPacket
 import org.everbuild.celestia.orion.core.util.Cooldown
@@ -22,6 +23,7 @@ class ShopGUI(name: String, val entries: List<ShopEntry>) : Inventory(InventoryT
         eventNode()
             .listen { event: InventoryPreClickEvent ->
                 check()
+                if(event.click is Click.LeftShift || event.click is Click.RightShift) return@listen
                 if (event.slot != 2) return@listen
                 event.isCancelled = true
                 if (!rateLimit.get()) return@listen

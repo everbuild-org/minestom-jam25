@@ -23,6 +23,14 @@ repositories {
     maven("https://repo.hypera.dev/snapshots")
     maven("https://repo.lucko.me/")
     maven("https://reposilite.atlasengine.ca/public")
+    maven("https://repo.hypera.dev/snapshots")
+    maven("https://repo.codemc.io/repository/maven-public/")
+    maven("https://repo.mineinabyss.com/releases")
+    maven("https://reposilite.atlasengine.ca/public")
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.viaversion.com")
+    maven("https://repo.lucko.me/")
+    maven("https://maven.solo-studios.ca/releases")
 }
 
 tasks.withType<Test>().configureEach {
