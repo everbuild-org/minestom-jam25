@@ -54,7 +54,7 @@ class ResourceNode(val pos: Pos, val spawneableResource: SpawneableResource) : A
     fun trySetTimer(isFull: Boolean) {
         if (!timerCooldown.get()) return
         if ((team.game.start - Clock.System.now()).absoluteValue > 60.seconds && spawneableResource == SpawneableResource.BIO_SCRAPS) {
-            timerCooldown.duration = 10.seconds
+            timerCooldown.duration = 15.seconds
         }
         val comp = if (isFull) {
             "Resource node full".component().color(NamedTextColor.RED)

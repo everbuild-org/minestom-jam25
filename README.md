@@ -6,18 +6,18 @@ Team:
 - \_CreepyX_
 - TheNico24
 - Bloeckchengrafik
+- JustAlittleWolf
 - p3sto
 
 ## Setup Instructions
 
 Import into intellij, start using the `gradle run` task. Create a jar using the `gradle jar` task.
 
-## API Overview
+## Documentation for the base setup
 
 There are three important modules: App, Resources and Utils.
 
-- App contains the primary application logic written for the game jam, including code copied from the Asorda "Averium"
-  Module.
+- App contains the primary application logic written for the game jam
 - Resources contain the definitions for the resource pack.
 - Utils contain the core implementation "Orion" and its minestom platform.
 
